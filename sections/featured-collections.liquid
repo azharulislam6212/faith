@@ -2,27 +2,29 @@
 <noscript>{{ 'component-video.css' | asset_url | stylesheet_tag }}</noscript>
 {{- 'section-featured-collections.css' | asset_url | stylesheet_tag -}}
 
-<div class="featured-collections-wrapper collection-promo-animate" role="region"
-  aria-label="Featured collections">
+<div
+  class="featured-collections-wrapper collection-promo-animate"
+  role="region"
+  aria-label="Featured collections"
+>
   {% render 'background-element', placeholder: false %}
 
   <div class="featured-collections__content">
     <div class="{{section.settings.width}}">
       <div class="featured-collections__inner">
-        <div role="region"  aria-label="promo images" class="featured-collections__left-column">
+        <div role="region" aria-label="promo images" class="featured-collections__left-column">
           <div class="collection-promo__item collection-promo-fad-up">
             <a href="shop.html" class="collection-promo__img-wrap">
-
-           {{ "image" | placeholder_svg_tag: 'placeholder-svg' }}
-       
+              {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
             </a>
           </div>
           <div class="collection-promo__item collection-promo-fad-up">
             <a href="shop.html" class="collection-promo__img-wrap">
-          {{ "image" | placeholder_svg_tag: 'placeholder-svg' }}
+              {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
             </a>
-            <!-- VIDEO -->
-            <button class="collection-promo__play-button" id="promoVideoPopupButton">
+               <modal-opener class="product-selector__size-link p4" data-modal="#promo-video-modal">
+
+            <button class="collection-promo__play-button" aria-haspopup="dialog">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -35,49 +37,49 @@
                 </path>
               </svg>
             </button>
+
+
+    
+    </modal-opener>
+     
           </div>
         </div>
         <div class="featured-collections__right-column">
-          <ul role="list" class="promo-list">
-            <li class="collection-promo-fad-up promo-item-hover">
+          <ul role="list" aria-label="collection list" class="featured-collection-items">
+            <li class="featured-collection__item collection-promo-fad-up">
               <a href="shop.html">
-                <div class="promo-img-wrap">
-                  <img loading="lazy" src="./assets/images/promo/accessories.png" alt="Accessories">
+                <div class="featured-collection__img-wrap">
+                  {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
                 </div>
                 <p>
                   <span class="link-animation"> Accessories</span>
                 </p>
               </a>
             </li>
-            <li class="collection-promo-fad-up promo-item-hover">
+            <li class="featured-collection__item collection-promo-fad-up">
               <a href="shop.html">
-                <div class="promo-img-wrap">
-                  <img loading="lazy" src="./assets/images/promo/new-arrivals.png" alt="New Arrivals">
+                <div class="featured-collection__img-wrap">
+                  {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
                 </div>
                 <p>
                   <span class="link-animation">New Arrivals</span>
                 </p>
               </a>
             </li>
-            <li class="big-image collection-promo-fad-up promo-item-hover">
+            <li class="featured-collection__item featured-collection__item-big-image collection-promo-fad-up">
               <a href="shop.html">
-                <div class="promo-img-wrap">
-                  <img
-                    loading="lazy"
-                    class="promo-highlight-image"
-                    src="./assets/images/promo/women-collection.png"
-                    alt="Women Collection"
-                  >
+                <div class="featured-collection__img-wrap">
+                  {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
                 </div>
                 <p>
                   <span class="link-animation">Women Collection</span>
                 </p>
               </a>
             </li>
-            <li class="collection-promo-fad-up promo-item-hover">
+            <li class="featured-collection__item collection-promo-fad-up">
               <a href="shop.html">
-                <div class="promo-img-wrap">
-                  <img loading="lazy" src="./assets/images/promo/street-were.png" alt="Street Were">
+                <div class="featured-collection__img-wrap">
+                  {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
                 </div>
                 <p>
                   <span class="link-animation">Street Were </span>
@@ -85,36 +87,45 @@
               </a>
             </li>
           </ul>
-          <div class="promo-caption collection-promo-fad-up">
+          <div class="featured-collection__caption collection-promo-fad-up">
             <p class="desc">Weekly Hot Deals. Get Up to 25% Discount</p>
-            <a href="#" class="primary-button">
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 16 16"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                    d="M12.75 4V10.5C12.75 10.6989 12.671 10.8897 12.5303 11.0303C12.3896 11.171 12.1989 11.25 12 11.25C11.8011 11.25 11.6103 11.171 11.4696 11.0303C11.329 10.8897 11.25 10.6989 11.25 10.5V5.8125L4.5306 12.5306C4.3897 12.6715 4.19861 12.7507 3.99935 12.7507C3.80009 12.7507 3.60899 12.6715 3.4681 12.5306C3.3272 12.3897 3.24805 12.1986 3.24805 11.9994C3.24805 11.8001 3.3272 11.609 3.4681 11.4681L10.1875 4.75H5.49997C5.30106 4.75 5.11029 4.67098 4.96964 4.53033C4.82899 4.38968 4.74997 4.19891 4.74997 4C4.74997 3.80109 4.82899 3.61032 4.96964 3.46967C5.11029 3.32902 5.30106 3.25 5.49997 3.25H12C12.1989 3.25 12.3896 3.32902 12.5303 3.46967C12.671 3.61032 12.75 3.80109 12.75 4Z"
-                    fill="white" />
-              </svg>
-              Shop Now</a
+
+            <a
+              class="button button--primary button--with-icon"
+              href="/products/breasted-trench-coat"
+              aria-label="Shop Now"
             >
+              <span class="button--text">
+                <svg
+                  aria-hidden="true"
+                  focusable="false"
+                  width="16"
+                  height="16"
+                  class="icon-arrow icon icon-arrow"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path d="M12.75 4V10.5C12.75 10.6989 12.671 10.8897 12.5303 11.0303C12.3896 11.171 12.1989 11.25 12 11.25C11.8011 11.25 11.6103 11.171 11.4696 11.0303C11.329 10.8897 11.25 10.6989 11.25 10.5V5.8125L4.5306 12.5306C4.3897 12.6715 4.19861 12.7507 3.99935 12.7507C3.80009 12.7507 3.60899 12.6715 3.4681 12.5306C3.3272 12.3897 3.24805 12.1986 3.24805 11.9994C3.24805 11.8001 3.3272 11.609 3.4681 11.4681L10.1875 4.75H5.49997C5.30106 4.75 5.11029 4.67098 4.96964 4.53033C4.82899 4.38968 4.74997 4.19891 4.74997 4C4.74997 3.80109 4.82899 3.61032 4.96964 3.46967C5.11029 3.32902 5.30106 3.25 5.49997 3.25H12C12.1989 3.25 12.3896 3.32902 12.5303 3.46967C12.671 3.61032 12.75 3.80109 12.75 4Z" fill="currentColor"></path>
+                </svg>
+
+                Shop Now
+              </span>
+            </a>
           </div>
         </div>
       </div>
     </div>
+
+
+    <!-- /product-selector__size-link -->
   </div>
 
   <!-- PROMO VIDEO -->
   <div class="popup" id="videoPopup">
     <div class="popup-wrapper">
       <div class="promo-video-popup">
-        <video width="708" height="584" class="promo-video" preload="auto" loop controls>
-          <source src="./assets/videos/video-02.mp4" type="video/mp4">
-          Your browser does not support the video tag.
-        </video>
+    
         <!-- CLOSE BUTTON -->
         <button class="close-button" role="button">
           <svg
@@ -134,6 +145,21 @@
   </div>
 </div>
 
+{% capture modal_content %}
+      <video width="708" height="584" class="promo-video" preload="auto" loop controls>
+          <source src="./assets/videos/video-02.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+{% endcapture %}
+
+{%- render 'modal-dialog',
+  title: 'title',
+  content: modal_content,
+  id: 'promo-video-modal',
+  modifiers: 'video-modal,large',
+  class: 'modal class'
+-%}
+
 {% schema %}
 {
   "name": "Featured collections",
@@ -143,11 +169,11 @@
     {
       "type": "image_picker",
       "id": "desktop_image",
-      "label": "Background Image"
+      "label": "Background image"
     },
     {
       "type": "header",
-      "content": "Layout Wdith"
+      "content": "Layout wdith"
     },
     {
       "type": "select",

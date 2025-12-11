@@ -405,7 +405,7 @@
       }
     },
     "featured_collections_list_6yJkGc": {
-      "type": "featured-collections-list",
+      "type": "featured-collections-pills",
       "blocks": {
         "collection_tab_block_eJthqp": {
           "type": "_collection-tab-block",

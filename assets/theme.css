@@ -3448,6 +3448,125 @@ section+section {
 }
 
 /* ============================
+    Modal
+============================ */
+
+.modal-dialog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: var(--z-modals);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--duration-default) ease-out,
+    visibility var(--duration-default) ease-out;
+}
+
+.modal-dialog[open] {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal-dialog__overlay {
+  width: 100%;
+  height: 100%;
+  background-color: var(--color-background-transparent-50);
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  cursor: pointer;
+}
+
+.modal-dialog__wrapper {
+  color: var(--color-paragraphs);
+  background-color: var(--color-background);
+  width: 88rem;
+  max-width: calc(100% - calc(var(--page-gap) * 2));
+  max-height: calc(100% - calc(var(--page-gap) * 2));
+  padding: var(--page-gap);
+  margin: auto;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+  transform: translate(-50%, -40%);
+  transition: transform var(--ft-duration-default) ease-out;
+  overflow-y: auto;
+  outline-color: transparent;
+}
+
+.modal-dialog__content {
+  overflow-x: auto;
+}
+
+.modal-dialog__content > table {
+  width: 96rem;
+  margin: 0.1rem;
+}
+
+.modal-dialog__content > :first-child {
+  margin-top: 0;
+}
+
+.modal-dialog--large .modal-dialog__wrapper {
+  width: 102.6rem;
+}
+
+[open] .modal-dialog__wrapper {
+  transform: translate(-50%, -50%);
+}
+
+.modal-dialog__close {
+  color: currentColor;
+  background: none;
+  width: 2.4rem;
+  height: 2.4rem;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  cursor: pointer;
+  position: absolute;
+  top: calc(var(--spacing-step) * 2);
+  right: calc(var(--spacing-step) * 2);
+  z-index: 2;
+}
+
+.modal-dialog__close svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+@media screen and (min-width: 750px) {
+  .modal-dialog__close {
+    top: 2rem;
+    right: 2rem;
+  }
+}
+
+@media screen and (min-width: 990px) {
+  .modal-dialog--pickup-availability .modal-dialog__wrapper {
+    padding: var(--page-gap) calc(var(--page-gap) * 2);
+  }
+}
+
+.modal-dialog--quickview .modal-dialog__close {
+  top: calc(var(--spacing-step) * 6);
+  right: calc(var(--spacing-step) * 6);
+}
+
+@media screen and (min-width: 990px) {
+  .modal-dialog--quickview .modal-dialog__close {
+    top: calc(var(--spacing-step) * 2);
+    right: calc(var(--spacing-step) * 2);
+  }
+}
+
+
+/* ============================
    toast-message-wrapper
 ============================ */
 
@@ -3492,10 +3611,6 @@ section+section {
     animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
     will-change: opacity, transform;
 }
-
-
-
-
 
 /* Initial state: invisible + translate up a bit */
 [data-anim="fade"] {

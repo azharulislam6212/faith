@@ -5,10 +5,10 @@
 <noscript>{{ 'component-product-card.css' | asset_url | stylesheet_tag }}</noscript>
 <noscript>{{ 'component-price.css' | asset_url | stylesheet_tag }}</noscript>
 
-{{- 'section-featured-collections-list.css' | asset_url | stylesheet_tag -}}
+{{- 'section-featured-collections-pills.css' | asset_url | stylesheet_tag -}}
 
 <div
-  class="featured-collections-list__wrapper section--padding  tabs-wrapper"
+  class="featured-collections-pills__wrapper section--padding  tabs-wrapper"
   data-color-scheme="{{ section.settings.color_scheme }}"
   role="region"
   aria-label="Featured collections list"
@@ -21,9 +21,9 @@
   {% endif %}
 
   <collection-tab-content>
-    <div class="featured-collections-list__header section-header">
+    <div class="featured-collections-pills__header section-header">
       <div class="{{ container }}">
-        <div class="featured-collections-list__header-wrap">
+        <div class="featured-collections-pills__header-wrap">
           {% content_for 'block', type: '_section-header-no-container', id: 'featured-collections-header' %}
 
           <ul class="tabs-button-list" role="tablist" aria-label="Featured product collections">
@@ -33,7 +33,7 @@
       </div>
     </div>
 
-    <div class="featured-collections-list__content" aria-live="polite">
+    <div class="featured-collections-pills__content" aria-live="polite">
       <div class="{{ section.settings.width }}">
         {% content_for 'blocks' %}
       </div>
@@ -43,9 +43,9 @@
 
 {% schema %}
 {
-  "name": "Featured collection list",
+  "name": "Featured collection pills",
   "tag": "section",
-  "class": "featured-collections-list",
+  "class": "featured-collections-pills",
   "settings": [
     {
       "type": "header",
@@ -165,7 +165,7 @@
   ],
   "presets": [
     {
-      "name": "Featured collection list",
+      "name": "Featured collection pills",
       "category": "Collections",
       "settings": {
         "width": "container",

@@ -108,7 +108,7 @@ const HTMLUpdate = class {
   }
 };
 
-const pauseAllMedia = (element = document) => {
+window.pauseAllMedia = (element = document) => {
   element.querySelectorAll('.js-youtube').forEach(video => {
     try {
       video.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
@@ -128,26 +128,26 @@ const pauseAllMedia = (element = document) => {
   });
 };
 
-// const resumeMedia = (element = document) => {
-//   element.querySelectorAll('.js-youtube, .js-vimeo, video').forEach(video => {
-//     if (!isInViewport(video)) return;
+const resumeMedia = (element = document) => {
+  element.querySelectorAll('.js-youtube, .js-vimeo, video').forEach(video => {
+    if (!isInViewport(video)) return;
 
-//     const postMessage =
-//       video.classList.contains('js-youtube') && video.tagName !== 'VIDEO'
-//         ? '{"event":"command","func":"playVideo","args":""}'
-//         : video.classList.contains('js-vimeo') && video.tagName !== 'VIDEO'
-//           ? '{"method":"play"}'
-//           : null;
+    const postMessage =
+      video.classList.contains('js-youtube') && video.tagName !== 'VIDEO'
+        ? '{"event":"command","func":"playVideo","args":""}'
+        : video.classList.contains('js-vimeo') && video.tagName !== 'VIDEO'
+          ? '{"method":"play"}'
+          : null;
 
-//     if (postMessage) {
-//       try { video.contentWindow.postMessage(postMessage, '*'); } catch (e) { }
-//     }
+    if (postMessage) {
+      try { video.contentWindow.postMessage(postMessage, '*'); } catch (e) { }
+    }
 
-//     if (video.tagName === 'VIDEO') {
-//       try { video.play(); } catch (e) { }
-//     }
-//   });
-// };
+    if (video.tagName === 'VIDEO') {
+      try { video.play(); } catch (e) { }
+    }
+  });
+};
 
 const serializeForm = form => {
   const obj = {};
@@ -1417,7 +1417,7 @@ if (!customElements.get('collection-tab-content')) {
 
       handleClick(evt) {
         if (!evt.target.matches('[role="tab"]') || evt.target === this.activeTab) return;
-        
+
         this.activateTab(evt.target);
       }
 
@@ -1599,6 +1599,99 @@ class VariantSelects extends HTMLElement {
   }
 }
 customElements.define('variant-selects', VariantSelects);
+
+
+
+
+/* -----------------------------
+   Modal dialog
+   ----------------------------- */
+
+   class ModalOpener extends HTMLElement {
+  constructor() {
+    super();
+
+    const button = this.querySelector('button');
+
+    if (!button) return;
+
+    button.addEventListener('click', () => {
+      this.onButtonClick(button);
+    });
+  }
+
+  onButtonClick(button) {
+    const modal = document.querySelector(
+      this.getAttribute('data-modal')
+    );
+
+    if (modal) modal.show(button);
+  }
+}
+customElements.define('modal-opener', ModalOpener);
+
+class ModalDialog extends HTMLElement {
+  constructor() {
+    super();
+
+    this.dialogHolder = this.querySelector('[role="dialog"]');
+    this.querySelectorAll('[id^="ModalClose-"]').forEach(button => {
+      button.addEventListener('click', this.hide.bind(this, false));
+    });
+    this.addEventListener('keyup', event => {
+      if (event.code?.toUpperCase() === 'ESCAPE') this.hide();
+    });
+    this.addEventListener('click', event => {
+      if (event.target === this) this.hide();
+    });
+  }
+
+  connectedCallback() {
+    if (this.moved) return;
+    this.moved = true;
+    document.body.appendChild(this);
+  }
+
+  show(opener) {
+    this.openedBy = opener;
+    this.setAttribute('open', '');
+    this.dialogHolder.addEventListener(
+      'transitionend',
+      () => {
+        trapFocus(this, this.dialogHolder);
+      },
+      { once: true }
+    );
+    window.pauseAllMedia();
+  }
+
+  hide() {
+    if (this.hasAttribute('data-remove')) {
+      const transitionDisabled = window
+        .getComputedStyle(this, null)
+        .getPropertyValue('transition')
+        .includes('none');
+      if (transitionDisabled) {
+        this.remove();
+      } else {
+        this.addEventListener(
+          'transitionend',
+          () => {
+            this.remove();
+          },
+          { once: true }
+        );
+      }
+    }
+    document.body.dispatchEvent(new CustomEvent('modalClosed'));
+    this.removeAttribute('open');
+    removeTrapFocus(this.openedBy);
+    window.pauseAllMedia();
+    resumeMedia();
+  }
+}
+customElements.define('modal-dialog', ModalDialog);  
+
 
 /* -----------------------------
    ColorSwatch
@@ -1952,7 +2045,7 @@ customElements.define("size-variant", SizeVariant);
    CountdownTimer
    ----------------------------- */
 
-  class CountdownTimer extends HTMLElement {
+class CountdownTimer extends HTMLElement {
   constructor() {
     super();
     this.interval = null;
@@ -2104,4 +2197,8 @@ class BeforeAfterImages extends HTMLElement {
 }
 
 customElements.define("before-after-images", BeforeAfterImages);
+
+
+
+
 
