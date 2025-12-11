@@ -394,6 +394,7 @@
       "type": "featured-collections",
       "name": "Featured collections",
       "settings": {
+        "desktop_image": "shopify://shop_images/promo-bg_74e7748a-faee-4705-a3a4-c294e79b7a2e.png",
         "width": "container-full",
         "color_scheme": "",
         "padding_top": 118,
@@ -404,10 +405,10 @@
         "padding_bottom_mobile": 60
       }
     },
-    "featured_collections_list_6yJkGc": {
-      "type": "featured-collections-pills",
+    "featured_collections_pillis_Pxtm3n": {
+      "type": "featured-collections-pillis",
       "blocks": {
-        "collection_tab_block_eJthqp": {
+        "collection_tab_block_Tcc4Ef": {
           "type": "_collection-tab-block",
           "name": "Collection tab content",
           "settings": {
@@ -441,7 +442,7 @@
           },
           "block_order": []
         },
-        "collection_tab_block_UpU8bH": {
+        "collection_tab_block_E8Dxad": {
           "type": "_collection-tab-block",
           "name": "Collection tab content",
           "settings": {
@@ -474,7 +475,7 @@
           },
           "block_order": []
         },
-        "collection_tab_block_zQxUgU": {
+        "collection_tab_block_QL3Grf": {
           "type": "_collection-tab-block",
           "name": "Collection tab content",
           "settings": {
@@ -507,7 +508,7 @@
           },
           "block_order": []
         },
-        "collection_tab_block_cgcx4J": {
+        "collection_tab_block_mjQ7Gh": {
           "type": "_collection-tab-block",
           "name": "Collection tab content",
           "settings": {
@@ -540,7 +541,7 @@
           },
           "block_order": []
         },
-        "collection_tab_block_EDrxxy": {
+        "collection_tab_block_qYmfNi": {
           "type": "_collection-tab-block",
           "name": "Collection tab content",
           "settings": {
@@ -592,7 +593,7 @@
           "static": true,
           "settings": {},
           "blocks": {
-            "collection_item_p8in9R": {
+            "collection_tab_item_jdBfb3": {
               "type": "_collection-tab-item",
               "name": "Collection item",
               "settings": {
@@ -601,7 +602,7 @@
               },
               "blocks": {}
             },
-            "collection_item_iWFTJJ": {
+            "collection_tab_item_XtaALz": {
               "type": "_collection-tab-item",
               "name": "Collection item",
               "settings": {
@@ -610,7 +611,7 @@
               },
               "blocks": {}
             },
-            "collection_item_qqEfFn": {
+            "collection_tab_item_rktJTX": {
               "type": "_collection-tab-item",
               "name": "Collection item",
               "settings": {
@@ -619,7 +620,7 @@
               },
               "blocks": {}
             },
-            "collection_item_EptfUL": {
+            "collection_tab_item_XiFRnE": {
               "type": "_collection-tab-item",
               "name": "Collection item",
               "settings": {
@@ -630,21 +631,21 @@
             }
           },
           "block_order": [
-            "collection_item_p8in9R",
-            "collection_item_iWFTJJ",
-            "collection_item_qqEfFn",
-            "collection_item_EptfUL"
+            "collection_tab_item_jdBfb3",
+            "collection_tab_item_XtaALz",
+            "collection_tab_item_rktJTX",
+            "collection_tab_item_XiFRnE"
           ]
         }
       },
       "block_order": [
-        "collection_tab_block_eJthqp",
-        "collection_tab_block_UpU8bH",
-        "collection_tab_block_zQxUgU",
-        "collection_tab_block_cgcx4J",
-        "collection_tab_block_EDrxxy"
+        "collection_tab_block_Tcc4Ef",
+        "collection_tab_block_E8Dxad",
+        "collection_tab_block_QL3Grf",
+        "collection_tab_block_mjQ7Gh",
+        "collection_tab_block_qYmfNi"
       ],
-      "name": "Featured collection list",
+      "name": "Featured collection pills",
       "settings": {
         "width": "container",
         "color_scheme": "",
@@ -1710,7 +1711,7 @@
   "order": [
     "marquee_scroller_tynpnX",
     "featured_collections_TjfX9R",
-    "featured_collections_list_6yJkGc",
+    "featured_collections_pillis_Pxtm3n",
     "mutli_card_7DNwEP",
     "collage_grid_hnnyyA",
     "deals_ntHJPC",

@@ -3457,11 +3457,11 @@ section+section {
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: var(--z-modals);
+  z-index: var(--z-popup);
   opacity: 0;
   visibility: hidden;
-  transition: opacity var(--duration-default) ease-out,
-    visibility var(--duration-default) ease-out;
+  transition: opacity var(--ft-duration-default) ease-out,
+    visibility var(--ft-duration-default) ease-out;
 }
 
 .modal-dialog[open] {
@@ -3472,7 +3472,9 @@ section+section {
 .modal-dialog__overlay {
   width: 100%;
   height: 100%;
-  background-color: var(--color-background-transparent-50);
+  background-color: rgb(var(--color-heading), 0.6);
+        backdrop-filter: blur(0.5rem);
+          inset: 0;
   position: absolute;
   top: 0;
   left: 0;
@@ -3481,12 +3483,13 @@ section+section {
 }
 
 .modal-dialog__wrapper {
-  color: var(--color-paragraphs);
-  background-color: var(--color-background);
+  color: rgb(var(--color-text));
+  background-color: rgb(var(--color-background));
   width: 88rem;
-  max-width: calc(100% - calc(var(--page-gap) * 2));
-  max-height: calc(100% - calc(var(--page-gap) * 2));
-  padding: var(--page-gap);
+  max-width: calc(100% - calc(var(--outer) * 2));
+  max-height: calc(100% - calc(var(--outer) * 2));
+  padding: 0;
+   border: 0.8rem solid rgb(var(--color-background));
   margin: auto;
   position: absolute;
   top: 50%;
@@ -3494,8 +3497,14 @@ section+section {
   z-index: 2;
   transform: translate(-50%, -40%);
   transition: transform var(--ft-duration-default) ease-out;
+
   overflow-y: auto;
   outline-color: transparent;
+      border-radius: 1.6rem;
+    -webkit-border-radius: 1.6rem;
+    -moz-border-radius: 1.6rem;
+    -ms-border-radius: 1.6rem;
+    -o-border-radius: 1.6rem;
 }
 
 .modal-dialog__content {
@@ -3520,26 +3529,38 @@ section+section {
 }
 
 .modal-dialog__close {
-  color: currentColor;
   background: none;
-  width: 2.4rem;
-  height: 2.4rem;
+    width: 4rem;
+    height: 4rem;
+        display: flex;
+    justify-content: center;
+    align-items: center;
   padding: 0;
-  border: none;
-  border-radius: 0;
   cursor: pointer;
   position: absolute;
-  top: calc(var(--spacing-step) * 2);
-  right: calc(var(--spacing-step) * 2);
+  color: rgb(var(--color-background));
+  border: 0.1rem solid rgb(var(--color-background));
+   box-shadow: 0px 0px 2rem rgba(var(--color-shadow), 0.2);
+       border-radius: 1.2rem;
+  top: 2rem;
+  right: 2rem;
   z-index: 2;
 }
 
-.modal-dialog__close svg {
-  display: block;
-  width: 100%;
-  height: 100%;
+.modal-dialog__close:hover {
+    background: rgb(var(--color-accent));
+    border-color: rgb(var(--color-accent));
+    color: rgb(var(--color-heading))
 }
 
+
+.modal-dialog__close svg {
+  display: block;
+ transition: all ease 0.3s;
+}
+.modal-dialog__close:hover > * {
+    transform: rotate(180deg);
+}
 @media screen and (min-width: 750px) {
   .modal-dialog__close {
     top: 2rem;
@@ -3547,24 +3568,7 @@ section+section {
   }
 }
 
-@media screen and (min-width: 990px) {
-  .modal-dialog--pickup-availability .modal-dialog__wrapper {
-    padding: var(--page-gap) calc(var(--page-gap) * 2);
-  }
-}
-
-.modal-dialog--quickview .modal-dialog__close {
-  top: calc(var(--spacing-step) * 6);
-  right: calc(var(--spacing-step) * 6);
-}
-
-@media screen and (min-width: 990px) {
-  .modal-dialog--quickview .modal-dialog__close {
-    top: calc(var(--spacing-step) * 2);
-    right: calc(var(--spacing-step) * 2);
-  }
-}
-
+ 
 
 /* ============================
    toast-message-wrapper
