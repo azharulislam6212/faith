@@ -1,0 +1,59 @@
+{%- comment -%}
+  Renders checkbox input form element
+  Accepts:
+  - id {String} ID of the input element
+  - label {String} Label of the input element
+  - name {String} Name of the input element
+  - checked {String} Checked
+  - required {Boolean} Whether the input element is required or not
+  - attr {String} Data attributes to be added to the input element
+  - disabled {Boolean} Toggle disabled input
+
+  Usage:
+  {%- render 'checkbox-input', id: 'my-id', label: 'Placeholder', name: 'my-name' -%}
+{%- endcomment -%}
+{%-
+  liquid
+  assign id = id | default: false
+  assign label = label | default: false
+  assign name = name | default: false
+  assign value = value | default: false
+  assign required = required | default: false
+  assign attr = attr | default: false
+  assign wrapper_attr = wrapper_attr | default: ''
+  assign disabled = disabled | default: false
+  assign class = class | default: ''
+-%}
+
+{%- if id and label and name -%}
+  <div class="checkbox {% if disabled %} checkbox--is-disabled{% endif %}">
+  <input
+      type="checkbox"
+      class="checkbox__input visually-hidden"
+      id="{{- id | escape -}}"
+      name="{{- name | escape -}}"
+      {% if checked %}
+        checked
+      {% endif %}
+      {% if value %}
+        value="{{- value -}}"
+      {% endif %}
+      {% if required %}
+        required
+      {% endif %}
+      {% if disabled %}
+        disabled
+      {% endif %}
+      {% if attr %}
+        {{- attr -}}
+      {% endif %}
+    />
+    <label
+      for="{{- id -}}"
+      class="checkbox__label"
+      focusable="false"
+    >
+      {{- label -}}
+    </label>
+  </div><!-- /.checkbox -->
+{%- endif -%}

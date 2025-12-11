@@ -1,0 +1,12 @@
+.has_text_reveal_anim {
+  display: inline-block;
+}
+
+
+.anim-reveal {
+  overflow: hidden;
+}
+
+.anim-reveal-line {
+  overflow: hidden;
+}

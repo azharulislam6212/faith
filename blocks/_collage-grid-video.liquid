@@ -1,0 +1,280 @@
+
+
+   {% liquid
+                        
+     assign color_schema = block.settings.color_schema
+                             
+     assign desktop_column = block.settings.column_desktop
+     assign desktop_row = block.settings.row_desktop
+
+     assign column_tablet = block.settings.column_tablet
+     assign row_tablet = block.settings.row_tablet
+
+     assign mobile_column = block.settings.column_mobile
+     assign mobile_row = block.settings.row_mobile
+
+
+  assign video_source= block.settings.video_source
+  assign video= block.settings.video
+  assign video_hosted= block.settings.video_hosted | default: false
+  assign video_thumbnail = block.settings.video_thumbnail | default: false
+
+  assign autoplay = block.settings.enable_autoplay
+  assign loop = block.settings.enable_video_loop
+  assign muted= block.settings.enable_video_mute
+  assign video_type  = video.type
+
+  if video_source == 'video_hosted'
+    assign video_type = 'local_video'
+  endif
+
+   %}
+
+ <div class="collage-grid-media image-animation" data-color-scheme="{{ color_schema }}" 
+    style="--column-desktop: {{ desktop_column }}; --row-desktop: {{ desktop_row }}; --column-tablet: {{ column_tablet }}; --row-tablet: {{ row_tablet }};  --mobile-column: {{ mobile_column }};--mobile-row: {{ mobile_row }};">
+                        
+
+   <fth-load-media
+    class="video-media"
+    data-hosted="{{ video_hosted | file_url }}"
+    aria-label="Promotional video"
+    role="region"
+  >
+    {% if video_hosted or video_type == 'local_video' %}
+      <button 
+        class="video-play-pause-button" 
+        role="button"
+        aria-label="Play or Pause Video"
+      >
+        {% render 'icon' with 'play', width: '16', height: '16', class: 'video-play-icon' %}
+        {% render 'icon' with 'pause', width: '16', height: '16', class: 'video-pause-icon' %}
+      </button>
+
+      {% if video_thumbnail != blank %}
+        {% render 'image',
+          image: video_thumbnail,
+          widths: '480, 550, 960, 1100',
+          mobile_widths: '320, 480, 550',
+          src_width: 1280,
+          sizes: '(max-width: 600px) 100vw, 50vw',
+          lazy_load: true,
+          decoding: 'async',
+          fetchpriority: 'high',
+          alt_text: 'collage-grid',
+          class: "js-load-media-trigger"
+        %}
+      {% elsif video_hosted %}
+        {% render 'image',
+          image: video_hosted,
+          widths: '480, 550, 960, 1100',
+          mobile_widths: '320, 480, 550',
+          src_width: 1280,
+          sizes: '(max-width: 600px) 100vw, 50vw',
+          lazy_load: true,
+          decoding: 'async',
+          fetchpriority: 'high',
+          alt_text: 'collage-grid',
+          class: "js-load-media-trigger"
+        %}
+      {% else %}
+        {{ "image" | placeholder_svg_tag:"placeholder-svg" }}
+      {% endif %}
+
+      <template>
+        {{
+          video_hosted
+          | video_tag:
+            autoplay: autoplay,
+            loop: loop,
+            muted: muted,
+            controls: true,
+            class: 'js-media-item-video'
+        }}
+      </template>
+    {% else %}
+      {% if video.type == 'youtube' or video.type == 'vimeo' %}
+        <iframe
+          tabindex="0"
+          title="Promotional video -collage-grid }}"
+          class="video-ifram js-local-video w-100 h-100"
+          allow="autoplay; encrypted-media"
+          loading="lazy"
+          title="collage-grid video"
+          src="https://www.youtube.com/embed/{{ video.id }}?autoplay=0&mute=1&controls=0&rel=0"
+        ></iframe>
+      {% endif %}
+    {% endif %}
+  </fth-load-media>
+
+ </div>
+{% schema %}
+{
+    "name": "Video",
+    "tag":null,
+   "settings": [
+
+         {
+           "type": "select",
+           "id": "video_source",
+           "label": "Video source",
+           "default": "video_external",
+           "options": [
+             {
+               "value": "video_external",
+               "label": "External"
+             },
+             {
+               "value": "video_hosted",
+               "label": "Video hosted"
+             }
+           ]
+         },
+         {
+           "type": "video_url",
+           "id": "video",
+           "accept": ["youtube", "vimeo"],
+           "default": "https://www.youtube.com/watch?v=_9VUPq3SxOc",
+           "label": "URL",
+           "visible_if": "{{ block.settings.video_source == 'video_external' }}"
+         },
+         {
+           "type": "video",
+           "id": "video_hosted",
+           "label": "Hosted video",
+           "visible_if": "{{ block.settings.video_source == 'video_hosted' }}"
+         },
+         {
+           "type": "image_picker",
+           "id": "video_thumbnail",
+           "label": "Video thumbnail"
+         },
+       
+         {
+           "type": "checkbox",
+           "id": "enable_autoplay",
+           "label": "Enable autoplay",
+           "default": true
+         },
+         {
+           "type": "checkbox",
+           "id": "enable_video_loop",
+           "label": "Enable video loop",
+           "default": true
+         },
+         {
+           "type": "checkbox",
+           "id": "enable_video_mute",
+           "label": "Enable video mute",
+           "default": false
+         },
+        {
+            "type": "header",
+            "content": "Desktop"
+        },
+        {
+            "type": "range",
+            "id": "column_desktop",
+             "max": 4,
+             "min": 1,
+             "default":1,
+             "step": 1,
+             "unit":",",
+             "label": "Column"
+        },
+        {
+            "type": "range",
+            "id": "row_desktop",
+             "max": 4,
+             "min": 1,
+             "default":1,
+             "step": 1,
+             "unit":",", 
+             "label": "Row"
+        },
+        {
+            "type": "header",
+            "content": "Tablet"
+        },
+        {
+            "type": "select",
+            "id": "column_tablet",
+            "label": "Column",
+            "options": [
+                {
+                    "value": "1",
+                    "label": "1"
+                },
+                {
+                    "label": "2",
+                    "value": "2"
+                }
+            ],
+            "default":"1"
+        },
+        {
+            "type": "select",
+            "id": "row_tablet",
+            "label": "Row",
+            "options": [
+                {
+                    "value": "1",
+                    "label": "1"
+                },
+                {
+                    "label": "2",
+                    "value": "2"
+                }
+            ],
+            "default":"1"
+        },
+        
+        {
+            "type": "header",
+            "content": "Mobile"
+        },
+        {
+            "type": "select",
+            "id": "column_mobile",
+            "label": "Column",
+            "options": [
+                {
+                    "value": "1",
+                    "label": "1"
+                },
+                {
+                    "label": "2",
+                    "value": "2"
+                }
+            ],
+            "default":"1"
+        },
+        {
+            "type": "select",
+            "id": "row_mobile",
+            "label": "Row",
+            "options": [
+                {
+                    "value": "1",
+                    "label": "1"
+                },
+                {
+                    "label": "2",
+                    "value": "2"
+                }
+            ],
+            "default":"1"
+        },
+         {
+          "type": "color_scheme",
+          "id": "color_schema",
+          "label": "Color schema",
+          "default":"scheme-2"
+        }
+],
+        "presets": [
+            {
+                "name": "Video"
+            }
+        ]
+}
+{% endschema %}

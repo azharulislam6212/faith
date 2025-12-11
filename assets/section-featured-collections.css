@@ -1,0 +1,450 @@
+
+.featured-collections-wrapper{
+    position: relative;
+}
+
+.featured-collections__inner {
+  --color-border: #000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2rem 0;
+  gap: 4.8rem;
+}
+
+@media screen and (min-width: 1536px) {
+  .featured-collections__inner {
+    gap: 14.7rem;
+  }
+}
+ 
+.featured-collections__left-column{
+    width: 48rem;
+  display: none;
+  align-items: center;
+  gap: 1.2rem;
+  flex-grow: 0;
+  flex-shrink: 1;
+}
+
+
+.promo-left {
+  width: 48rem;
+  display: none;
+  align-items: center;
+  gap: 1.2rem;
+  flex-grow: 0;
+  flex-shrink: 1;
+}
+
+
+
+@media screen and (min-width: 1200px) {
+.featured-collections__left-column{
+    display: flex;
+  }
+}
+
+
+
+.featured-collections__right-column{
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  padding-right: 2rem;
+  padding-left: 2rem;
+  gap: 4rem;
+  width: 100%;
+  flex-shrink: 1;
+  flex-grow: 0;
+  justify-content: center;
+}
+
+@media screen and (min-width: 992px) {
+  .featured-collections__right-column{
+    flex-wrap: nowrap;
+    justify-content: start;
+  }
+}
+@media screen and (min-width: 1400px) {
+  .featured-collections__right-column{
+    padding-right: 4rem;
+    padding-left: 0;
+  }
+}
+
+
+.collection-promo__item {
+  position: relative;
+}
+
+.collection-promo__item .collection-promo__img-wrap{
+    padding: 0.2rem;
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+    display: block;
+}
+
+.collection-promo__img-wrap::after{
+    content: "";
+    display: block;
+    position: absolute;
+    inset: 0;
+    transition: all 0.7s ease;
+    transform: scale(0) rotate(0);
+    background: rgba(var(--color-heading));
+    z-index: -1;
+}
+.collection-promo__item:hover .collection-promo__img-wrap:after {
+    transform: scale(1) rotate(360deg);
+}
+
+
+
+/* ========================
+ POPUP SECTION BAR START
+ =------------------------------------*/
+
+.overlay {
+  --overlay-z-index: 99998;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  z-index: var(--overlay-z-index);
+  background: rgba(2, 7, 20, 0.6);
+  backdrop-filter: blur(0.5rem);
+  inset: 0;
+  visibility: hidden;
+  opacity: 0;
+  top: 0;
+  transition-delay: 0;
+  transition: all 0.3s ease-in-out;
+  -webkit-transition: all 0.3s ease-in-out;
+  -moz-transition: all 0.3s ease-in-out;
+  -ms-transition: all 0.3s ease-in-out;
+  -o-transition: all 0.3s ease-in-out;
+  overflow: hidden;
+}
+
+.overlay.active {
+  visibility: visible;
+  opacity: 1;
+}
+
+.popup {
+  transition-delay: 0.3s;
+  position: fixed;
+  width: 100vw;
+  height: 100%;
+  z-index: 9999999;
+  inset: 0;
+  visibility: hidden;
+  opacity: 0;
+  top: 0;
+  transform: translateY(-4rem);
+  transition: all 0.3s ease-in-out;
+  -webkit-transition: all 0.3s ease-in-out;
+  -moz-transition: all 0.3s ease-in-out;
+  -ms-transition: all 0.3s ease-in-out;
+  -o-transition: all 0.3s ease-in-out;
+  -webkit-transform: translateY(-4rem);
+  -moz-transform: translateY(-4rem);
+  -ms-transform: translateY(-4rem);
+  -o-transform: translateY(-4rem);
+}
+
+.overlay-closer {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: transparent;
+}
+
+.popup-wrapper {
+  position: relative;
+  z-index: 1;
+}
+.popup.active {
+  transform: translateY(0);
+  opacity: 1;
+  visibility: visible;
+  -webkit-transform: translateY(0);
+  -moz-transform: translateY(0);
+  -ms-transform: translateY(0);
+  -o-transform: translateY(0);
+}
+
+/* ========================
+ PROMO SECTION START
+ =------------------------------------*/
+ 
+
+
+
+
+.promo-img-wrap {
+  padding: 0.2rem;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  display: block;
+}
+
+.promo-img-wrap::after {
+  content: "";
+  display: block;
+  position: absolute;
+  inset: 0;
+  transition: all 0.7s ease;
+  transform: scale(0) rotate(0);
+  background: var(--color-heading);
+  z-index: -1;
+}
+
+.promo-item-hover:hover .promo-img-wrap::after {
+  transform: scale(1) rotate(360deg);
+}
+
+
+.promo-left .promo-img-wrap {
+  border-radius: 0 2.4rem 2.4rem 0;
+}
+
+.promo-video-wrapper {
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+
+.promo-video-wrapper .promo-img-wrap {
+  border-radius: 2.4rem 20rem 20rem 2.4rem;
+}
+
+.promo-video {
+  width: 100%;
+  height: 100%;
+}
+
+.promo-video-play-button {
+  fill: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 6rem;
+  height: 6rem;
+  background: white;
+  transform: translate(-50%, -50%);
+  border-radius: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 100%;
+  z-index: 2;
+}
+
+.promo-video-play-button svg {
+  width: 2.4rem;
+  height: 2.4rem;
+}
+
+.promo-video-play-button::before,
+.promo-video-play-button::after {
+  content: "";
+  position: absolute;
+  display: inline-block;
+  inset: -0.8rem;
+  border-radius: 100%;
+  border: 2rem solid #fff;
+  animation: promoVideoPulse 1.5s ease infinite;
+  z-index: -1;
+  transform: scale(0);
+  opacity: 1;
+}
+
+.promo-video-play-button::after {
+  inset: -1.6rem;
+  border: 0.8rem solid #fff;
+  animation-duration: 2.5s;
+}
+
+@keyframes promoVideoPulse {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+
+
+.promo-list {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding-right: 0;
+  --color-foreground: var(--color-heading);
+  gap: 1.6rem;
+}
+
+@media screen and (min-width: 575px) {
+  .promo-list {
+    flex-wrap: nowrap;
+  }
+}
+
+.promo-list li {
+  width: fit-content;
+}
+
+.promo-list li .promo-img-wrap {
+  border-radius: 100%;
+}
+
+.promo-list li img {
+  width: 16rem;
+  height: auto;
+}
+
+.promo-list li.big-image .promo-img-wrap {
+  border-radius: 10rem;
+}
+
+.promo-list li.big-image img {
+  width: 28rem;
+  height: auto;
+}
+
+.promo-list li {
+  text-align: center;
+}
+.promo-list p {
+  text-align: center;
+  padding-top: 1.2rem;
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+@media screen and (min-width: 575px) {
+  .promo-list p {
+    font-size: 1.4rem;
+    font-weight: 400;
+  }
+}
+
+@media screen and (min-width: 1400px) {
+  .promo-list p {
+    font-size: 1.6rem;
+  }
+}
+
+.promo-caption {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+@media screen and (min-width: 992px) {
+  .promo-caption {
+    width: 24.1rem;
+    flex-shrink: 0;
+    display: block;
+    text-align: left;
+  }
+}
+
+.promo-caption .desc {
+  font-size: 1.6rem;
+  font-weight: 500;
+  padding-bottom: 1.6rem;
+  text-align: inherit;
+}
+
+@media screen and (min-width: 1400px) {
+  .promo-caption .desc {
+    font-size: 1.8rem;
+  }
+}
+
+/* PROMO VIDEO POPUP */
+ .popup-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100vh;
+}
+
+.promo-video-popup {
+  background: var(--color-background);
+  border: 0.8rem solid var(--color-background);
+  width: 95%;
+  height: 25rem;
+  border-radius: 1.6rem;
+  -webkit-border-radius: 1.6rem;
+  -moz-border-radius: 1.6rem;
+  -ms-border-radius: 1.6rem;
+  -o-border-radius: 1.6rem;
+  position: relative;
+}
+
+@media screen and (min-width: 575px) {
+  .promo-video-popup {
+    width: 95%;
+    height: 35rem;
+  }
+}
+@media screen and (min-width: 992px) {
+  .promo-video-popup {
+    width: 90%;
+    height: 60vh;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .promo-video-popup {
+    width: 95rem;
+    height: 48rem;
+  }
+}
+
+.promo-video-popup .close-button {
+  top: 1.2rem;
+  right: 1.2rem;
+  background: transparent;
+  border-color: #fff;
+  color: #fff;
+}
+
+.promo-video-popup .close-button:hover {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-heading);
+}
+
+@media screen and (min-width: 992px) {
+  .promo-video-popup .close-button {
+    top: 2rem;
+    right: 2rem;
+  }
+}
+
+.promo-video-popup video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 1.6rem;
+}

@@ -1,0 +1,209 @@
+
+
+   {% liquid
+                        
+     assign color_schema = block.settings.color_schema
+                             
+     assign desktop_column = block.settings.column_desktop
+     assign desktop_row = block.settings.row_desktop
+
+     assign column_tablet = block.settings.column_tablet
+     assign row_tablet = block.settings.row_tablet
+
+     assign mobile_column = block.settings.column_mobile
+     assign mobile_row = block.settings.row_mobile
+   %}
+
+ <div class="collage-grid-media image-animation" data-color-scheme="{{ color_schema }}" 
+    style="--column-desktop: {{ desktop_column }}; --row-desktop: {{ desktop_row }}; --column-tablet: {{ column_tablet }}; --row-tablet: {{ row_tablet }};  --mobile-column: {{ mobile_column }};--mobile-row: {{ mobile_row }};">
+                        
+   <div
+      class="collage-grid-media-link"
+      {% if block.settings.image != blank %}
+              aria-label="{{ block.settings.image.name | default:block.settings.image.alt }}"
+      {% endif %}
+
+    >
+      {% if block.settings.image != blank %}
+      {% render 'image',
+        image: block.settings.image,
+        widths: '480, 550, 960',
+        mobile_widths: '320, 480, 550',
+        src_width: 1280,
+        sizes: '(max-width: 600px) 100vw, 50vw',
+        lazy_load: true,
+        decoding: 'async',
+        fetchpriority: 'low',
+        alt_text: block.settings.image.name | default:block.settings.image.alt
+        
+      %}  
+      {% else %}
+    {{ "image" | placeholder_svg_tag:"placeholder-svg" }}
+  {% endif %}
+  
+      <div class="collage-grid-media-content">
+
+      {% if block.settings.url != blank %}
+                <a href="{{ block.settings.url }}" class="full-link" aria-hidden="true" aria-label="{{ block.settings.image.name |  default: "collage image url" }}"></a>
+      {% endif %}
+
+          {% content_for 'block', type: "heading" , id:"collage-grid-title"  %}
+
+         <div 
+          class="collage-grid-media-button" 
+          role="button"
+          tabindex="0"
+        > 
+          {% content_for 'block', type: "button" , id:"collage-grid-button"  %}
+         </div>  
+      </div>
+      
+    </div>
+
+ </div>
+{% schema %}
+{
+    "name": "Image",
+    "tag":null,
+   "settings": [
+     {
+           "type": "image_picker",
+           "id": "image",
+           "label": "Image",
+         },
+         {
+            "type": "url",
+            "id": "url",
+            "label": "Url"
+         },
+        {
+            "type": "header",
+            "content": "Desktop"
+        },
+        {
+            "type": "range",
+            "id": "column_desktop",
+             "max": 4,
+             "min": 1,
+             "default":1,
+             "step": 1,
+             "unit":",",
+             "label": "Column"
+        },
+        {
+            "type": "range",
+            "id": "row_desktop",
+             "max": 4,
+             "min": 1,
+             "default":1,
+             "step": 1,
+             "unit":",", 
+             "label": "Row"
+        },
+        {
+            "type": "header",
+            "content": "Tablet"
+        },
+        {
+            "type": "select",
+            "id": "column_tablet",
+            "label": "Column",
+            "options": [
+                {
+                    "value": "1",
+                    "label": "1"
+                },
+                {
+                    "label": "2",
+                    "value": "2"
+                }
+            ],
+            "default":"1"
+        },
+        {
+            "type": "select",
+            "id": "row_tablet",
+            "label": "Row",
+            "options": [
+                {
+                    "value": "1",
+                    "label": "1"
+                },
+                {
+                    "label": "2",
+                    "value": "2"
+                }
+            ],
+            "default":"1"
+        },
+        
+        {
+            "type": "header",
+            "content": "Mobile"
+        },
+        {
+            "type": "select",
+            "id": "column_mobile",
+            "label": "Column",
+            "options": [
+                {
+                    "value": "1",
+                    "label": "1"
+                },
+                {
+                    "label": "2",
+                    "value": "2"
+                }
+            ],
+            "default":"1"
+        },
+        {
+            "type": "select",
+            "id": "row_mobile",
+            "label": "Row",
+            "options": [
+                {
+                    "value": "1",
+                    "label": "1"
+                },
+                {
+                    "label": "2",
+                    "value": "2"
+                }
+            ],
+            "default":"1"
+        },
+         {
+          "type": "color_scheme",
+          "id": "color_schema",
+          "label": "Color schema",
+          "default":"scheme-2"
+        }
+],
+        "presets": [
+            {
+                "name": "Image",
+                "blocks":{
+                    "collage-grid-title":{
+                        "name": "Title",
+                        "type": "heading",
+                        "static": true,
+                        "settings": {
+                            "heading":"Title"
+                        }
+                    },
+                    "collage-grid-button":{
+                        "type": "button",
+                        "name": "Button",
+                        "static": true,
+                        "settings": {
+                            "button_type":"with-none",
+                            "button_style":"link",
+                            "button_label":"Shop now"
+                        }
+                    }
+                }
+            }
+        ]
+}
+{% endschema %}

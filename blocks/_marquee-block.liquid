@@ -1,0 +1,39 @@
+<div class="js-marquee-item marquee-item  marquee__items--animate  marquee--{{- section.settings.moving_direction }}">
+  <div
+    class="running-content-item running-content-text rte"
+    style="--bg-color: {{ block.settings.background_color}}"
+    {{ block.shopify_attributes }}
+  >
+    {% content_for 'blocks' %}
+  </div>
+</div>
+
+
+{% schema %}
+{
+  "name": "Marquee content",
+  "tag": null,
+  "blocks": [
+    {
+      "type": "_icon"
+    },
+    {
+      "type": "heading"
+    },
+    {
+      "type": "inline-richtext"
+    },
+    {
+      "type": "text"
+    },
+    {
+      "type": "button"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Marquee content"
+    }
+  ]
+}
+{% endschema %}

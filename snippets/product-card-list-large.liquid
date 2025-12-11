@@ -1,0 +1,36 @@
+<div class="product-card">
+  <div class="product-card__image">
+    {% render 'product-card-image', product: product, image_ratio: image_ratio %}
+  </div>
+  <div class="product-card__info">
+    <div class="product-card__inner">
+      {% render 'rating', product: product %}
+      {%- if show_vendor -%}
+        <span class="visually-hidden">{{ 'accessibility.vendor' | t }}</span>
+        <p class="product-card__vendor">{{ 'products.product.vendor' | t }}</p>
+      {%- endif -%}
+      <a class="product-link" href="{{ product_url }}">
+        <p class="product-card__title">{{ product.title | strip_html | escape }}</p>
+      </a>
+      <div class="product-card__price">
+        {% render 'price', product: product %}
+      </div>
+    </div>
+    <div class="product-card__siblings-holder">
+      {% render 'siblings', product: product %}
+    </div>
+    <div class="product-card__swatch-holder">
+      {% render 'swatch', product: product %}
+    </div>
+  </div>
+</div>
+
+
+{% comment %}
+  1. image
+  2. vendor
+  2. title
+  2. price
+  2. rating
+  3, quick add
+{% endcomment %}

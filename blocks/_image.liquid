@@ -1,0 +1,97 @@
+{% liquid
+  assign alt_text = block.settings.alt_text
+  assign img_ratio = block.settings.image_ratio
+  assign image_width = block.settings.image_width
+  assign placeholder = placeholder | default: "image"
+  assign image = block.settings.image | default: false
+  assign image_ratio = img_ratio | default: 'portrait'
+  if image_ratio == 'aspect-ratio' and image == false
+    assign image_ratio = false
+  endif
+%}
+
+<div class="media-wrapper"  {% if image_width > 0 %} style="--max-wdith: {{ image_width | append: 'px'}}" {% endif %} >
+  <div class="{% if image_ratio != false %}media media--{{ image_ratio }}{% endif %}" {% if image_ratio == 'aspect-ratio' %}style="padding-bottom: {% render 'aspect-ratio' with image.aspect_ratio as aspect_ratio %}%;"{% endif %}>
+    {% if image != blank %}
+     {%
+      render 'image',
+      image: image,
+      height: image.height,
+      alt: alt_text | default:image.alt,
+      lazy_load: true,
+      fetchpriority: "high",
+      attributes: 'decoding="async"',
+      sizes: "(max-width: 640px) 100vw, 50vw"
+    %}
+    {% else %}
+      {{ placeholder | placeholder_svg_tag: 'placeholder-svg' }}
+    {% endif %}
+  </div>
+</div>
+
+
+{% schema %}
+{
+  "name": "Image",
+  "tag": null,
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Select image"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "options": [
+        {
+          "label": "Portrait",
+          "value": "portrait"
+        },
+        {
+          "label": "Square",
+          "value": "1-1"
+        },
+        {
+          "label": "Large",
+          "value": "5-4"
+        },
+        {
+          "label": "Medium",
+          "value": "3-4"
+        },
+        {
+          "label": "Small",
+          "value": "2-3"
+        },
+        {
+          "label": "Original",
+          "value": "aspect-ratio"
+        }
+      ],
+      "default": "portrait",
+      "label": "Image Ratio"
+    },
+    {
+      "type": "range",
+      "id": "image_width",
+      "step": 50,
+      "min": 0,
+      "max": 2000,
+      "default": 1400,
+      "unit": "px",
+      "label": "Maximum width"
+    },
+    {
+      "type": "text",
+      "id": "alt_text",
+      "label": "Image alt text"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Image"
+    }
+  ]
+}
+{% endschema %}

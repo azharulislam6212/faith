@@ -1,0 +1,426 @@
+{{- 'section-icon-with-text.css' | asset_url | stylesheet_tag: preload: true -}}
+
+{%- style -%}
+  #shopify-section-{{ section.id }} {
+        --pad-top-desktop: {{ section.settings.padding_top }}px;
+        --pad-bottom-desktop: {{ section.settings.padding_bottom }}px;
+        --pad-top-tablet: {{ section.settings.padding_top_tablet }}px;
+        --pad-bottom-tablet: {{ section.settings.padding_bottom_tablet }}px;
+        --pad-top-mobile: {{ section.settings.padding_top_mobile }}px;
+        --pad-bottom-mobile: {{ section.settings.padding_bottom_mobile }}px;
+  }
+{%- endstyle -%}
+
+{%- liquid
+  assign enable_pagination = section.settings.enable_pagination
+  assign enable_navigation = section.settings.enable_navigation
+  assign loop = section.settings.loop_enabled
+  assign autoplay = section.settings.autoplay_enabled
+  assign delay = section.settings.autoplay_timeout | times: 1000
+-%}
+{% capture data_config %}
+  data-option  = '{
+   "desktopSlider": true,
+   "slidesPerView": 1,
+   "spaceBetween": 0,
+   "centeredSlides": false,
+   "loop": {{ loop }},
+   "speed" : 700,
+   "freeMode" : false,
+   "autoplay": {
+     "enabled": {{autoplay}},
+     "disableOnInteraction": false,
+     "delay": {{delay}}
+   },
+   "breakpoints":{
+     "992":{"direction":"vertical"}
+     }
+ }'
+  {% endcapture %}
+
+<div
+  class="icon-with-text-section section--padding"
+  data-color-scheme="{{ section.settings.color_scheme }}"
+>
+  <div class="{{ section.settings.width }}">
+    {% liquid
+      assign heading = section.settings.heading
+      assign heading_size = section.settings.heading_size
+    %}
+
+    {% unless heading == blank %}
+      <div class="section-header">
+        <h2 class="section-heading inline-richtext {{ heading_size }}">{{ heading }}</h2>
+      </div>
+    {% endunless %}
+
+    <div class="row row-cols-2 row-cols-sm-2 row-cols-lg-4">
+      {%- for block in section.blocks -%}
+        {% liquid
+          assign icon_image = block.settings.icon_image
+          assign heading_size = block.settings.heading_size
+          assign text = block.settings.text
+          assign text_style = block.settings.text_style
+          assign text_size = block.settings.text_size
+          assign color_scheme_card = block.settings.color_scheme_card
+        %}
+        <div class="col">
+          <div class="card-icon" data-color-scheme="{{ color_scheme_card }}">
+            {% if icon_image != blank %}
+              <div class="card-icon__img">
+                {% render 'icon-img' with image: icon_image %}
+              </div>
+            {% else %}
+              <div class="card-icon__img">
+                {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+              </div>
+            {% endif %}
+            <span class="card-icon__count">{{ forloop.index | prepend: '0' }}</span>
+            {% if heading != blank %}
+              <h4 class="card-icon__title inline-richtext {{ heading_size }}">{{ heading }}</h4>
+            {% endif %}
+            {% if text != blank %}
+              <p class="card-icon__text {{ text_style }} body--{{text_size}}">
+                {{ text }}
+              </p>
+            {% endif %}
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Icon with text",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout Wdith"
+    },
+    {
+      "type": "select",
+      "id": "width",
+      "label": "Width",
+      "default": "container-full-with-padding",
+      "options": [
+        {
+          "value": "container-full",
+          "label": "Full width"
+        },
+        {
+          "value": "container-full-with-padding",
+          "label": "Full width padded"
+        },
+        {
+          "value": "container-full-mobile",
+          "label": "Full width mobile only"
+        },
+        {
+          "value": "container",
+          "label": "Page width"
+        }
+      ]
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "default": "Section Title",
+      "label": "Title"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        {
+          "value": "h2",
+          "label": "H2"
+        },
+        {
+          "value": "h1",
+          "label": "H1"
+        },
+        {
+          "value": "heading-small",
+          "label": "t:sections.all.heading_size.options__1.label"
+        },
+        {
+          "value": "heading-medium",
+          "label": "t:sections.all.heading_size.options__2.label"
+        },
+        {
+          "value": "heading-large",
+          "label": "t:sections.all.heading_size.options__3.label"
+        },
+        {
+          "value": "heading-xlarge",
+          "label": "t:sections.all.heading_size.options__4.label"
+        }
+      ],
+      "default": "h1",
+      "label": "t:sections.all.heading_size.label"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme_card",
+      "label": "Card color",
+      "default": "scheme-2"
+    },
+    {
+      "type": "header",
+      "content": "t:settings_schema.global.settings.slider.heading.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay_enabled",
+      "label": "t:settings_schema.global.settings.slider.autoplay.label",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "autoplay_timeout",
+      "label": "t:settings_schema.global.settings.slider.autoplay_time.label",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "default": 5,
+      "unit": "s"
+    },
+    {
+      "type": "checkbox",
+      "id": "loop_enabled",
+      "label": "t:settings_schema.global.settings.slider.loop.label",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_pagination",
+      "label": "t:settings_schema.global.settings.slider.pagination.label",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_navigation",
+      "label": "t:settings_schema.global.settings.slider.arrows.label",
+      "default": true
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme_navigation",
+      "label": "Navigation color",
+      "default": "scheme-2"
+    },
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "paragraph",
+      "content": "Desktop"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 40
+    },
+    {
+      "type": "paragraph",
+      "content": "Tablet"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_tablet",
+      "min": 0,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_tablet",
+      "min": 0,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 30
+    },
+    {
+      "type": "paragraph",
+      "content": "Mobile"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 20
+    }
+  ],
+  "blocks": [
+    {
+      "type": "icon_block",
+      "name": "Icon block",
+      "limit": 8,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon_image",
+          "label": "Icon image"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "heading",
+          "default": "Icon Title",
+          "label": "Title"
+        },
+        {
+          "type": "select",
+          "id": "heading_size",
+          "options": [
+            {
+              "value": "h5",
+              "label": "H5"
+            },
+            {
+              "value": "h4",
+              "label": "H4"
+            },
+            {
+              "value": "h3",
+              "label": "H3"
+            },
+            {
+              "value": "h2",
+              "label": "H2"
+            }
+          ],
+          "default": "h4",
+          "label": "t:sections.all.heading_size.label"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "text",
+          "default": "Pair text with an image to focus on your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.",
+          "label": "t:sections.image-with-text.blocks.text.settings.text.label"
+        },
+        {
+          "type": "select",
+          "id": "text_style",
+          "options": [
+            {
+              "value": "body",
+              "label": "Body"
+            },
+            {
+              "value": "subtitle",
+              "label": "Subtitle"
+            }
+          ],
+          "default": "body",
+          "label": "Body"
+        },
+        {
+          "type": "select",
+          "id": "text_size",
+          "options": [
+            {
+              "value": "small",
+              "label": "Small"
+            },
+            {
+              "value": "medium",
+              "label": "Medium"
+            },
+            {
+              "value": "large",
+              "label": "Large"
+            }
+          ],
+          "default": "medium",
+          "label": "Caption Size"
+        },
+        {
+          "type": "header",
+          "content": "Colors"
+        },
+        {
+          "type": "checkbox",
+          "id": "override_colors",
+          "label": "Enable color",
+          "default": false
+        },
+        {
+          "type": "color",
+          "id": "colors_card",
+          "label": "Card background",
+          "default": "#ffffff"
+        },
+        {
+          "type": "color",
+          "id": "colors_text",
+          "label": "Text",
+          "default": "#020714"
+        },
+        {
+          "type": "color",
+          "id": "colors_heading",
+          "label": "Heading",
+          "default": "#020714"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Icon with text",
+      "blocks": [
+        {
+          "type": "icon_block"
+        },
+        {
+          "type": "icon_block"
+        },
+        {
+          "type": "icon_block"
+        },
+        {
+          "type": "icon_block"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

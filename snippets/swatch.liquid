@@ -1,0 +1,113 @@
+{% assign uniqueId = 'now' | date: '%N' | modulo: 1000 %}
+
+{%- if settings.swatches_type != 'disabled' and settings.show_grid_swatches -%}
+  <div class="product-card__swatch-holder">
+    {%- for option in product.options_with_values -%}
+      {%- liquid
+        assign is_native_swatch = false
+        assign native_swatch_options = option.values | where: 'swatch'
+        if settings.swatches_type == 'native' and native_swatch_options.size > 0
+          assign is_native_swatch = true
+        endif
+      -%}
+      {%- if is_native_swatch or settings.swatch_option_name contains option.name -%}
+        {%- if is_native_swatch
+          or settings.product_card_swatch_style == 'grid'
+          or settings.product_card_swatch_style == 'limited'
+        -%}
+          {% assign limited = 50 %}
+          {% if settings.product_card_swatch_style contains 'limited' %}
+            {% assign limited = settings.swatch_limit %}
+          {% endif %}
+
+          <div class="card-swatches flex">
+            {%- capture option_id %}{{ option.name }}-{{ product.id }}-{{ uniqueId }}{% endcapture -%}
+            {%- assign variant_key = 'option' | append: option.position -%}
+
+            {%- for value in option.values limit: limited -%}
+              {%- liquid
+                assign variant_value = product.variants | where: variant_key, value | first
+              -%}
+
+              <color-swatch class="swatches-item">
+                <input
+                  type="radio"
+                  class="color-swatch__radio visually-hidden js-option {% unless variant_value.available %}sold-out{% endunless %}"
+                  name="{{ option_id }}-option"
+                  id="{{ option_id }}-option-{{ forloop.index0 }}"
+                  value="{{ value | escape }}"
+                  data-product-handle="{{ product.handle }}"
+                  data-collection-handle="{{ collection.handle | escape }}"
+                  {% if variant_value.featured_media %}
+                    data-media-id="{{ variant_value.featured_media.id }}"
+                  {% endif -%}
+                  {% if option.selected_value == value %}
+                    checked
+                  {% endif %}
+
+                >
+
+                {% if is_native_swatch %}
+                  {%- if value.swatch.image -%}
+                    <label
+                      {% if forloop.index > swatch_limit %}
+                        hidden
+                      {% endif %}
+                      class="option-label option-label--swatch relative"
+                      title="{{ value | replace: '"', '`' }}"
+                      for="{{ option_id }}-option-{{ forloop.index0 }}"
+                    >
+                      {% render 'swatch_style', swatch_image: value.swatch.image, value: value %}
+                      <span class="tooltip">{{ value }}</span>
+                    </label>
+
+                  {%- elsif value.swatch.color -%}
+                    <label
+                      {% if forloop.index > swatch_limit %}
+                        hidden
+                      {% endif %}
+                      class="option-label option-label--swatch relative"
+                      title="{{ value | replace: '"', '`' }}"
+                      for="{{ option_id }}-option-{{ forloop.index0 }}"
+                    >
+                      {% render 'swatch_style', swatch_image: value.swatch.image, value: value %}
+                      <span class="tooltip">{{ value }}</span>
+                    </label>
+                  {%- endif -%}
+
+                {%- else -%}
+                  <label
+                    {% if forloop.index > swatch_limit %}
+                      hidden
+                    {% endif %}
+                    class="option-label option-label--swatch relative"
+                    title="{{ value | replace: '"', '`' }}"
+                    for="{{ option_id }}-option-{{ forloop.index0 }}"
+                  >
+                    {% render 'swatch_style', swatch_image: variant_value.featured_media, value: value %}
+                    <span class="tooltip">{{ value }}</span>
+                  </label>
+                {% endif %}
+              </color-swatch>
+            {%- endfor -%}
+
+            {%- if option.values.size > settings.swatch_limit
+              and settings.product_card_swatch_style contains 'limited'
+            -%}
+              <a class="link-animation" role="link" href="{{ product.url }}" tabindex="-1">
+                <small>{{ option.values.size | minus: settings.swatch_limit | prepend: '+' }}</small>
+              </a>
+            {%- endif -%}
+          </div>
+
+        {% else %}
+          {%- if option.values.size == 1 -%}
+            <p class="color-swatch-count">{{ 'sections.collection.colors_single' | t }}</p>
+          {%- else -%}
+            <p class="color-swatch-count">{{ 'sections.collection.colors_count' | t: count: option.values.size }}</p>
+          {%- endif -%}
+        {%- endif -%}
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+{%- endif -%}

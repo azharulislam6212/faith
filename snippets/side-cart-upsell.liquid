@@ -1,0 +1,95 @@
+{%- liquid
+  assign title = title | default: false
+  assign resources = resources | default: false
+  assign url = url | default: false
+  if recommendations.performed and recommendations.products_count > 0
+    assign resources = recommendations.products
+  endif
+
+  assign image_ratio = settings.upsell_product_image_ratio | default: 'portrait'
+  assign button_type = settings.cart_empty_upsell_button_type
+  capture button_class
+    echo 'button button--' | append: settings.cart_empty_upsell_button_style | append: ' button-' | append: button_type
+  endcapture
+  assign show_quick_add = settings.cart_upsell_enable_quick_add
+
+  assign enable_pagination = settings.cart_upsell_enable_pagination
+  assign enable_navigation = settings.cart_upsell_enable_navigation
+  assign loop = settings.cart_upsell_loop_enabled
+  assign autoplay = settings.cart_upsell_autoplay_enabled
+  assign delay = settings.cart_upsell_autoplay_timeout | times: 1000
+-%}
+{% capture data_config %}
+  data-option  = '{
+   "desktopSlider": true,
+   "slidesPerView": 1,
+   "spaceBetween": 16,
+   "centeredSlides": false,
+   "loop": {{ loop }},
+   "speed" : 700,
+   "freeMode" : false,
+   "autoplay": {
+     "enabled": {{autoplay}},
+     "disableOnInteraction": false,
+     "delay": {{delay}}
+   }
+ }'
+  {% endcapture %}
+
+{%- if resources or url -%}
+  {%- if settings.enable_cart_upsell -%}
+
+      <div class="cart-upsell__products {% if url and recommendations.products_count == 0 %} hidden{% endif %}" {% if url %} data-side-cart-upsells data-url="{{- url -}}"{% endif %} data-recommendations-products-count="{{- recommendations.products_count -}}">
+         <slideshow-swiper>
+        <div class="cart-upsell__header">
+          {% if title %}
+            <h4 class="cart-upsell__title h5">{{ title }}</h4>
+          {% endif %}
+
+          <!-- Swiper Navigation -->
+          {% if enable_navigation %}
+            <nav
+              class="swiper-navigation"
+              data-color-scheme="{{ settings.cart_upsell_color_scheme_navigation }}"
+              aria-label="Slideshow Navigation"
+            >
+              <button class="swiper-button-prev" aria-label="Previous Slide">
+                {% render 'icon' with 'arrow-left', width: '16', height: '16' %}
+              </button>
+          {% endif %}
+
+          {% if enable_pagination %}
+            <div class="swiper-pagination" data-color-scheme="{{ settings.cart_upsell_color_scheme_navigation }}"></div>
+          {% endif %}
+
+          {% if enable_navigation %}
+            <button class="swiper-button-next" aria-label="Next Slide">
+              {% render 'icon' with 'arrow-right', width: '16', height: '16' %}
+            </button>
+            </nav>
+          {% endif %}
+        </div>
+        <div class="swiper slideshow__swiper cart-drawer-suggest-products-wrapper" {{ data_config }}>
+          <div class="swiper-wrapper cart-drawer-suggest-products">
+            {%- for product in resources -%}
+              <div
+                class="swiper-slide"
+                role="group"
+                aria-roledescription="slide"
+                aria-label="Slide {{ forloop.index }} of {{ forloop.length }}"
+              >
+                {% render 'product-card-list-small',
+                  product: product,
+                  image_ratio: image_ratio,
+                  show_quick_add: show_quick_add,
+                  button_class: button_class,
+                  button_type: button_type
+                %}
+              </div>
+            {%- endfor -%}
+          </div>
+        </div>
+       </slideshow-swiper>
+      </div>
+  {%- endif -%}
+{%- endif -%}

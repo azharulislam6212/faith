@@ -1,0 +1,249 @@
+{{- 'section-before-after.css' | asset_url | stylesheet_tag -}}
+
+
+{%- liquid
+  assign label_size = settings.label_size
+  assign label_position = settings.label_position
+
+-%}
+
+<div
+  class="before-after section--padding" data-color-scheme="{{ section.settings.color_scheme }}" style="{%  render 'section-spacing' %}">
+     {% content_for 'block', type: '_section-header', id: 'before-after-section-header' %}
+
+     <div class="{{ section.settings.width }}">
+       <before-after-images>
+          <div class="before-image--wrapper">
+            <div class=" before-image ">
+              {% content_for 'block', type: "_before", id:"before-image", label_size: label_size, label_position:label_position %}
+
+            </div>
+            <div class="after-image js-after-image">
+              {% content_for 'block', type: "_after" , id:"after-image", label_size: label_size, label_position:label_position %}
+            </div>
+
+            <div class="split-cursor-wrapper">
+              <div class="split-cursor js-split-cursor">
+                <button class="drag-button" tabindex="0" role="button" aria-label="Split Cursor">
+                   {% render 'icon' with 'drag-icon', width: '60', height: '80' %}
+                </button>
+              </div>
+            </div>
+
+          </div>
+      </before-after-images>
+      </div>
+    </div>
+
+
+
+
+{% schema %}
+{
+  "name": "Before After",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "select",
+      "id": "width",
+      "label": "Width",
+      "default": "container-full",
+      "options": [
+        {
+          "value": "container-full",
+          "label": "Full width"
+        },
+        {
+          "value": "container-full-with-padding",
+          "label": "Full width padded"
+        },
+        {
+          "value": "container-full-mobile",
+          "label": "Full width mobile only"
+        },
+        {
+          "value": "container",
+          "label": "Page width"
+        },
+        {
+          "value": "container-narrow",
+          "label": "Page width narrow"
+        },
+        {
+          "value": "container-xs-narrow",
+          "label": "Page width extra narrow"
+        }
+      ]
+    },
+
+     {
+      "type": "select",
+      "id": "label_size",
+      "options": [
+        {
+          "value": "h1",
+          "label": "H1"
+        },
+        {
+          "value": "h2",
+          "label": "H2"
+        },
+        {
+          "value": "heading-small",
+          "label": "t:sections.all.heading_size.options__1.label"
+        },
+        {
+          "value": "heading-medium",
+          "label": "t:sections.all.heading_size.options__2.label"
+        },
+        {
+          "value": "heading-large",
+          "label": "t:sections.all.heading_size.options__3.label"
+        },
+        {
+          "value": "heading-xlarge",
+          "label": "t:sections.all.heading_size.options__4.label"
+        }
+      ],
+      "default": "h1",
+      "label": "Label size"
+    },
+     { 
+      "type": "select",
+      "id": "label_position",
+      "options": [
+        {
+          "value": "text-position-top",
+          "label": "Top"
+        },
+        {
+          "value": "text-position-bottom",
+          "label": "Bottom"
+        }
+      ],
+      "default": "text-position-top",
+      "label": "Label position"
+    },
+    
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color Scheme",
+      "default": "scheme-3"
+    },
+
+      {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "paragraph",
+      "content": "Desktop"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 120
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 120
+    },
+    {
+      "type": "paragraph",
+      "content": "Tablet"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_tablet",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_tablet",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 80
+    },
+    {
+      "type": "paragraph",
+      "content": "Mobile"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 60
+    }
+  ],
+
+  "presets": [
+    {
+      "name": "Before After",
+      "category": "after before",
+      "blocks": {
+      "before-after-section-header": {
+        "type": "_section-header",
+        "name": "Section header",
+        "static": true,
+        "settings": {
+          "heading": "Before after [Heading]",
+          "text": "<p>Before & after visuals highlight the real impact of our products, showcasing noticeable improvement and genuine transformation.</p>"
+        }
+      },
+      "before-image":{
+        "name": "Before",
+        "type": "_before",
+        "static": true,
+        "settings": {
+          "image_ratio":"aspect-ratio"
+        }
+      },
+      "after-image":{
+        "name": "After",
+        "type": "_after",
+        "static": true,
+        "settings": {
+          "image_ratio":"aspect-ratio"
+        }
+      }
+    }
+    }
+  ],
+}
+
+
+{% endschema %}

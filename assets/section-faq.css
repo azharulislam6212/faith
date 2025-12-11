@@ -1,0 +1,130 @@
+.faq-section {
+    position: relative;
+
+}
+.faq-section-border{
+    border-radius: 120px 120px 0 0;
+    border-top: 3px solid rgba(var(--color-accent));
+}
+
+.faq-section-page {
+    border: 0;
+    border-radius: 0;
+}
+.faq-content__header {
+    max-width: 511px;
+}
+
+.disclosure__flex {
+    display: flex;
+    align-items: start;
+    gap: 10px;
+}
+
+.disclosure__box {
+    flex: 1;
+}
+
+.disclosure__icon .disclosure__toggle {
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 0px;
+    gap: 10px;
+
+    width: 40px;
+    height: 40px;
+
+    background: rgba(71, 112, 219, 0.15);
+    color: rgba(var(--color-accent));
+    border-radius: 10px;
+
+}
+
+.disclosure__flex.open .disclosure__toggle {
+    background-color: rgba(var(--color-accent));
+    color: rgba(var(--color-background));
+}
+
+.disclosure__flex.open .disclosure__toggle .plus-icon {
+    display: none;
+}
+
+.disclosure__flex.open .disclosure__toggle .minus-icon {
+    display: block;
+}
+
+.disclosure__flex .disclosure__content {
+    padding-inline: 2.4rem;
+}
+
+
+.disclosure__flex .disclosure__title {
+    font-style: normal;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 150%;
+}
+
+.disclosure__flex .disclosure__panel {
+    padding: 0 24px;
+}
+
+.disclosure__flex .disclosure__content {
+    box-sizing: border-box;
+    padding: 16px 0 0;
+    border-top: 1px solid rgba(71, 112, 219, 0.2) !important;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 150%;
+}
+
+.faq-content__header .section--header{
+    border-bottom: 1px solid rgba(var(--color-accent));
+        margin-bottom: 24px;
+    padding-bottom: 24px;
+}
+
+
+
+.faq-subheading{
+font-style: normal;
+font-weight: 700;
+font-size: 25px;
+line-height: 150%;
+margin: 0 0 20px;
+
+}
+
+.faq-text-wrapper .button {
+    margin-top: 20px;
+}
+
+
+
+@media screen and (max-width: 768px) {
+
+
+.faq-section-border{
+    border-radius: 24px 24px 0 0;
+}
+.faq-section-page {
+    border: 0;
+    border-radius: 0;
+}
+
+.disclosure__flex .disclosure__title {
+    font-size: 16px;
+}
+
+.disclosure__flex .disclosure__content {
+    font-size: 16px;
+    line-height: 150%;
+}
+.disclosure__flex .disclosure__panel {
+    padding: 0 1rem;
+}
+}

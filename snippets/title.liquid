@@ -1,0 +1,7 @@
+{% liquid
+    assign heading = block.settings.heading 
+    assign heading_size = block.settings.heading_size 
+%}
+{% if heading != blank %}
+   <h3 class="{{ heading_size }}">{{ heading }}</h3>
+{% endif %} 

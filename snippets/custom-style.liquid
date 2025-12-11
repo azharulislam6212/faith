@@ -1,0 +1,13 @@
+ 
+{% assign block_settings = block.settings %}
+{% assign sect_settings = section.settings %}
+
+{%- case target -%}
+  {%- when 'testimonial-card' -%}
+
+    --color-star: {{ block_settings.star_color.red}}, {{ block_settings.star_color.green}}, {{ block_settings.star_color.blue}};
+    --color-text: {{ block_settings.text_color.red}}, {{ block_settings.text_color.green}}, {{ block_settings.text_color.blue}};
+
+  {%- when 'multi-card' -%}
+    
+ {%- endcase -%}

@@ -1,0 +1,37 @@
+<div class="deals-card flex-grid__item swiper-slide" role="listitem" tabindex="0" {{ block.shopify_attributes }}>
+  <div class="deals-card-img-wrap">
+    {% assign image_width = '320, 480, 550,650,750,850' %}
+    {% content_for 'block', type: '_image', id: 'deals_card_image', image_width: image_width %}
+  </div>
+  <div class="deals-card-count">01</div>
+  <div class="deals-card-content">
+    <div class="deals-card-title">
+      {% content_for 'block', type: 'heading', id: 'deals-card-title' %}
+    </div>
+    <div class="deals-desc">
+      {% content_for 'block', type: 'text', id: 'text' %}
+    </div>
+    {% content_for 'block', type: 'button', id: 'button' %}
+  </div>
+</div>
+
+
+{% schema %}
+{
+  "name": "Deals card",
+  "tag": null,
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Deals card"
+    }
+  ]
+}
+{% endschema %}

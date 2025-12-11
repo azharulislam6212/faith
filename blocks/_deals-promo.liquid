@@ -1,0 +1,90 @@
+<div
+  class="deals-card-banner flex-grid__item swiper-slide"
+  role="listitem"
+  tabindex="0"
+  data-color-scheme="{{ block.settings.color_schema }}"
+>
+  {% if block.settings.image != blank %}
+    <div class="deals-card-banner-bg">
+      {%
+        render 'image',
+        image: block.settings.image,
+        widths: "320, 480, 550,650,750,850",
+        mobile_widths: "320, 480, 550,650,750,850",
+        src_width: 1200,
+        sizes: '(max-width: 600px) 100vw, 50vw',
+        lazy_load: true,
+        fetchpriority: 'high',
+        class: 'img-fit',
+        alt_text: block.settings.alt | defualt:block.settings.image.alt
+      %}
+    </div>
+  {% endif %}
+
+  <div class="deals-banner-card-wrap">
+    <div class="deals-card-banner-content">
+      {% content_for 'block', type: 'heading', id: 'promo-title' %}
+      {% content_for 'block', type: 'inline-richtext', id: 'promo-text' %}
+    </div>
+    {% content_for 'block', type: 'button', id: 'promo-button' %}
+  </div>
+</div>
+
+
+{% schema %}
+{
+  "name": "Promo",
+  "tag": null,
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Select background image"
+    },
+    {
+      "type": "text",
+      "id": "alt",
+      "label": "Image alt text"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_schema",
+      "label": "Color schema"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Promo",
+      "blocks": {
+        "promo-title": {
+          "name": "Title",
+          "static": true,
+          "type": "heading",
+          "settings": {
+            "heading": "Today Hot <em>deals</em>",
+            "heading_size": "h2"
+          }
+        },
+        "promo-text": {
+          "type": "inline-richtext",
+          "name": "Inline richtext",
+          "static": true,
+          "settings": {
+            "text": "Hot deals refer to limited-time promotions, discounts, or offers on products or services that provide significant savings"
+          }
+        },
+        "promo-button": {
+          "type": "button",
+          "name": "Button",
+          "static": true,
+          "settings": {
+            "button_label": "Shop Now",
+            "button_style": "primary",
+            "button_type": "with-icon"
+          }
+        }
+      }
+    }
+  ]
+}
+{% endschema %}

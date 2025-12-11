@@ -1,0 +1,49 @@
+ {% render 'title', block: block %}
+
+{% schema %}
+{
+    "name": "Title",
+    "tag":null,
+    "settings": [
+        {
+          "type": "inline_richtext",
+          "id": "heading",
+          "default": "Title",
+          "label": "Title"
+        },
+        {
+          "type": "select",
+          "id": "heading_size",
+          "options": [
+            {
+              "value": "h1",
+              "label": "H1"
+            },
+            {
+              "value": "h2",
+              "label": "H2"
+            },
+            {
+              "value": "h3",
+              "label": "H3"
+            },
+            {
+              "value": "h4",
+              "label": "H4"
+            },
+            {
+              "value": "h5",
+              "label": "H5"
+            }
+          ],
+          "default": "h4",
+          "label": "t:sections.all.heading_size.label"
+        }
+        ],
+        "presets": [
+            {
+                "name": "Title"
+            }
+        ]
+}
+{% endschema %}

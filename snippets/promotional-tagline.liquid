@@ -1,0 +1,46 @@
+{% assign tagline = product.metafields.theme.tagline.value %}
+
+{% if settings.enable_promotional_tagline and tagline != blank %}
+  <div class="product-card__promotional-tagline"  data-color-scheme="{{ settings.tagline_color_scheme }}">
+     <div class="running-content marquee"   role="region"> 
+          <marquee-content
+          data-speed="{{ settings.tagline_speed }}"
+          class="running-content-wrap"
+          style="--marquee-duration: {{ 1000 | divided_by: settings.tagline_speed }}s;"
+        >
+     {%- capture marquee_item -%}
+
+        <div class="countdown-marquee-item" >
+            <span>{{ tagline.tagline_text }}</span>
+            <countdown-timer
+              class="count-down-timmer count-down"
+              data-end-date="{{ tagline.offer_end_date }}"
+            >
+              <div class="count-down-day">00</div>
+              <div class="divider">:</div>
+              <div class="count-down-hrs">00</div>
+              <div class="divider">:</div>
+              <div class="count-down-mins">00</div>
+              <div class="divider">:</div>
+              <div class="count-down-secs">00</div>
+            </countdown-timer>
+            <span>{{  tagline.offer_text }}</span>
+                </div>
+                
+        {%- endcapture -%}
+
+    <div class="marquee-container js-marquee-items">
+           
+              
+                {%- for i in (1..6) -%}
+                  <div class="js-marquee-item marquee-item  marquee__items--animate marquee--animation-direction">
+                    {{- marquee_item -}}
+                  </div>
+                {%- endfor -%}
+ 
+          </div>
+   
+        </marquee-content>
+      </div>
+  </div>
+{% endif %}

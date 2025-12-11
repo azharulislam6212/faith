@@ -1,0 +1,92 @@
+{% comment %}
+  Render cart note
+  Usage:
+  {% render 'estimate-shipping' %}
+{% endcomment %}
+
+{%- if settings.show_estimate_shipping -%}
+  <collapsible-content>
+    <details
+      class="estimate-shipping  gradient"
+      data-color-scheme="{{ settings.estimate_color_scheme }}"
+    >
+      <summary>
+        <div class="estimate-shipping__header">
+          <span class="estimate-shipping__title">
+            {{ 'sections.cart.estimated_shipping_title' | t }}
+          </span>
+          <span class="icon-toggler">
+            {% render 'icon' with 'chevron-down', width: '18', height: '18' %}
+          </span>
+        </div>
+      </summary>
+      <div class="estimate-shipping__panel has-motion">
+        <estimate-shipping-rate>
+          <div class="estimate-shipping__inner">
+            <div class="estimate-shipping__body">
+              <div class="estimate-shipping__slect">
+                <label for="AddressCountry_Shipping" class="visually-hidden">Country</label>
+                <select
+                  class="select__select"
+                  id="AddressCountry_Shipping"
+                  name="address[country]"
+                  data-default="{% if shop.customer_accounts_enabled and customer %}{{ customer.default_address.country }}{% elsif settings.shipping_calculator_default_country != '' %}{{ settings.shipping_calculator_default_country }}{% endif %}"
+                >
+                  {{ country_option_tags }}
+                </select>
+              </div>
+
+              <div id="AddressProvinceContainerNewShiping" class="estimate-shipping__slect" style="display:none;">
+                <label for="AddressProvince_shipping" class="visually-hidden">Province</label>
+                <select
+                  id="AddressProvince_shipping"
+                  class="select__select"
+                  name="address[province]"
+                  data-default="{% if shop.customer_accounts_enabled and customer and customer.default_address.province != '' %}{{ customer.default_address.province }}{% endif %}"
+                ></select>
+              </div>
+
+              <div class="estimate-shipping__form">
+                <label for="ShippingAddressZip" class="visually-hidden">Zip/Postal Code</label>
+                <input
+                  type="text"
+                  class="estimate-shipping__input"
+                  id="ShippingAddressZip"
+                  autocapitalize="characters"
+                  autocomplete="postal-code"
+                  {% if shop.customer_accounts_enabled and customer %}
+                    value="{{ customer.default_address.zip }}"
+                  {% endif %}
+                  placeholder="Postal/ZIP code"
+                >
+              </div>
+            </div>
+
+            <div class="estimate-shipping__footer">
+              <button
+                class="button button--primary shipping_calc_save button--with-icon"
+                data-action="shipping"
+                aria-label="{{ 'sections.cart.estimated_button_label' | t }}"
+              >
+                {%- render 'loading-overlay' -%}
+                <span class="button--text">
+                  {% render 'icon' with 'arrow', width: '16', height: '16', class: 'icon-arrow' %}
+                  <span> {{ 'sections.cart.estimated_button_label' | t }} </span>
+                </span>
+              </button>
+            </div>
+
+            <div class="shipping_rate_message no-js-inline">
+              <p>
+                {{ 'sections.cart.before_message' | t }}
+                <span class="shipping_address_count"></span>
+                {{ 'sections.cart.after_message' | t }}
+              </p>
+            </div>
+            <div class="shipping_rate_package"><p class="error-message"></p></div>
+          </div>
+        </estimate-shipping-rate>
+      </div>
+    </details>
+  </collapsible-content>
+{% endif %}

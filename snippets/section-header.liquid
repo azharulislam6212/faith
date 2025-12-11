@@ -1,0 +1,40 @@
+{% comment %}
+  Renders  section headomg block
+  Usage:
+  {% render 'section-heading-block' %}
+{% endcomment %}
+
+{% liquid
+  assign heading = block.settings.heading
+  assign heading_size = block.settings.heading_size
+  assign text = block.settings.text
+  assign text_style = block.settings.text_style
+  assign text_size =  block.settings.text_size
+%}
+
+{% unless heading == blank %}
+  {% assign title = heading %}
+
+  {% if heading contains '[' or heading contains ']' %}
+    {% assign parts = heading | split: '[' %}
+    {% assign pre_bracket = parts[0] %}
+    {% assign rest = parts[1] | split: ']' %}
+    {% assign bracket_content = rest[0] %}
+    {% assign post_bracket = rest[1] %}
+
+    {% capture title %}
+      {{ pre_bracket | strip }} <span>{{ bracket_content | strip }}</span> {{ post_bracket | strip }}
+    {% endcapture %}
+  {% endif %}
+
+  <div class="section-heading__inner {{ text_align }}">
+  <h2 class="section-heading inline-richtext {{ heading_size }}">{{ title }}</h2>
+  {% if text != blank %}
+    <div class="section-text rte {{ text_style }} body--{{text_size}}">
+      {{ text }}
+    </div>
+  {% endif %}
+  </div>
+
+
+{% endunless %}

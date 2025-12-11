@@ -1,0 +1,551 @@
+{{- 'section-testimonial.css' | asset_url | stylesheet_tag -}}
+
+{% liquid
+  assign heading = section.settings.heading
+  assign text_align = section.settings.text_align
+
+  assign layout_gutter = settings.layout_gutter
+  assign loop = section.settings.loop_enabled
+  assign autoplay = section.settings.autoplay_enabled
+  assign delay = section.settings.autoplay_timeout | times: 1000
+  assign pagination = section.settings.enable_pagination
+
+  assign desktop_grid = section.settings.desktop_grid
+  assign tab_grid = section.settings.tab_grid
+  assign mobile_grid = section.settings.mobile_grid
+
+  assign star_color = section.settings.star_color
+  assign override_star_color = section.settings.override_star_color
+%}
+{% capture data_config %}
+  data-option='{
+    "desktopSlider": true,
+    "slidesPerView": {{mobile_grid}},
+    "spaceBetween": {{layout_gutter}},
+    "centeredSlides": false,
+    "loop": {{ loop }},
+    "autoplay": {
+      "enabled": {{ autoplay }},
+      "disableOnInteraction": false,
+      "delay": {{ delay }}
+    },
+    "pagination": {
+      "el": ".swiper-pagination",
+      "clickable": true
+    },
+    "breakpoints": {
+      "300": {"slidesPerView": {{ mobile_grid }}},
+      "750": {"slidesPerView": {{ tab_grid }}},
+      "1200": {"slidesPerView": {{ desktop_grid }}
+      }
+    }
+  }'
+{% endcapture %}
+
+<div
+  class="testimonial-section section--padding section-header" style="{%render "section-spacing"%}"
+  data-color-scheme="{{ section.settings.color_scheme }}"
+>
+
+  {% if section.settings.width contains 'container-full' %}
+    {% assign container = 'container-full-with-padding' %}
+  {% else %}
+    {% assign container = section.settings.width %}
+  {% endif %}
+
+  {% content_for 'block', type: '_section-header', id: 'testimonial-header' , container: container %}
+
+  <div class="{{ section.settings.width }}">
+    <slideshow-swiper>
+      <div
+        class="testimonial-card-wrap swiper slideshow__swiper"
+        {{ data_config }}
+        role="region"
+        aria-roledescription="carousel"
+        aria-label="Customer Testimonials"
+        aria-live="polite"
+      >
+        <div
+          class="swiper-wrapper flex-grid flex-grid--2-col flex-grid--{{ mobile_grid }}-col-mobile flex-grid--{{ tab_grid }}-col-tablet flex-grid--{{ desktop_grid }}-col-desktop"
+          {% if override_star_color %}
+            style="--star_color: {{ star_color }};"
+          {% endif %}
+        >
+          {% content_for 'blocks' %}
+        </div>
+        {% if pagination %}
+          <div class="swiper-pagination" aria-label="Testimonial Slider Pagination"></div>
+        {% endif %}
+      </div>
+    </slideshow-swiper>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Testimonials",
+  "tag": "section",
+  "blocks": [
+    {
+      "type": "_testimonial"
+    }
+  ],
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout Wdith"
+    },
+    {
+      "type": "select",
+      "id": "width",
+      "label": "Width",
+      "default": "container-full",
+      "options": [
+        {
+          "value": "container-full",
+          "label": "Full width"
+        },
+        {
+          "value": "container-full-with-padding",
+          "label": "Full width padded"
+        },
+        {
+          "value": "container-full-mobile",
+          "label": "Full width mobile only"
+        },
+        {
+          "value": "container",
+          "label": "Page width"
+        },
+        {
+          "value": "container-narrow",
+          "label": "Page width narrow"
+        },
+        {
+          "value": "container-xs-narrow",
+          "label": "Page width extra narrow"
+        }
+      ]
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color Schema",
+      "default": "scheme-2"
+    },
+    {
+      "type": "header",
+      "content": "t:settings_schema.global.settings.slider.heading.label"
+    },
+
+    {
+      "type": "checkbox",
+      "id": "autoplay_enabled",
+      "label": "Enable autoplay"
+    },
+    {
+      "type": "range",
+      "id": "autoplay_timeout",
+      "label": "t:settings_schema.global.settings.slider.autoplay_time.label",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "default": 5,
+      "unit": "s"
+    },
+    {
+      "type": "checkbox",
+      "id": "loop_enabled",
+      "label": "t:settings_schema.global.settings.slider.loop.label",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_pagination",
+      "label": "Enable pagination",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "mobile_grid",
+      "options": [
+        {
+          "label": "1",
+          "value": "1"
+        },
+        {
+          "label": "1.5",
+          "value": "1.5"
+        },
+        {
+          "label": "2",
+          "value": "2"
+        },
+        {
+          "label": "2.5",
+          "value": "2.5"
+        },
+        {
+          "label": "3",
+          "value": "3"
+        }
+      ],
+      "default": "1",
+      "label": "Mobile"
+    },
+    {
+      "type": "select",
+      "id": "tab_grid",
+      "options": [
+        {
+          "label": "1",
+          "value": "1"
+        },
+        {
+          "label": "1.5",
+          "value": "1.5"
+        },
+        {
+          "label": "2",
+          "value": "2"
+        },
+        {
+          "label": "2.5",
+          "value": "2.5"
+        },
+        {
+          "label": "3",
+          "value": "3"
+        },
+        {
+          "label": "4",
+          "value": "4"
+        }
+      ],
+      "default": "1.5",
+      "label": "Tablet"
+    },
+    {
+      "type": "select",
+      "id": "desktop_grid",
+      "options": [
+        {
+          "label": "2",
+          "value": "2"
+        },
+        {
+          "label": "2.5",
+          "value": "2.5"
+        },
+        {
+          "label": "3",
+          "value": "3"
+        },
+        {
+          "label": "3.5",
+          "value": "3.5"
+        },
+        {
+          "label": "4",
+          "value": "4"
+        }
+      ],
+      "default": "2.5",
+      "label": "Desktop"
+    },
+    {
+      "type": "checkbox",
+      "id": "override_star_color",
+      "label": "Override star color",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "star_color",
+      "label": "Color",
+      "default": "#D52F5A"
+    },
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "paragraph",
+      "content": "Desktop"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 40
+    },
+    {
+      "type": "paragraph",
+      "content": "Tablet"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_tablet",
+      "min": 0,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_tablet",
+      "min": 0,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 30
+    },
+    {
+      "type": "paragraph",
+      "content": "Mobile"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 20
+    }
+  ],
+  "presets": [
+    {
+      "name": "Testimonials",
+      "category": "Text",
+      "blocks": {
+        "testimonial-header": {
+          "type": "_section-header",
+          "name": "Section Header",
+          "static": true,
+          "settings": {
+            "heading": "Customer [Review]",
+            "heading_size": "h1",
+            "text": "<p>Customer review style, or even provide a review.</p>",
+            "text_style": "body",
+            "text_size": "medium",
+            "text_align": "text-center"
+          }
+        },
+        "testimonial_gDLXAd": {
+          "type": "_testimonial",
+          "name": "Testimonial",
+          "settings": {},
+          "blocks": {
+            "rating": {
+              "type": "_rating",
+              "name": "Rating",
+              "static": true,
+              "settings": {
+                "star_rating": 5
+              }
+            },
+            "testimonial-text": {
+              "type": "inline-richtext",
+              "name": "Inline richtext",
+              "static": true,
+              "settings": {
+                "text": "Hands down the best clothing store I’ve been to in a long time! The customer service was excellent—they really took the time to help me find the perfect outfits for both work and weekend wear. I especially loved the sustainable fabric options.",
+                "text_style": "body",
+                "text_size": "medium"
+              }
+            },
+            "author-image": {
+              "type": "_image",
+              "name": "Autghor Image",
+              "static": true
+            },
+            "author-name": {
+              "type": "text",
+              "name": "Author name",
+              "static": true,
+              "settings": {
+                "text": "Alisa Olivia"
+              }
+            },
+            "author-designation": {
+              "type": "text",
+              "name": "Author designation",
+              "static": true,
+              "settings": {
+                "text": "Project Manger"
+              }
+            }
+          }
+        },
+        "testimonial_MiT8jM": {
+          "type": "_testimonial",
+          "name": "Testimonial",
+          "settings": {},
+          "blocks": {
+            "rating": {
+              "type": "_rating",
+              "name": "Rating",
+              "static": true,
+              "settings": {
+                "star_rating": 5
+              }
+            },
+            "testimonial-text": {
+              "type": "inline-richtext",
+              "name": "Inline richtext",
+              "static": true,
+              "settings": {
+                "text": "I had a wonderful experience shopping here last week. The store layout is clean, and everything is easy to find. I was looking for casual wear and found some great options that are both stylish and comfortable. I’m really happy with my purchases.",
+                "text_style": "body",
+                "text_size": "medium"
+              }
+            },
+            "author-image": {
+              "type": "_image",
+              "name": "Autghor Image",
+              "static": true
+            },
+            "author-name": {
+              "type": "text",
+              "name": "Author name",
+              "static": true,
+              "settings": {
+                "text": "Isabella Rose"
+              }
+            },
+            "author-designation": {
+              "type": "text",
+              "name": "Author designation",
+              "static": true,
+              "settings": {
+                "text": "Product Designer"
+              }
+            }
+          }
+        },
+        "testimonial_hAicTh": {
+          "type": "_testimonial",
+          "name": "Testimonial",
+          "settings": {},
+          "blocks": {
+            "rating": {
+              "type": "_rating",
+              "name": "Rating",
+              "static": true,
+              "settings": {
+                "star_rating": 5
+              }
+            },
+            "testimonial-text": {
+              "type": "inline-richtext",
+              "name": "Inline richtext",
+              "static": true,
+              "settings": {
+                "text": "I absolutely love shopping at this store! The quality of the clothes is top-notch, and they have such a great variety of trendy options. I recently bought a few dresses, and each one fits perfectly and feels amazing. The staff is super helpful",
+                "text_style": "body",
+                "text_size": "medium"
+              }
+            },
+            "author-image": {
+              "type": "_image",
+              "name": "Autghor Image",
+              "static": true
+            },
+            "author-name": {
+              "type": "text",
+              "name": "Author name",
+              "static": true,
+              "settings": {
+                "text": "Amanda Queen"
+              }
+            },
+            "author-designation": {
+              "type": "text",
+              "name": "Author designation",
+              "static": true,
+              "settings": {
+                "text": "Shopify Developer"
+              }
+            }
+          }
+        },
+        "testimonial_36HpqW": {
+          "type": "_testimonial",
+          "name": "Testimonial",
+          "settings": {},
+          "blocks": {
+            "rating": {
+              "type": "_rating",
+              "name": "Rating",
+              "static": true,
+              "settings": {
+                "star_rating": 5
+              }
+            },
+            "testimonial-text": {
+              "type": "inline-richtext",
+              "name": "Inline richtext",
+              "static": true,
+              "settings": {
+                "text": "I had a wonderful experience shopping here last week. The store layout is clean, and everything is easy to find. I was looking for casual wear and found some great options that are both stylish and comfortable. I’m really happy with my purchases.",
+                "text_style": "body",
+                "text_size": "medium"
+              }
+            },
+            "author-image": {
+              "type": "_image",
+              "name": "Autghor Image",
+              "static": true
+            },
+            "author-name": {
+              "type": "text",
+              "name": "Author name",
+              "static": true,
+              "settings": {
+                "text": "Isabella Rose"
+              }
+            },
+            "author-designation": {
+              "type": "text",
+              "name": "Author designation",
+              "static": true,
+              "settings": {
+                "text": "Product Designer"
+              }
+            }
+          }
+        }
+      },
+      "block_order": ["testimonial_gDLXAd", "testimonial_MiT8jM", "testimonial_hAicTh", "testimonial_36HpqW"]
+    }
+  ]
+}
+{% endschema %}

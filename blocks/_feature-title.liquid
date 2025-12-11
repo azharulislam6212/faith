@@ -1,0 +1,95 @@
+{% liquid
+  assign text_align = block.settings.text_align
+  assign heading = block.settings.heading
+  assign text = block.settings.text
+%}
+{% if heading != blank or text != blank %}
+  <div class="container">
+    <div class="section-header {{ text_align }}">
+      {% render 'feature-title', block: block %}
+    </div>
+  </div>
+{% endif %}
+
+
+{% schema %}
+{
+  "name": "Feature title",
+  "tag": null,
+  "settings": [
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "default": "Feature [Title]",
+      "label": "Heading"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        {
+          "value": "h2",
+          "label": "H2"
+        },
+        {
+          "value": "h1",
+          "label": "H1"
+        },
+        {
+          "value": "heading-small",
+          "label": "t:sections.all.heading_size.options__1.label"
+        },
+        {
+          "value": "heading-medium",
+          "label": "t:sections.all.heading_size.options__2.label"
+        },
+        {
+          "value": "heading-large",
+          "label": "t:sections.all.heading_size.options__3.label"
+        },
+        {
+          "value": "heading-xlarge",
+          "label": "t:sections.all.heading_size.options__4.label"
+        }
+      ],
+      "default": "h1",
+      "label": "t:sections.all.heading_size.label"
+    },
+
+    {
+      "type": "select",
+      "id": "text_align",
+      "label": "Align",
+      "options": [
+        {
+          "value": "text-start",
+          "label": "Left"
+        },
+        {
+          "value": "text-center",
+          "label": "Center"
+        },
+        {
+          "value": "text-end",
+          "label": "Right"
+        }
+      ],
+      "default": "text-center"
+    },
+    {
+      "type": "checkbox",
+      "id": "override_title_color",
+      "label": "Override title color",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "color",
+      "label": "Color",
+      "default": "#fff"
+    }
+  ],
+
+  "presets": [{ "name": "Feature title" }]
+}
+{% endschema %}

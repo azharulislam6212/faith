@@ -1,0 +1,69 @@
+{%- if settings.enable_cart_shipping_bar
+  and settings.cart_shipping_bar_threshold > 0
+  and settings.cart_shipping_bar_progress_text != blank
+  and settings.cart_shipping_bar_success_text != blank
+  and settings.cart_shipping_bar_empty_text != blank
+-%}
+  {%- capture bar_html -%}
+    <div class="progress-bar__wrapper hidden">
+
+  
+    <div class="progress-bar__progress " data-progress-bar>
+      <span class="progress-bar__progress-inner" ></span>
+    </div><!-- /.progress-bar__progress -->
+
+      <span class="progress-icon">
+                  <svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M15.4462 4.22125L14.5712 2.03375C14.479 1.80172 14.319 1.60286 14.1121 1.46306C13.9052 1.32327 13.661 1.24902 13.4113 1.25H11.75V1C11.75 0.801088 11.671 0.610322 11.5303 0.46967C11.3897 0.329018 11.1989 0.25 11 0.25H1.5C1.16848 0.25 0.850537 0.381696 0.616117 0.616117C0.381696 0.850537 0.25 1.16848 0.25 1.5V8.5C0.25 8.83152 0.381696 9.14946 0.616117 9.38388C0.850537 9.6183 1.16848 9.75 1.5 9.75H2.37875C2.53387 10.1886 2.82116 10.5684 3.20105 10.837C3.58094 11.1056 4.03475 11.2498 4.5 11.2498C4.96525 11.2498 5.41906 11.1056 5.79895 10.837C6.17884 10.5684 6.46613 10.1886 6.62125 9.75H9.37875C9.53387 10.1886 9.82116 10.5684 10.201 10.837C10.5809 11.1056 11.0347 11.2498 11.5 11.2498C11.9653 11.2498 12.4191 11.1056 12.799 10.837C13.1788 10.5684 13.4661 10.1886 13.6213 9.75H14.25C14.5815 9.75 14.8995 9.6183 15.1339 9.38388C15.3683 9.14946 15.5 8.83152 15.5 8.5V4.5C15.4919 4.40546 15.4739 4.31203 15.4462 4.22125ZM11.75 2.75H13.2425L13.6425 3.75H11.75V2.75ZM4.5 9.75C4.35166 9.75 4.20666 9.70601 4.08332 9.6236C3.95999 9.54119 3.86386 9.42406 3.80709 9.28701C3.75032 9.14997 3.73547 8.99917 3.76441 8.85368C3.79335 8.7082 3.86478 8.57456 3.96967 8.46967C4.07456 8.36478 4.2082 8.29335 4.35368 8.26441C4.49917 8.23547 4.64997 8.25033 4.78701 8.30709C4.92406 8.36386 5.04119 8.45999 5.1236 8.58332C5.20601 8.70666 5.25 8.85166 5.25 9C5.25 9.19891 5.17098 9.38968 5.03033 9.53033C4.88968 9.67098 4.69891 9.75 4.5 9.75ZM10.25 7.13C9.84736 7.40064 9.54202 7.79316 9.37875 8.25H6.62125C6.46613 7.81137 6.17884 7.43162 5.79895 7.16302C5.41906 6.89443 4.96525 6.7502 4.5 6.7502C4.03475 6.7502 3.58094 6.89443 3.20105 7.16302C2.82116 7.43162 2.53387 7.81137 2.37875 8.25H1.75V5.75H10.25V7.13ZM10.25 4.25H1.75V1.75H10.25V4.25ZM11.5 9.75C11.3517 9.75 11.2067 9.70601 11.0833 9.6236C10.96 9.54119 10.8639 9.42406 10.8071 9.28701C10.7503 9.14997 10.7355 8.99917 10.7644 8.85368C10.7934 8.7082 10.8648 8.57456 10.9697 8.46967C11.0746 8.36478 11.2082 8.29335 11.3537 8.26441C11.4992 8.23547 11.65 8.25033 11.787 8.30709C11.9241 8.36386 12.0412 8.45999 12.1236 8.58332C12.206 8.70666 12.25 8.85166 12.25 9C12.25 9.19891 12.171 9.38968 12.0303 9.53033C11.8897 9.67098 11.6989 9.75 11.5 9.75ZM14 8.25H13.6213C13.4797 7.852 13.2293 7.50173 12.8985 7.23908C12.5677 6.97642 12.1697 6.81195 11.75 6.76437V5.25H14V8.25Z" fill="#020714"></path>
+                  </svg>
+           </span>
+                  </div>
+  {%- endcapture -%}
+
+  <div data-cart-shipping-bar>
+    <collapsible-content>
+      <shipping-bar
+        class="progress-bar"
+        data-money-format="{{- shop.money_format | escape -}}"
+        data-threshold="{{- settings.cart_shipping_bar_threshold | times: 100 -}}"
+        data-discount-percent="8"
+        data-total-price="{{- cart.total_price -}}"
+        data-empty="{%- if cart == empty -%} true {%- else -%} false {%- endif -%}"
+        data-show-currency-code="{{- settings.show_currency_codes -}}"
+      >
+        <details
+          class="shipping-bar  gradient"
+          data-color-scheme="{{ settings.estimate_color_scheme }}"
+          open
+        >
+          <summary>
+            <div class="shipping-bar__header">
+              <span class="icon-toggler">
+                {% render 'icon' with 'cicle-arrow', width: '16', height: '16', class: 'cicle-arrow-icon' %}
+              </span>
+              <span class="shipping-bar__title" data-empty-text>
+                {{- settings.cart_shipping_bar_empty_text -}}
+              </span>
+            </div>
+          </summary>
+          <div class="shipping-bar__panel has-motion">
+            <div class="shipping-bar__inner">
+              <div class="shipping-bar__content">
+                  {{- bar_html -}}
+                   <span class="hidden shipping-bar__info__text" data-success-text>
+                      {{- settings.cart_shipping_bar_success_text -}}
+                    </span>
+
+                    <span class="hidden  shipping-bar__info__text" data-progress-text>
+                      {{- settings.cart_shipping_bar_progress_text -}}
+                    </span>
+              </div>
+            </div>
+            <!-- /.progress-bar__text p3 -->
+          </div>
+        </details>
+      </shipping-bar>
+      <!-- /.progress-bar -->
+    </collapsible-content>
+  </div>
+{%- endif -%}

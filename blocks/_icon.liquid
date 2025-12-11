@@ -1,0 +1,59 @@
+{% liquid
+  assign alt_text = block.settings.alt_text
+  assign image = block.settings.image | default: false
+  assign image_width = block.settings.image_width | default: false
+
+%}
+
+<span class="media-icon"  {%if image_width > 0%} style="--max-wdith: {{image_width | append: 'px'}}" {% endif %}>
+  {% if image != blank %}
+    {%
+      render 'image',
+      image: image,
+      height: image.height,
+      alt: alt_text | default:image.alt,
+      lazy_load: true,
+      fetchpriority: "high",
+      attributes: 'decoding="async"',
+      sizes: "(max-width: 640px) 100vw, 50vw"
+    %}
+
+  {% else %}
+    {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+  {% endif %}
+</span>
+
+
+{% schema %}
+{
+  "name": "Icon",
+  "tag": null,
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Select image"
+    },
+    {
+      "type": "range",
+      "id": "image_width",
+      "step": 1,
+      "min": 0,
+      "max": 100,
+      "default": 40,
+      "unit": "px",
+      "label": "Maximum width"
+    },
+    {
+      "type": "text",
+      "id": "alt_text",
+      "label": "Image alt text"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Icon"
+    }
+  ]
+}
+{% endschema %}

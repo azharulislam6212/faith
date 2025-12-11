@@ -1,0 +1,327 @@
+    <section class="search-drawer " id="searchDrawer">
+        <!-- CLOSE BUTTON -->
+        <button class="close-button" role="button" id="searchDrawerCloseBtn">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                    d="M13.0306 11.9695C13.1715 12.1104 13.2506 12.3015 13.2506 12.5007C13.2506 12.7 13.1715 12.8911 13.0306 13.032C12.8897 13.1729 12.6986 13.252 12.4993 13.252C12.3001 13.252 12.109 13.1729 11.9681 13.032L7.99997 9.06261L4.0306 13.0307C3.8897 13.1716 3.69861 13.2508 3.49935 13.2508C3.30009 13.2508 3.10899 13.1716 2.9681 13.0307C2.8272 12.8898 2.74805 12.6987 2.74805 12.4995C2.74805 12.3002 2.8272 12.1091 2.9681 11.9682L6.93747 8.00011L2.96935 4.03073C2.82845 3.88984 2.7493 3.69874 2.7493 3.49948C2.7493 3.30023 2.82845 3.10913 2.96935 2.96823C3.11024 2.82734 3.30134 2.74818 3.5006 2.74818C3.69986 2.74818 3.89095 2.82734 4.03185 2.96823L7.99997 6.93761L11.9693 2.96761C12.1102 2.82671 12.3013 2.74756 12.5006 2.74756C12.6999 2.74756 12.891 2.82671 13.0318 2.96761C13.1727 3.10851 13.2519 3.2996 13.2519 3.49886C13.2519 3.69812 13.1727 3.88921 13.0318 4.03011L9.06247 8.00011L13.0306 11.9695Z"
+                    fill="#020714"></path>
+            </svg>
+        </button>
+        <div class="container">
+            <!-- SEARCH BAR -->
+            <div class="search-drawer-panel">
+                <form action="#">
+                    <div class="search-drawer-form">
+                        <!-- SEARCH OPTIONS -->
+                        <div class="search-drawer-form-category">
+                            <div class="custom-select">
+                                <div class="select-box">
+                                  <span class="selected">Select an option</span>
+                                </div>
+                                <ul class="select-options-list">
+                                    <option class="option" value="All Categories">All Categories</option>
+                                    <option class="option" value="Summer Cloth">Summer Cloth</option>
+                                    <option class="option" value="Women Collection">Women Collection</option>
+                                    <option class="option" value="New Arrival">New Arrival</option>
+                                    <option class="option" value="Recent Added">Recent Added</option>
+                                </ul>
+                              </div>
+                        </div>
+                        <div class="divider"></div>
+                        <!-- SEARCH INPUT -->
+                        <input type="text" placeholder="Search By Category">
+                        <!-- Button -->
+                        <button role="button" type="button" class="search-drawer-form-button">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#000000"
+                                viewBox="0 0 256 256">
+                                <path
+                                    d="M232.49,215.51,185,168a92.12,92.12,0,1,0-17,17l47.53,47.54a12,12,0,0,0,17-17ZM44,112a68,68,0,1,1,68,68A68.07,68.07,0,0,1,44,112Z">
+                                </path>
+                            </svg>
+                        </button>
+                    </div>
+                </form>
+                <!-- SUGGEST -->
+                <ul class="search-drawer-suggest-tag" role="list">
+                    <li>
+                        <h4>Suggest For You</h4>
+                    </li>
+                    <li>
+                        <button type="button" role="button">
+                            Clothes
+                        </button>
+                    </li>
+                    <li>
+                        <button type="button" role="button">
+                            Indian Skirts
+                        </button>
+                    </li>
+                    <li>
+                        <button type="button" role="button">
+                            Women Gown
+                        </button>
+                    </li>
+                    <li>
+                        <button type="button" role="button">
+                            Gym Short
+                        </button>
+                    </li>
+                </ul>
+            </div>
+            <!-- SEARCHED PRODUCTS -->
+            <div class="searched-products search-drawer-product-wrapper">
+                <div class="search-drawer-heading">
+                    <h3>Products <span>(02)</span></h3>
+                </div>
+                <ul class="searched-product-list search-drawer-product-list">
+                    <!-- PRODUCT LIST ITEM -->
+                    <li class="product">
+                        <div class="searched-product-image">
+                            <a href="shop.html">
+                                <div class="product-image product-images">
+                                    <img loading="lazy" src="./assets/images/products/01-product-image.jpg"
+                                        alt="Product Image">
+                                    <img loading="lazy" src="./assets/images/products/01-product-image-hover.jpg"
+                                        alt="Product Image">
+                                </div>
+                            </a>
+                        </div>
+                        <div class="searched-product-content">
+                            <h4 class="product-title"><a href="shop.html" class="link-animation">Front wrap dress</a>
+                            </h4>
+                            <p>From $12.00</p>
+                        </div>
+                    </li>
+                    <!-- PRODUCT LIST ITEM -->
+                    <li class="product">
+                        <div class="searched-product-image">
+                            <a href="shop.html">
+                                <div class="product-image product-images">
+                                    <img loading="lazy" src="./assets/images/products/02-product-image.jpg"
+                                        alt="Product Image">
+                                    <img loading="lazy" src="./assets/images/products/02-product-image-hover.jpg"
+                                        alt="Product Image">
+                                </div>
+                            </a>
+                        </div>
+                        <div class="searched-product-content">
+                            <h4 class="product-title"><a href="shop.html" class="link-animation">Striped neck top</a>
+                            </h4>
+                            <p>From $13.00</p>
+                        </div>
+                    </li>
+                    <!-- PRODUCT LIST ITEM -->
+                    <li class="product">
+                        <div class="searched-product-image">
+                            <a href="shop.html">
+                                <div class="product-image product-images">
+                                    <img loading="lazy" src="./assets/images/products/03-product-image.jpg"
+                                        alt="Product Image">
+                                    <img loading="lazy" src="./assets/images/products/03-product-image-hover.jpg"
+                                        alt="Product Image">
+                                </div>
+                            </a>
+                        </div>
+                        <div class="searched-product-content">
+                            <h4 class="product-title"><a href="shop.html" class="link-animation">Floral Maxi Dress</a>
+                            </h4>
+                            <p>From $12.00</p>
+                        </div>
+                    </li>
+
+
+
+                </ul>
+            </div>
+
+            <!-- SUGGESTED PRODUCTS -->
+            <div class="suggested-products search-drawer-product-wrapper">
+                <div class="search-drawer-heading">
+                    <h3>Suggest For you</span></h3>
+                </div>
+                <ul class="suggested-product-list search-drawer-product-list">
+                    <!-- PRODUCT LIST ITEM -->
+                    <li class="product">
+                        <a href="shop.html" class="searched-product-image">
+                            <div class="product-image">
+                                    <img loading="lazy" src="./assets/images/products/03-product-image.jpg"
+                                    alt="Product Image">
+                                <img loading="lazy" src="./assets/images/products/04-product-image-hover.jpg"
+                                    alt="Product Image">
+                            </div>
+                        </a>
+                        <div class="searched-product-content">
+                            <!-- Product Rating -->
+                            <a href="#" class="rating-star">
+                                <span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#000000"
+                                        viewBox="0 0 256 256">
+                                        <path
+                                            d="M234.29,114.85l-45,38.83L203,211.75a16.4,16.4,0,0,1-24.5,17.82L128,198.49,77.47,229.57A16.4,16.4,0,0,1,53,211.75l13.76-58.07-45-38.83A16.46,16.46,0,0,1,31.08,86l59-4.76,22.76-55.08a16.36,16.36,0,0,1,30.27,0l22.75,55.08,59,4.76a16.46,16.46,0,0,1,9.37,28.86Z">
+                                        </path>
+                                    </svg>
+                                </span>
+                                <span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#000000"
+                                        viewBox="0 0 256 256">
+                                        <path
+                                            d="M234.29,114.85l-45,38.83L203,211.75a16.4,16.4,0,0,1-24.5,17.82L128,198.49,77.47,229.57A16.4,16.4,0,0,1,53,211.75l13.76-58.07-45-38.83A16.46,16.46,0,0,1,31.08,86l59-4.76,22.76-55.08a16.36,16.36,0,0,1,30.27,0l22.75,55.08,59,4.76a16.46,16.46,0,0,1,9.37,28.86Z">
+                                        </path>
+                                    </svg>
+                                </span>
+                                <span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#000000"
+                                        viewBox="0 0 256 256">
+                                        <path
+                                            d="M234.29,114.85l-45,38.83L203,211.75a16.4,16.4,0,0,1-24.5,17.82L128,198.49,77.47,229.57A16.4,16.4,0,0,1,53,211.75l13.76-58.07-45-38.83A16.46,16.46,0,0,1,31.08,86l59-4.76,22.76-55.08a16.36,16.36,0,0,1,30.27,0l22.75,55.08,59,4.76a16.46,16.46,0,0,1,9.37,28.86Z">
+                                        </path>
+                                    </svg>
+                                </span>
+                                <span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#000000"
+                                        viewBox="0 0 256 256">
+                                        <path
+                                            d="M243,96a20.33,20.33,0,0,0-17.74-14l-56.59-4.57L146.83,24.62a20.36,20.36,0,0,0-37.66,0L87.35,77.44,30.76,82A20.45,20.45,0,0,0,19.1,117.88l43.18,37.24-13.2,55.7A20.37,20.37,0,0,0,79.57,233L128,203.19,176.43,233a20.39,20.39,0,0,0,30.49-22.15l-13.2-55.7,43.18-37.24A20.43,20.43,0,0,0,243,96ZM172.53,141.7a12,12,0,0,0-3.84,11.86L181.58,208l-47.29-29.08a12,12,0,0,0-12.58,0L74.42,208l12.89-54.4a12,12,0,0,0-3.84-11.86L41.2,105.24l55.4-4.47a12,12,0,0,0,10.13-7.38L128,41.89l21.27,51.5a12,12,0,0,0,10.13,7.38l55.4,4.47Z">
+                                        </path>
+                                    </svg>
+                                </span>
+                                <span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#000000"
+                                        viewBox="0 0 256 256">
+                                        <path
+                                            d="M243,96a20.33,20.33,0,0,0-17.74-14l-56.59-4.57L146.83,24.62a20.36,20.36,0,0,0-37.66,0L87.35,77.44,30.76,82A20.45,20.45,0,0,0,19.1,117.88l43.18,37.24-13.2,55.7A20.37,20.37,0,0,0,79.57,233L128,203.19,176.43,233a20.39,20.39,0,0,0,30.49-22.15l-13.2-55.7,43.18-37.24A20.43,20.43,0,0,0,243,96ZM172.53,141.7a12,12,0,0,0-3.84,11.86L181.58,208l-47.29-29.08a12,12,0,0,0-12.58,0L74.42,208l12.89-54.4a12,12,0,0,0-3.84-11.86L41.2,105.24l55.4-4.47a12,12,0,0,0,10.13-7.38L128,41.89l21.27,51.5a12,12,0,0,0,10.13,7.38l55.4,4.47Z">
+                                        </path>
+                                    </svg>
+                                </span>
+                            </a>
+                            <h4 class="product-title"><a href="shop.html" class="link-animation">boat neck top</a>
+                            </h4>
+                            <p class="product-price">$12.00 <del>$20.00</del></p>
+                        </div>
+                    </li>
+                    <!-- PRODUCT LIST ITEM -->
+                    <li class="product">
+                        <a href="shop.html" class="searched-product-image">
+                            <div class="product-image">
+                                    <img loading="lazy" src="./assets/images/products/05-product-image.jpg"
+                                    alt="Product Image">
+                                <img loading="lazy" src="./assets/images/products/05-product-image-hover.jpg"
+                                    alt="Product Image">
+                            </div>
+                        </a>
+                        <div class="searched-product-content">
+
+                            <!-- Product Rating -->
+                            <a href="#" class="rating-star">
+                                <span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#000000"
+                                        viewBox="0 0 256 256">
+                                        <path
+                                            d="M234.29,114.85l-45,38.83L203,211.75a16.4,16.4,0,0,1-24.5,17.82L128,198.49,77.47,229.57A16.4,16.4,0,0,1,53,211.75l13.76-58.07-45-38.83A16.46,16.46,0,0,1,31.08,86l59-4.76,22.76-55.08a16.36,16.36,0,0,1,30.27,0l22.75,55.08,59,4.76a16.46,16.46,0,0,1,9.37,28.86Z">
+                                        </path>
+                                    </svg>
+                                </span>
+                                <span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#000000"
+                                        viewBox="0 0 256 256">
+                                        <path
+                                            d="M234.29,114.85l-45,38.83L203,211.75a16.4,16.4,0,0,1-24.5,17.82L128,198.49,77.47,229.57A16.4,16.4,0,0,1,53,211.75l13.76-58.07-45-38.83A16.46,16.46,0,0,1,31.08,86l59-4.76,22.76-55.08a16.36,16.36,0,0,1,30.27,0l22.75,55.08,59,4.76a16.46,16.46,0,0,1,9.37,28.86Z">
+                                        </path>
+                                    </svg>
+                                </span>
+                                <span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#000000"
+                                        viewBox="0 0 256 256">
+                                        <path
+                                            d="M234.29,114.85l-45,38.83L203,211.75a16.4,16.4,0,0,1-24.5,17.82L128,198.49,77.47,229.57A16.4,16.4,0,0,1,53,211.75l13.76-58.07-45-38.83A16.46,16.46,0,0,1,31.08,86l59-4.76,22.76-55.08a16.36,16.36,0,0,1,30.27,0l22.75,55.08,59,4.76a16.46,16.46,0,0,1,9.37,28.86Z">
+                                        </path>
+                                    </svg>
+                                </span>
+                                <span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#000000"
+                                        viewBox="0 0 256 256">
+                                        <path
+                                            d="M243,96a20.33,20.33,0,0,0-17.74-14l-56.59-4.57L146.83,24.62a20.36,20.36,0,0,0-37.66,0L87.35,77.44,30.76,82A20.45,20.45,0,0,0,19.1,117.88l43.18,37.24-13.2,55.7A20.37,20.37,0,0,0,79.57,233L128,203.19,176.43,233a20.39,20.39,0,0,0,30.49-22.15l-13.2-55.7,43.18-37.24A20.43,20.43,0,0,0,243,96ZM172.53,141.7a12,12,0,0,0-3.84,11.86L181.58,208l-47.29-29.08a12,12,0,0,0-12.58,0L74.42,208l12.89-54.4a12,12,0,0,0-3.84-11.86L41.2,105.24l55.4-4.47a12,12,0,0,0,10.13-7.38L128,41.89l21.27,51.5a12,12,0,0,0,10.13,7.38l55.4,4.47Z">
+                                        </path>
+                                    </svg>
+                                </span>
+                                <span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#000000"
+                                        viewBox="0 0 256 256">
+                                        <path
+                                            d="M243,96a20.33,20.33,0,0,0-17.74-14l-56.59-4.57L146.83,24.62a20.36,20.36,0,0,0-37.66,0L87.35,77.44,30.76,82A20.45,20.45,0,0,0,19.1,117.88l43.18,37.24-13.2,55.7A20.37,20.37,0,0,0,79.57,233L128,203.19,176.43,233a20.39,20.39,0,0,0,30.49-22.15l-13.2-55.7,43.18-37.24A20.43,20.43,0,0,0,243,96ZM172.53,141.7a12,12,0,0,0-3.84,11.86L181.58,208l-47.29-29.08a12,12,0,0,0-12.58,0L74.42,208l12.89-54.4a12,12,0,0,0-3.84-11.86L41.2,105.24l55.4-4.47a12,12,0,0,0,10.13-7.38L128,41.89l21.27,51.5a12,12,0,0,0,10.13,7.38l55.4,4.47Z">
+                                        </path>
+                                    </svg>
+                                </span>
+                            </a>
+                            <h4 class="product-title"><a href="shop.html" class="link-animation">Shoulder midi dress</a>
+                            </h4>
+                            <p class="product-price">$10.00 <del>$12.00</del></p>
+                        </div>
+                    </li>
+                    <!-- PRODUCT LIST ITEM -->
+                    <li class="product">
+                        <a href="shop.html" class="searched-product-image">
+                            <div class="product-image">
+                                    <img loading="lazy" src="./assets/images/products/06-product-image.jpg"
+                                    alt="Product Image">
+                                <img loading="lazy" src="./assets/images/products/06-product-image-hover.jpg"
+                                    alt="Product Image">
+                            </div>
+                        </a>
+                        <div class="searched-product-content">
+
+                            <!-- Product Rating -->
+                            <a href="#" class="rating-star">
+                                <span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#000000"
+                                        viewBox="0 0 256 256">
+                                        <path
+                                            d="M234.29,114.85l-45,38.83L203,211.75a16.4,16.4,0,0,1-24.5,17.82L128,198.49,77.47,229.57A16.4,16.4,0,0,1,53,211.75l13.76-58.07-45-38.83A16.46,16.46,0,0,1,31.08,86l59-4.76,22.76-55.08a16.36,16.36,0,0,1,30.27,0l22.75,55.08,59,4.76a16.46,16.46,0,0,1,9.37,28.86Z">
+                                        </path>
+                                    </svg>
+                                </span>
+                                <span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#000000"
+                                        viewBox="0 0 256 256">
+                                        <path
+                                            d="M234.29,114.85l-45,38.83L203,211.75a16.4,16.4,0,0,1-24.5,17.82L128,198.49,77.47,229.57A16.4,16.4,0,0,1,53,211.75l13.76-58.07-45-38.83A16.46,16.46,0,0,1,31.08,86l59-4.76,22.76-55.08a16.36,16.36,0,0,1,30.27,0l22.75,55.08,59,4.76a16.46,16.46,0,0,1,9.37,28.86Z">
+                                        </path>
+                                    </svg>
+                                </span>
+                                <span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#000000"
+                                        viewBox="0 0 256 256">
+                                        <path
+                                            d="M234.29,114.85l-45,38.83L203,211.75a16.4,16.4,0,0,1-24.5,17.82L128,198.49,77.47,229.57A16.4,16.4,0,0,1,53,211.75l13.76-58.07-45-38.83A16.46,16.46,0,0,1,31.08,86l59-4.76,22.76-55.08a16.36,16.36,0,0,1,30.27,0l22.75,55.08,59,4.76a16.46,16.46,0,0,1,9.37,28.86Z">
+                                        </path>
+                                    </svg>
+                                </span>
+                                <span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#000000"
+                                        viewBox="0 0 256 256">
+                                        <path
+                                            d="M243,96a20.33,20.33,0,0,0-17.74-14l-56.59-4.57L146.83,24.62a20.36,20.36,0,0,0-37.66,0L87.35,77.44,30.76,82A20.45,20.45,0,0,0,19.1,117.88l43.18,37.24-13.2,55.7A20.37,20.37,0,0,0,79.57,233L128,203.19,176.43,233a20.39,20.39,0,0,0,30.49-22.15l-13.2-55.7,43.18-37.24A20.43,20.43,0,0,0,243,96ZM172.53,141.7a12,12,0,0,0-3.84,11.86L181.58,208l-47.29-29.08a12,12,0,0,0-12.58,0L74.42,208l12.89-54.4a12,12,0,0,0-3.84-11.86L41.2,105.24l55.4-4.47a12,12,0,0,0,10.13-7.38L128,41.89l21.27,51.5a12,12,0,0,0,10.13,7.38l55.4,4.47Z">
+                                        </path>
+                                    </svg>
+                                </span>
+                                <span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#000000"
+                                        viewBox="0 0 256 256">
+                                        <path
+                                            d="M243,96a20.33,20.33,0,0,0-17.74-14l-56.59-4.57L146.83,24.62a20.36,20.36,0,0,0-37.66,0L87.35,77.44,30.76,82A20.45,20.45,0,0,0,19.1,117.88l43.18,37.24-13.2,55.7A20.37,20.37,0,0,0,79.57,233L128,203.19,176.43,233a20.39,20.39,0,0,0,30.49-22.15l-13.2-55.7,43.18-37.24A20.43,20.43,0,0,0,243,96ZM172.53,141.7a12,12,0,0,0-3.84,11.86L181.58,208l-47.29-29.08a12,12,0,0,0-12.58,0L74.42,208l12.89-54.4a12,12,0,0,0-3.84-11.86L41.2,105.24l55.4-4.47a12,12,0,0,0,10.13-7.38L128,41.89l21.27,51.5a12,12,0,0,0,10.13,7.38l55.4,4.47Z">
+                                        </path>
+                                    </svg>
+                                </span>
+                            </a>
+                            <h4 class="product-title"><a href="shop.html" class="link-animation">front maxi skirt</a>
+                            </h4>
+                            <p class="product-price">$12.00 <del>$24.00</del></p>
+                        </div>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+        </div>
+    </section>

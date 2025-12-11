@@ -1,0 +1,104 @@
+{% comment %}
+  Renders a product card
+  Accepts:
+   - media_aspect_ratio: {String} Size of the product image card. Values are "square" and "portrait". Default is "square" (optional)
+  - image_shape: {String} Image mask to apply to the product image card. Values are "arch", "blob", "chevronleft", "chevronright", "diamond", "parallelogram", and "round". (optional)
+  - show_secondary_image: {Boolean} Show the secondary image on hover. Default: false (optional)
+  - show_vendor: {Boolean} Show the product vendor. Default: false
+  - show_rating: {Boolean} Show the product rating. Default: false
+  - show_quick_add: {Boolean} Show the quick add button.
+  - section_id: {String} The ID of the section that contains this card.
+  - placeholder_image: {String} The placeholder image to use when no product exists. Default: 'product-apparel-2' (optional)
+
+  Usage:
+  {% render 'product-card-list-small', show_vendor: section.settings.show_vendor %}
+{% endcomment %}
+
+{% liquid
+  if collection and settings.card_url_within_coll and product.collections contains collection
+    assign product_url = product.url | within: collection
+  else
+    assign product_url = product.url
+  endif
+  assign current_variant = product.selected_or_first_available_variant
+%}
+
+<div
+  class="product-card card card-with-{{ settings.card_style }} corner-radius-{{ settings.corner_radius }}  product-card__list-samll gradient"
+  data-color-scheme="{{ settings.card_color_scheme }}"
+>
+  {%- if product and product != empty -%}
+    <div class="product-card__image">
+      {%- if product.available and settings.quickview_enable -%}
+        <quick-view-product>
+          <div
+            class="quick-view__holder {%if  settings.quickview_hide_mobile %} quickview-hide-mobile {% endif %}"
+            data-quick-view-holder="{{ product.id }}"
+          >
+            {% render 'quick-view', product: product %}
+          </div>
+        </quick-view-product>
+      {%- endif -%}
+      {% render 'product-card-image',
+        product: product,
+        image_ratio: image_ratio,
+      %}
+      {%- if show_quick_add -%}
+          {% render 'quick-add', product: product, button_class: button_class, button_type: button_type  %}
+      {%- endif -%}
+    </div>
+    <div class="product-card__info">
+      <div class="product-card__inner">
+        {%- if settings.show_vendor -%}
+          <span class="visually-hidden">{{ 'accessibility.vendor' | t }}</span>
+          <p class="product-card__vendor">{{ product.vendor | escape }}</p>
+        {%- endif -%}
+
+        <h3 class="product-card__title">
+          <a role="link" aria-disabled="true" class="product-link link-animation" href="{{ product_url }}">
+            {{ product.title | strip_html | escape }}
+          </a>
+        </h3>
+
+        {%- if settings.show_rating -%}
+          {% render 'rating', product: product %}
+        {%- endif -%}
+
+        <div class="product-card__price">
+          {% render 'price', product: product, current_variant: current_variant %}
+        </div>
+      </div>
+
+    </div>
+  {%- else -%}
+    <div class="product-card__image">
+      <div
+        class="
+          product-media media
+          {% if image_ratio != false %}  media media--no-hover  media--{{ image_ratio }} {% endif %}
+        "
+        {% if image_ratio == 'aspect-ratio' %}
+          style="padding-bottom: {% render 'aspect-ratio' with image.aspect_ratio as aspect_ratio %}%;"
+        {% endif %}
+      >
+        {%- if placeholder_image -%}
+          {{ placeholder_image | placeholder_svg_tag: 'placeholder-svg' }}
+        {%- else -%}
+          {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+        {% endif %}
+      </div>
+    </div>
+    <div class="product-card__info">
+      <div class="product-card__inner">
+        <h3 class="product-card__title product-card__title--placeholder">
+          <a role="link" aria-disabled="true" class="product-link">
+            {{ 'onboarding.product_title' | t }}
+          </a>
+        </h3>
+        <div class="product-card__price">
+          {% render 'price', product: product, onboarding_product: true %}
+        </div>
+      </div>
+    </div>
+  {%- endif -%}
+</div>

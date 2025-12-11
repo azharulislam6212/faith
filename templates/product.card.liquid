@@ -1,0 +1,132 @@
+{% render 'css-variables' %}
+{{ 'swiper.min.css' | asset_url | stylesheet_tag }}
+{{ 'theme.css' | asset_url | stylesheet_tag }}
+
+{{ 'component-product-card.css' | asset_url | stylesheet_tag: preload: true }}
+{{ 'component-price.css' | asset_url | stylesheet_tag: preload: true }}
+
+{% render 'js-variables' %}
+<script src="{{ 'swiper.min.js' | asset_url }}" defer></script>
+<script src="{{ 'theme.js' | asset_url }}" defer></script>
+
+{% liquid
+  layout none
+
+  assign has_color_option = false
+
+  for option in product.options_with_values
+    if settings.swatch_option_name contains option.name
+      assign has_color_option = true
+      break
+      break
+    endif
+  endfor
+
+  assign options_count = product.options.size
+  assign use_variant = false
+  if options_count == 1 and has_color_option
+    assign use_variant = true
+  endif
+
+  if collection and settings.card_url_within_coll and product.collections contains collection
+    assign product_url = product.url | within: collection
+  else
+    assign product_url = product.url
+  endif
+  assign curent_product = product.selected_or_first_available_variant
+%}
+
+<div class="product-card-section">
+  <div class="container container-narrow">
+    <div class="flex-grid flex-grid--2-col flex-grid--1-col-mobile  flex-grid--3-col-tablet  flex-grid--4-col-desktop">
+      <div class="flex-grid__item">
+        <div
+          class="product-card card card-with-{{ settings.card_style }} corner-radius-{{ settings.corner_radius }} gradient"
+          data-color-scheme="{{ settings.card_color_scheme }}"
+        >
+          <div class="product-card__image">
+            {%- liquid
+              if settings.product_badge_card_position != 'none'
+                render 'product-badge', product: product, variant: curent_product, position: settings.product_badge_card_position, is_product_card: true, limit: 2
+              endif
+            -%}
+
+            {%- if product.available and settings.quickview_enable -%}
+              <quick-view-product>
+                <div
+                  class="quick-view__holder {%if  settings.quickview_hide_mobile %} quickview-hide-mobile {% endif %}"
+                  data-quick-view-holder="{{ product.id }}"
+                >
+                  {% render 'quick-view', product: product %}
+                </div>
+              </quick-view-product>
+            {%- endif -%}
+            {% render 'product-card-image', product: product, image_ratio: 'portrait' %}
+            {%- render 'size-variants', product: product -%}
+            </div>
+          <div class="product-card__info">
+            <div class="product-card-body">
+              <div class="product-card-body__inner">
+                {%- render 'siblings', product: product -%}
+                {%- render 'swatch', product: product -%}
+                <div class="product-card__inner">
+                  {%- if settings.show_vendor -%}
+                    <span class="visually-hidden">{{ 'accessibility.vendor' | t }}</span>
+                    <p class="product-card__vendor">{{ product.vendor | escape }}</p>
+                  {%- endif -%}
+
+                  <h3 class="product-card__title">
+                    <a role="link" aria-disabled="true" class="product-link link-animation" href="{{ product_url }}">
+                      {{ product.title | strip_html | escape }}
+                    </a>
+                  </h3>
+
+                  {%- if settings.show_rating -%}
+                    {% render 'rating', product: product %}
+                  {%- endif -%}
+
+                  <div class="product-card__price">
+                    {%- render 'price', product: curent_product, use_variant: use_variant, show_badges: false -%}
+                  </div>
+                </div>
+
+                {% render 'quick-add',
+                  product: product,
+                  button_class: 'button button--primary  button-with-icon',
+                  button_type: 'with-icon'
+                %}
+              </div>
+
+              {% render 'quick-add',
+                product: product,
+                button_class: 'button button--primary button-icon-only',
+                button_type: 'icon-only'
+              %}
+            </div>
+          </div>
+
+          <script type="application/json" data-selected-variant>
+            {{ product.selected_or_first_available_variant | json }}
+          </script>
+
+          <script type="application/json" data-variants-images>
+            [
+            {%- for variant in product.variants -%}
+              {%- unless forloop.first -%},{%- endunless -%}
+              {%- assign variant_image = variant.image | default: product.featured_image -%}
+              {
+                "id": {{ variant.id | json }},
+                "image": {
+                  "id": variant_image.id,
+                  "src": "{{ variant_image | image_url: width: 500 }}",
+                  "srcset": "{%- render 'srcset', image: variant_image -%}"
+                }
+              }
+            {%- endfor -%}
+            ]
+          </script>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

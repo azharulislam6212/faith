@@ -1,0 +1,70 @@
+
+ <div class="flex-grid__item multi-card-item swiper-slide" role="group" aria-roledescription="slide">
+     <div class="card-item_img ">
+         
+       {% assign image_width = "320, 480, 550" %}
+        {% content_for 'block', type: "_image" , id:"multi-card", image_width:image_width   %}
+        
+      </div>
+      <div class="multi-card-content" data-color-scheme="{{ block.settings.color_schema }}">
+            {% content_for 'block', type: "heading" , id:"title"  %} 
+            {% content_for 'block', type: "inline-richtext" , id:"multi-card-text"  %} 
+            {% content_for 'block', type: "button" , id:"multi-card-button"  %}  
+           </div>
+ 
+  </div>  
+  
+
+  {% schema %}
+  {
+    "name": "Card",
+    "tag":null,
+    "settings": [
+        {
+            "type": "color_scheme",
+            "id": "color_schema",
+            "label": "Color schema",
+            "default":"scheme-3"
+        }
+        ],
+        "presets": [
+            {
+                "name": "Card",
+                "blocks":{
+                    "multi-card":{
+                        "type": "_image",
+                        "name": "Image",
+                        "static": true
+                    },
+                    "title":{
+                        "type": "heading",
+                        "name": "Title",
+                        "static": true,
+                        "settings": {
+                            "heading":"Casual Wear"
+                        }
+                    },
+                    "multi-card-text":{
+                        "type": "inline-richtext",
+                        "name": "Inline richtext",
+                        "static": true,
+                        "settings": {
+                            "text":"These are comfortable, casual outfits worn for day-to-day activities, like running errands or meeting friends. Common items include t-shirts, jeans"
+                        }
+                    },
+                    "multi-card-button":{
+                        "type": "button",
+                        "name": "Button",
+                        "static": true,
+                        "settings": {
+                            "button_label":"Shop Now",
+                            "button_style":"primary",
+                            "button_type":"with-icon"
+                        }
+                    }
+                }
+                
+            }
+        ] 
+  }
+  {% endschema %}

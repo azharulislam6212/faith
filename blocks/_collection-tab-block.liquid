@@ -1,0 +1,284 @@
+
+{%- liquid
+ assign uniqueId = 'now' | date: '%N' | modulo: 1000 
+  assign products_to_show = block.settings.products_to_show | default: 8
+  assign image_ratio = block.settings.image_ratio | default: 'portrait'
+
+  assign desktop_grid = block.settings.desktop_grid
+  assign tab_grid = block.settings.tab_grid
+  assign mobile_grid = block.settings.mobile_grid
+  assign mobile_column = block.settings.mobile_grid
+
+  if mobile_column contains '1.25'
+  assign mobile_grid = 1
+  elsif mobile_column contains '1.5'
+  assign mobile_grid = 1
+  endif
+
+  assign enable_pagination = block.settings.enable_pagination
+  assign enable_navigation = block.settings.enable_navigation
+  assign loop = block.settings.loop_enabled
+  assign autoplay = block.settings.autoplay_enabled
+  assign delay = block.settings.autoplay_timeout | times: 1000
+  assign layout_gutter = settings.layout_gutter
+-%}
+
+{% capture data_config %}
+  data-option  = '{
+   "desktopSlider": true,
+   "slidesPerView": {{mobile_column}},
+   "spaceBetween": {{layout_gutter}},
+   "centeredSlides": false,
+   "loop": {{ loop }},
+   "speed" : 700,
+   "freeMode" : false,
+   "autoplay": {
+     "enabled": {{autoplay}},
+     "disableOnInteraction": false,
+     "delay": {{delay}}
+   },
+    "breakpoints":{
+       "300":{"slidesPerView":{{mobile_column}},"spaceBetween":{{layout_gutter}}}
+       ,"750":{"slidesPerView":{{tab_grid}},"spaceBetween":{{layout_gutter}}}
+       ,"990":{"slidesPerView":{{desktop_grid}},"spaceBetween":{{layout_gutter}}}
+       }
+ }'
+  {% endcapture %}
+
+  {% liquid
+    assign colelction_title = block.settings.title | handleize
+    if colelction_title != blank
+      assign collection = collections[colelction_title]
+    endif
+  %}
+
+  
+<div
+  id="panel-{{ section.id }}-{{ colelction_title |  downcase }}"
+  role="tabpanel"
+  tabindex="0"
+  aria-labelledby="tab-{{ section.id}}-{{  colelction_title |  downcase }}"
+  class="tabpanel-item  {%if uniqueId ==  block.id  %}  is-active  {% endif %}"
+  {{ block.shopify_attributes }}
+>
+  <slideshow-swiper>
+    <div class="swiper slideshow__swiper" {{ data_config }}>
+      <div class="swiper-wrapper flex-grid flex-grid--2-col flex-grid--{{ mobile_grid }}-col-mobile  flex-grid--{{ tab_grid }}-col-tablet  flex-grid--{{ desktop_grid }}-col-desktop">
+        {% for product in collection.products limit: products_to_show %}
+          <div class="flex-grid__item swiper-slide product-item">
+            {% content_for 'block', type: '_product-card', id: 'product-card', product: product %}
+          </div>
+        {%- else -%}
+          {%- for i in (1..products_to_show) -%}
+            {% if i == 1 %}
+              {% capture j %}{% cycle 1, 2, 3, 4, 5, 6 %}{% endcapture %}
+            {% else %}
+              {% capture j %}{% cycle 6, 5, 4, 3, 2, 1 %}{% endcapture %}
+            {% endif %}
+
+            {%- assign placeholder_image = 'product-' | append: j -%}
+            <div class="flex-grid__item swiper-slide  product-item">
+
+          {% render 'product-card',  product: product, image_ratio: image_ratio, placeholder_image: placeholder_image %}
+           
+            </div>
+          {%- endfor -%}
+        {% endfor %}
+      </div>
+               {% if enable_navigation  %}
+              <nav
+                class="swiper-navigation"
+                data-color-scheme="{{ section.settings.color_scheme_navigation }}"
+                aria-label="Slideshow Navigation"
+              >
+                <button class="swiper-button-prev arrow-prev-button" aria-label="Previous Slide">
+                  {% render 'icon' with 'arrow-left', width: '16', height: '16' %}
+                </button>
+                <button class="swiper-button-next arrow-next-button" aria-label="Next Slide">
+                  {% render 'icon' with 'arrow-right', width: '16', height: '16' %}
+                </button>
+              </nav>
+            {% endif %}
+
+            {% if enable_pagination %}
+              <div class="swiper-pagination"   data-color-scheme="{{ section.settings.color_scheme_navigation }}"></div>
+            {% endif %}
+    </div>
+  </slideshow-swiper>
+</div>
+
+{% schema %}
+{
+  "name": "Collection tab content",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Target tab lebel",
+      "info": "Input lebel from tablist blcok item"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "min": 0,
+      "max": 24,
+      "step": 1,
+      "unit": "Itm",
+      "label": "Maximum products to show",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "t:settings_schema.global.settings.grid.heading.label"
+    },
+    {
+      "type": "select",
+      "id": "desktop_grid",
+      "options": [
+        {
+          "value": "1",
+          "label": "t:settings_schema.global.settings.grid.option.label_1"
+        },
+        {
+          "value": "2",
+          "label": "t:settings_schema.global.settings.grid.option.label_2"
+        },
+        {
+          "value": "3",
+          "label": "t:settings_schema.global.settings.grid.option.label_3"
+        },
+        {
+          "value": "4",
+          "label": "t:settings_schema.global.settings.grid.option.label_4"
+        },
+        {
+          "value": "5",
+          "label": "t:settings_schema.global.settings.grid.option.label_5"
+        }
+      ],
+      "default": "4",
+      "label": "t:settings_schema.global.settings.grid.column.label_1"
+    },
+    {
+      "type": "select",
+      "id": "tab_grid",
+      "options": [
+        {
+          "value": "1",
+          "label": "t:settings_schema.global.settings.grid.option.label_1"
+        },
+        {
+          "value": "2",
+          "label": "t:settings_schema.global.settings.grid.option.label_2"
+        },
+        {
+          "value": "3",
+          "label": "t:settings_schema.global.settings.grid.option.label_3"
+        },
+        {
+          "value": "4",
+          "label": "t:settings_schema.global.settings.grid.option.label_4"
+        }
+      ],
+      "default": "4",
+      "label": "t:settings_schema.global.settings.grid.column.label_2"
+    },
+    {
+      "type": "select",
+      "id": "mobile_grid",
+      "options": [
+        {
+          "value": "1",
+          "label": "t:settings_schema.global.settings.grid.option.label_1"
+        },
+        {
+          "value": "1.25",
+          "label": "1.25"
+        },
+        {
+          "value": "1.5",
+          "label": "1.5"
+        },
+        {
+          "value": "2",
+          "label": "t:settings_schema.global.settings.grid.option.label_2"
+        }
+      ],
+      "default": "1",
+      "label": "t:settings_schema.global.settings.grid.column.label_3"
+    },
+    {
+      "type": "header",
+      "content": "t:settings_schema.global.settings.slider.heading.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay_enabled",
+      "label": "t:settings_schema.global.settings.slider.autoplay.label",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "autoplay_timeout",
+      "label": "t:settings_schema.global.settings.slider.autoplay_time.label",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "default": 5,
+      "unit": "s"
+    },
+    {
+      "type": "checkbox",
+      "id": "loop_enabled",
+      "label": "t:settings_schema.global.settings.slider.loop.label",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_pagination",
+      "label": "t:settings_schema.global.settings.slider.pagination.label",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_navigation",
+      "label": "t:settings_schema.global.settings.slider.arrows.label",
+      "default": true
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme_navigation",
+      "label": "Navigation color",
+      "default": "scheme-2"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_schema",
+      "label": "Color schema",
+      "default": "scheme-3"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection tab content",
+      "blocks": {
+        "product-card": {
+          "type": "_product-card",
+          "name": "Product card",
+          "static": true,
+          "settings": {
+            "image_ratio": "all",
+            "enable_quick_add": true,
+            "button_style": "primary",
+            "button_type": "icon-only",
+            "color_schema": "scheme-3"
+          }
+        }
+      }
+    }
+  ]
+}
+{% endschema %}
+
+

@@ -1,0 +1,112 @@
+{% liquid
+  assign alt_text = block.settings.alt_text
+  assign img_ratio = block.settings.image_ratio
+  assign image = block.settings.image | default: false
+  assign image_ratio = img_ratio | default: 'portrait'
+  if image_ratio == 'aspect-ratio' and image == false
+    assign image_ratio = false
+  endif
+ assign label = block.settings.label
+ assign label_size = section.settings.label_size
+ assign label_position = section.settings.label_position
+
+
+%}
+
+<div class="media-wrapper" data-color-scheme="{{ block.settings.color_scheme }}">
+  <div
+    class=" {% if image_ratio != false %}media media--{{ image_ratio }} {% endif %}"
+    {% if image_ratio == 'aspect-ratio' %}
+      style="padding-bottom: {% render 'aspect-ratio' with image.aspect_ratio as aspect_ratio %}%;"
+    {% endif %}
+  >
+    {% if image != blank %}
+     {%
+      render 'image',
+      image: image,
+      height: image.height,
+      alt: alt_text | default:image.alt,
+      lazy_load: true,
+      fetchpriority: "high",
+      attributes: 'decoding="async"',
+      sizes: "(max-width: 640px) 100vw, 50vw"
+    %}
+    {% else %}
+      {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+    {% endif %}
+    {% if label != blank %}
+        <div class="after__text {{label_position}}">
+         <h4  class="{{label_size}}">{{ label }}</h4>
+       </div>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "After",
+  "tag": null,
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Select image"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "options": [
+        {
+          "label": "Portrait",
+          "value": "portrait"
+        },
+        {
+          "label": "Square",
+          "value": "1-1"
+        },
+        {
+          "label": "Large",
+          "value": "5-4"
+        },
+        {
+          "label": "Medium",
+          "value": "3-4"
+        },
+        {
+          "label": "Small",
+          "value": "2-3"
+        },
+        {
+          "label": "Original",
+          "value": "aspect-ratio"
+        }
+      ],
+      "default": "portrait",
+      "label": "Image Ratio"
+    },
+   
+    {
+      "type": "text",
+      "id": "alt_text",
+      "label": "Image alt text"
+    },
+    {
+        "type": "text",
+        "id": "label",
+        "label": "Label",
+        "default":"After"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color Scheme",
+      "default": "scheme-2"
+    },
+  ],
+  "presets": [
+    {
+      "name": "After"
+    }
+  ]
+}
+{% endschema %}

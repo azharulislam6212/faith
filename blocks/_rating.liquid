@@ -1,0 +1,33 @@
+ {% assign max_stars = 5 %}
+{% assign rating = block.settings.star_rating %} 
+    {% for i in (1..max_stars) %}
+      {% if i <= rating %}
+         {% render 'icon' with 'rating-star', width: '16', height: '16' %}
+        {% else %}
+          {% render 'icon' with 'rating-star-empty', width: '16', height: '16' %}
+       {% endif %}
+   {% endfor %}
+   
+
+{% schema %}
+{
+    "name": "Rating",
+    "tag":null,
+    "settings": [
+          {
+       "type": "range",
+       "id": "star_rating",
+       "label": "Rating",
+         "min": 1,
+        "max": 5,
+       "default":3,
+       "step": 1
+       },
+        ],
+        "presets": [
+            {
+                "name": "Rating"
+            }
+        ]
+}
+{% endschema %}

@@ -1,0 +1,147 @@
+
+
+
+{% schema %}
+{
+  "name": "Scrollable collections",
+  "tag": "section",
+  "class": "scrollable-collections",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout Wdith"
+    },
+    {
+      "type": "select",
+      "id": "width",
+      "label": "Width",
+      "default": "container",
+      "options": [
+        {
+          "value": "container-full",
+          "label": "Full width"
+        },
+        {
+          "value": "container-full-with-padding",
+          "label": "Full width padded"
+        },
+        {
+          "value": "container-full-mobile",
+          "label": "Full width mobile only"
+        },
+        {
+          "value": "container",
+          "label": "Page width"
+        }
+      ]
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "paragraph",
+      "content": "Desktop"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 120
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 120
+    },
+    {
+      "type": "paragraph",
+      "content": "Tablet"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_tablet",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_tablet",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 80
+    },
+    {
+      "type": "paragraph",
+      "content": "Mobile"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 60
+    }
+  ],
+  "blocks": [
+    {
+      "type": "_collection-item"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Scrollable collections",
+      "category": "Collections",
+        "settings": {
+        "width": "container",
+        "color_scheme": "",
+        "padding_top": 120,
+        "padding_bottom": 120,
+        "padding_top_tablet": 80,
+        "padding_bottom_tablet": 80,
+        "padding_top_mobile": 60,
+        "padding_bottom_mobile": 60
+      }
+    }
+  ],
+  "enabled_on": {
+    "templates": ["*"],
+    "groups": ["aside"]
+  }
+}
+{% endschema %}

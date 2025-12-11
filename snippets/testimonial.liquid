@@ -1,0 +1,52 @@
+{%- doc -%}
+  Renders block content for all blocks that extend the group block.
+
+  @param {string} children - The DOM content of the group block.
+ 
+
+  @example
+  {% render 'testimonial', children: children, settings: block.settings, shopify_attributes: block.shopify_attributes %}
+{%- enddoc -%}
+
+
+ {{ children }}
+
+
+{% comment %} <div
+  class="testimonial-card swiper-slide flex-grid__item"
+  role="group"
+  aria-label="Customer Testimonial"
+  data-color-scheme="{{ settings.color_schema }}"
+> {% endcomment %}
+
+
+
+
+  {% comment %} <div class="testimonial-card-content">
+    <div class="testimonial-card-rating-star rating-star" role="img" aria-label="star rating">
+      {% content_for 'block', type: '_reting', id: 'rating' %}
+    </div>
+
+    <div class="testimonial-card-review">
+      {% content_for 'block', type: 'inline-text', id: 'testimonial-text' %}
+    </div>
+
+    <div class="testimonial-card-client-info">
+      <div class="testimonial-card-client-image">
+        {% assign image_width = '100,200,300' %}
+        {% content_for 'block', type: '_image', id: 'author_image', image_width: image_width %}
+      </div>
+      <div class="testimonial-card-client-name">
+        {% content_for 'block', type: 'text', id: 'author_name' %}
+        <span class="testimonial-card-client-designation">
+          {% content_for 'block', type: 'text', id: 'author_designation' %}
+        </span>
+      </div>
+
+  </div>
+  <div class="testimonial-shape" aria-hidden="true">
+    {% render 'icon' with 'quote', width: '240', height: '174' %}
+  </div>
+</div> {% endcomment %}
+
+

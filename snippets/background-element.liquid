@@ -1,0 +1,52 @@
+
+{% liquid
+  assign desktop_image = block.settings.desktop_image | default: section.settings.desktop_image
+  assign mobile_image = block.settings.mobile_image | default: section.settings.mobile_image
+
+  if placeholder != false
+    assign placeholder = placeholder | default: 'lifestyle-1'
+  else
+    assign placeholder = false
+  endif
+
+  assign image_class = ''
+  if mobile_image != blank
+    assign image_class = 'hidden md:block'
+  endif
+%}
+
+{% if desktop_image != blank %}
+  <div class="media-wrapper absolute-element">
+    {%
+      render 'image',
+      image: desktop_image,
+      height: desktop_image.height | default: 1080,
+      alt: alt_text | default:desktop_image.alt,
+      class: image_class
+      lazy_load: true,
+      fetchpriority: "high",
+      attributes: 'decoding="async"',
+      sizes: "(max-width: 640px) 100vw, 50vw"
+    %}
+    {% if mobile_image %}
+      {%
+        render 'image',
+        image: mobile_image,
+        height: mobile_image.height | default: 1080,
+        alt: alt_text | default:mobile_image.alt,
+        class: "md:hidden"
+        lazy_load: true,
+        fetchpriority: "high",
+        attributes: 'decoding="async"',
+        sizes: "(max-width: 640px) 100vw, 50vw"
+      %}
+    {% endif %}
+  </div>
+
+{% else %}
+  {% if placeholder != false %}
+    <div class="media-wrapper absolute-element">
+      {{ placeholder | placeholder_svg_tag: 'placeholder-svg' }}
+    </div>
+  {% endif %}
+{% endif %}

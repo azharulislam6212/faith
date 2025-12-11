@@ -1,0 +1,19 @@
+{%- if settings.cart_icon == 'bag' -%}
+  {% render 'icon' with 'bag', width: '24', height: '24' %}
+  <span class="visually-hidden">{{ 'sections.header.bag' | t }}</span>
+{%- elsif settings.cart_icon == 'basket' -%}
+  {% render 'icon' with 'basket', width: '24', height: '24' %}
+  <span class="visually-hidden">{{ 'sections.header.basket' | t }}</span>
+{%- else -%}
+  {% render 'icon' with 'cart', width: '24', height: '24' %}
+  <span class="visually-hidden">{{ 'sections.header.cart' | t }}</span>
+{%- endif -%}
+
+{%- if cart != empty -%}
+  <div class="header__cart-count" id="cart-icon-bubble">
+    {%- if cart.item_count < 10000 -%}
+      <span aria-hidden="true" class="header__cart-count-number">{{ cart.item_count }}</span>
+    {%- endif -%}
+    <span class="visually-hidden">{{ 'sections.header.cart_count' | t: count: cart.item_count }}</span>
+  </div>
+{%- endif -%}

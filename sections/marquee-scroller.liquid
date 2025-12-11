@@ -1,0 +1,592 @@
+{{- 'component-marquee.css' | asset_url | stylesheet_tag: preload: true -}}
+{{- 'section-marquee.css' | asset_url | stylesheet_tag -}}
+{%- style -%}
+  #shopify-section-{{ section.id }} {
+        --pad-top-desktop: {{ section.settings.padding_top }}px;
+        --pad-bottom-desktop: {{ section.settings.padding_bottom }}px;
+        --pad-top-tablet: {{ section.settings.padding_top_tablet }}px;
+        --pad-bottom-tablet: {{ section.settings.padding_bottom_tablet }}px;
+        --pad-top-mobile: {{ section.settings.padding_top_mobile }}px;
+        --pad-bottom-mobile: {{ section.settings.padding_bottom_mobile }}px;
+  }
+{%- endstyle -%}
+
+
+<div
+  class="marquee-scroll  section--padding gradient"
+  data-color-scheme="{{ section.settings.color_scheme }}"
+  role="region"
+  aria-label="marquee scroll conetent"
+>
+  <div class="{{ section.settings.width}}">
+    <div class="running-content marquee">
+      <marquee-content
+        data-speed="{{ section.settings.speed }}"
+        class="running-content-wrap"
+        style="--marquee-duration: {{ 1000 | divided_by: section.settings.speed }}s;"
+      >
+        <div class="marquee-container js-marquee-items {{ section.settings.pause_when_hover | default: '' | replace: 'true', 'marquee--animation-pause' }}">
+          {% content_for 'blocks' %}
+        </div>
+      </marquee-content>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Marquee scroll",
+  "tag": "section",
+  "class": "marquee-scroll",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout Wdith"
+    },
+    {
+      "type": "select",
+      "id": "width",
+      "label": "Width",
+      "default": "container-full",
+      "options": [
+        {
+          "value": "container-full",
+          "label": "Full width"
+        },
+        {
+          "value": "container-full-with-padding",
+          "label": "Full width padded"
+        },
+        {
+          "value": "container-full-mobile",
+          "label": "Full width mobile only"
+        },
+        {
+          "value": "container",
+          "label": "Page width"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Marquee Settings"
+    },
+    {
+      "type": "select",
+      "id": "speed",
+      "label": "Speed",
+      "default": "50",
+      "options": [
+        {
+          "value": "50",
+          "label": "50"
+        },
+        {
+          "value": "100",
+          "label": "100"
+        },
+        {
+          "value": "150",
+          "label": "150"
+        },
+        {
+          "value": "200",
+          "label": "200"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "label": "Movine Direction",
+      "id": "moving_direction",
+      "options": [
+        {
+          "value": "animation-direction",
+          "label": "animation-direction"
+        },
+        {
+          "value": "animation-reverse",
+          "label": "animation-reverse"
+        }
+      ],
+      "default": "animation-direction"
+    },
+    {
+      "type": "checkbox",
+      "id": "pause_when_hover",
+      "label": "Pause On Hover",
+      "default": false
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme4"
+    },
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "paragraph",
+      "content": "Desktop"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 40
+    },
+    {
+      "type": "paragraph",
+      "content": "Tablet"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_tablet",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_tablet",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 40
+    },
+    {
+      "type": "paragraph",
+      "content": "Mobile"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 40
+    }
+  ],
+  "blocks": [
+    {
+      "type": "_marquee-block"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Marquee scroll",
+      "category": "Animate scroll text",
+      "settings": {
+        "width": "container-full",
+        "speed": "50",
+        "moving_direction": "animation-direction",
+        "pause_when_hover": true,
+        "color_scheme": "scheme-4",
+        "padding_top": 20,
+        "padding_bottom": 20,
+        "padding_top_tablet": 20,
+        "padding_bottom_tablet": 20,
+        "padding_top_mobile": 20,
+        "padding_bottom_mobile": 20
+      },
+      "blocks": {
+        "marquee_block_w9Jkzp": {
+          "type": "_marquee-block",
+          "name": "Marquee content",
+          "settings": {},
+          "blocks": {
+            "icon_HaFyBF": {
+              "type": "_icon",
+              "name": "Icon",
+              "settings": {
+                "image": "shopify://shop_images/5464bd4912abd89c22c8c1dac73b4727.svg",
+                "image_width": 45,
+                "alt_text": ""
+              },
+              "blocks": {}
+            },
+            "inline_richtext_FKKUgx": {
+              "type": "inline-richtext",
+              "name": "Inline richtext",
+              "settings": {
+                "text": "Women’s Collections up to 30% Off <strong> </strong><a href=\"/collections\" title=\"All collections\">Shop Now</a>",
+                "text_style": "subtitle",
+                "text_size": "medium"
+              },
+              "blocks": {}
+            },
+            "icon_WYYayD": {
+              "type": "_icon",
+              "name": "Icon",
+              "settings": {
+                "image": "shopify://shop_images/5464bd4912abd89c22c8c1dac73b4727.svg",
+                "image_width": 45,
+                "alt_text": ""
+              },
+              "blocks": {}
+            },
+            "inline_richtext_fxcbLW": {
+              "type": "inline-richtext",
+              "name": "Inline richtext",
+              "settings": {
+                "text": "Women’s Collections up to 30% Off <strong> </strong><a href=\"/collections\" title=\"All collections\">Shop Now</a>",
+                "text_style": "subtitle",
+                "text_size": "medium"
+              },
+              "blocks": {}
+            },
+            "icon_eaLd4p": {
+              "type": "_icon",
+              "name": "Icon",
+              "settings": {
+                "image": "shopify://shop_images/5464bd4912abd89c22c8c1dac73b4727.svg",
+                "image_width": 45,
+                "alt_text": ""
+              },
+              "blocks": {}
+            },
+            "inline_richtext_htjrLH": {
+              "type": "inline-richtext",
+              "name": "Inline richtext",
+              "settings": {
+                "text": "Women’s Collections up to 30% Off <strong> </strong><a href=\"/collections\" title=\"All collections\">Shop Now</a>",
+                "text_style": "subtitle",
+                "text_size": "medium"
+              },
+              "blocks": {}
+            },
+            "icon_xbVefU": {
+              "type": "_icon",
+              "name": "Icon",
+              "settings": {
+                "image": "shopify://shop_images/5464bd4912abd89c22c8c1dac73b4727.svg",
+                "image_width": 45,
+                "alt_text": ""
+              },
+              "blocks": {}
+            },
+            "inline_richtext_dFhf4h": {
+              "type": "inline-richtext",
+              "name": "Inline richtext",
+              "settings": {
+                "text": "Women’s Collections up to 30% Off <strong> </strong><a href=\"/collections\" title=\"All collections\">Shop Now</a>",
+                "text_style": "subtitle",
+                "text_size": "medium"
+              },
+              "blocks": {}
+            },
+            "icon_BJJ6PF": {
+              "type": "_icon",
+              "name": "Icon",
+              "settings": {
+                "image": "shopify://shop_images/5464bd4912abd89c22c8c1dac73b4727.svg",
+                "image_width": 45,
+                "alt_text": ""
+              },
+              "blocks": {}
+            },
+            "inline_richtext_tQTRjp": {
+              "type": "inline-richtext",
+              "name": "Inline richtext",
+              "settings": {
+                "text": "Women’s Collections up to 30% Off <strong> </strong><a href=\"/collections\" title=\"All collections\">Shop Now</a>",
+                "text_style": "subtitle",
+                "text_size": "medium"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "icon_HaFyBF",
+            "inline_richtext_FKKUgx",
+            "icon_WYYayD",
+            "inline_richtext_fxcbLW",
+            "icon_eaLd4p",
+            "inline_richtext_htjrLH",
+            "icon_xbVefU",
+            "inline_richtext_dFhf4h",
+            "icon_BJJ6PF",
+            "inline_richtext_tQTRjp"
+          ]
+        },
+        "marquee_block_ERjJJG": {
+          "type": "_marquee-block",
+          "name": "Marquee content",
+          "settings": {},
+          "blocks": {
+            "icon_MGPYgm": {
+              "type": "_icon",
+              "name": "Icon",
+              "settings": {
+                "image": "shopify://shop_images/5464bd4912abd89c22c8c1dac73b4727.svg",
+                "image_width": 45,
+                "alt_text": ""
+              },
+              "blocks": {}
+            },
+            "inline_richtext_mV7mUj": {
+              "type": "inline-richtext",
+              "name": "Inline richtext",
+              "settings": {
+                "text": "Women’s Collections up to 30% Off <strong> </strong><a href=\"/collections\" title=\"All collections\">Shop Now</a>",
+                "text_style": "subtitle",
+                "text_size": "medium"
+              },
+              "blocks": {}
+            },
+            "icon_RqgWKV": {
+              "type": "_icon",
+              "name": "Icon",
+              "settings": {
+                "image": "shopify://shop_images/5464bd4912abd89c22c8c1dac73b4727.svg",
+                "image_width": 45,
+                "alt_text": ""
+              },
+              "blocks": {}
+            },
+            "inline_richtext_JiwXdJ": {
+              "type": "inline-richtext",
+              "name": "Inline richtext",
+              "settings": {
+                "text": "Women’s Collections up to 30% Off <strong> </strong><a href=\"/collections\" title=\"All collections\">Shop Now</a>",
+                "text_style": "subtitle",
+                "text_size": "medium"
+              },
+              "blocks": {}
+            },
+            "icon_AXNxkp": {
+              "type": "_icon",
+              "name": "Icon",
+              "settings": {
+                "image": "shopify://shop_images/5464bd4912abd89c22c8c1dac73b4727.svg",
+                "image_width": 45,
+                "alt_text": ""
+              },
+              "blocks": {}
+            },
+            "inline_richtext_qEGbCV": {
+              "type": "inline-richtext",
+              "name": "Inline richtext",
+              "settings": {
+                "text": "Women’s Collections up to 30% Off <strong> </strong><a href=\"/collections\" title=\"All collections\">Shop Now</a>",
+                "text_style": "subtitle",
+                "text_size": "medium"
+              },
+              "blocks": {}
+            },
+            "icon_f4FAD9": {
+              "type": "_icon",
+              "name": "Icon",
+              "settings": {
+                "image": "shopify://shop_images/5464bd4912abd89c22c8c1dac73b4727.svg",
+                "image_width": 45,
+                "alt_text": ""
+              },
+              "blocks": {}
+            },
+            "inline_richtext_rVdREm": {
+              "type": "inline-richtext",
+              "name": "Inline richtext",
+              "settings": {
+                "text": "Women’s Collections up to 30% Off <strong> </strong><a href=\"/collections\" title=\"All collections\">Shop Now</a>",
+                "text_style": "subtitle",
+                "text_size": "medium"
+              },
+              "blocks": {}
+            },
+            "icon_Afwpm4": {
+              "type": "_icon",
+              "name": "Icon",
+              "settings": {
+                "image": "shopify://shop_images/5464bd4912abd89c22c8c1dac73b4727.svg",
+                "image_width": 45,
+                "alt_text": ""
+              },
+              "blocks": {}
+            },
+            "inline_richtext_N4gnGm": {
+              "type": "inline-richtext",
+              "name": "Inline richtext",
+              "settings": {
+                "text": "Women’s Collections up to 30% Off <strong> </strong><a href=\"/collections\" title=\"All collections\">Shop Now</a>",
+                "text_style": "subtitle",
+                "text_size": "medium"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "icon_MGPYgm",
+            "inline_richtext_mV7mUj",
+            "icon_RqgWKV",
+            "inline_richtext_JiwXdJ",
+            "icon_AXNxkp",
+            "inline_richtext_qEGbCV",
+            "icon_f4FAD9",
+            "inline_richtext_rVdREm",
+            "icon_Afwpm4",
+            "inline_richtext_N4gnGm"
+          ]
+        },
+        "marquee_block_bB9Wa3": {
+          "type": "_marquee-block",
+          "name": "Marquee content",
+          "settings": {},
+          "blocks": {
+            "icon_aD7yxL": {
+              "type": "_icon",
+              "name": "Icon",
+              "settings": {
+                "image": "shopify://shop_images/5464bd4912abd89c22c8c1dac73b4727.svg",
+                "image_width": 45,
+                "alt_text": ""
+              },
+              "blocks": {}
+            },
+            "inline_richtext_bmFkAL": {
+              "type": "inline-richtext",
+              "name": "Inline richtext",
+              "settings": {
+                "text": "Women’s Collections up to 30% Off <strong> </strong><a href=\"/collections\" title=\"All collections\">Shop Now</a>",
+                "text_style": "subtitle",
+                "text_size": "medium"
+              },
+              "blocks": {}
+            },
+            "icon_qiQw9E": {
+              "type": "_icon",
+              "name": "Icon",
+              "settings": {
+                "image": "shopify://shop_images/5464bd4912abd89c22c8c1dac73b4727.svg",
+                "image_width": 45,
+                "alt_text": ""
+              },
+              "blocks": {}
+            },
+            "inline_richtext_akgcCU": {
+              "type": "inline-richtext",
+              "name": "Inline richtext",
+              "settings": {
+                "text": "Women’s Collections up to 30% Off <strong> </strong><a href=\"/collections\" title=\"All collections\">Shop Now</a>",
+                "text_style": "subtitle",
+                "text_size": "medium"
+              },
+              "blocks": {}
+            },
+            "icon_m9UfmF": {
+              "type": "_icon",
+              "name": "Icon",
+              "settings": {
+                "image": "shopify://shop_images/5464bd4912abd89c22c8c1dac73b4727.svg",
+                "image_width": 45,
+                "alt_text": ""
+              },
+              "blocks": {}
+            },
+            "inline_richtext_4iA34y": {
+              "type": "inline-richtext",
+              "name": "Inline richtext",
+              "settings": {
+                "text": "Women’s Collections up to 30% Off <strong> </strong><a href=\"/collections\" title=\"All collections\">Shop Now</a>",
+                "text_style": "subtitle",
+                "text_size": "medium"
+              },
+              "blocks": {}
+            },
+            "icon_EFgURw": {
+              "type": "_icon",
+              "name": "Icon",
+              "settings": {
+                "image": "shopify://shop_images/5464bd4912abd89c22c8c1dac73b4727.svg",
+                "image_width": 45,
+                "alt_text": ""
+              },
+              "blocks": {}
+            },
+            "inline_richtext_ymRmMi": {
+              "type": "inline-richtext",
+              "name": "Inline richtext",
+              "settings": {
+                "text": "Women’s Collections up to 30% Off <strong> </strong><a href=\"/collections\" title=\"All collections\">Shop Now</a>",
+                "text_style": "subtitle",
+                "text_size": "medium"
+              },
+              "blocks": {}
+            },
+            "icon_c6ptef": {
+              "type": "_icon",
+              "name": "Icon",
+              "settings": {
+                "image": "shopify://shop_images/5464bd4912abd89c22c8c1dac73b4727.svg",
+                "image_width": 45,
+                "alt_text": ""
+              },
+              "blocks": {}
+            },
+            "inline_richtext_c3kLUD": {
+              "type": "inline-richtext",
+              "name": "Inline richtext",
+              "settings": {
+                "text": "Women’s Collections up to 30% Off <strong> </strong><a href=\"/collections\" title=\"All collections\">Shop Now</a>",
+                "text_style": "subtitle",
+                "text_size": "medium"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "icon_aD7yxL",
+            "inline_richtext_bmFkAL",
+            "icon_qiQw9E",
+            "inline_richtext_akgcCU",
+            "icon_m9UfmF",
+            "inline_richtext_4iA34y",
+            "icon_EFgURw",
+            "inline_richtext_ymRmMi",
+            "icon_c6ptef",
+            "inline_richtext_c3kLUD"
+          ]
+        }
+      },
+      "block_order": ["marquee_block_w9Jkzp", "marquee_block_ERjJJG", "marquee_block_bB9Wa3"]
+    }
+  ],
+  "enabled_on": {
+    "templates": ["*"],
+    "groups": ["aside"]
+  }
+}
+{% endschema %}

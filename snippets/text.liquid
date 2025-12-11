@@ -1,0 +1,11 @@
+{% liquid
+     assign text = block.settings.text 
+     assign class = calss | default: "normal-text"
+
+ %}
+
+{% if text != blank %}
+    <p class="{{ class }}">
+     {{ text }}
+      </p>
+{% endif %}

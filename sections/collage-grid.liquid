@@ -1,0 +1,310 @@
+
+{{- 'component-video.css' | asset_url | stylesheet_tag -}}
+{{- 'section-collage-grid.css' | asset_url | stylesheet_tag -}}
+
+  <div class="collage-grid-section section--padding" data-color-scheme="{{ section.settings.color_scheme }}" style="{%render "section-spacing"%}">
+         {% content_for 'block', type: "_section-header" , id:"collage-grid-header"  %} 
+  
+          <div class="{{ section.settings.width }}">
+                 <div class="collage-grid-wrap">
+                   {% content_for 'blocks' %}
+                </div>       
+            </div> 
+  </div>
+ 
+
+{% schema %}
+{
+  "name": "Collage Grid",
+  "tag": "section",
+  "blocks": [
+    {
+      "type": "_collage-grid-image"
+    },
+    {
+      "type": "_collage-grid-video"
+    },
+    {
+      "type": "@app"
+    }
+  ],
+  "settings": [
+    
+    {
+      "type": "select",
+      "id": "width",
+      "label": "Width",
+      "default": "container",
+      "options": [
+        {
+          "value": "container-full",
+          "label": "Full width"
+        },
+        {
+          "value": "container-full-with-padding",
+          "label": "Full width padded"
+        },
+        {
+          "value": "container-full-mobile",
+          "label": "Full width mobile only"
+        },
+        {
+          "value": "container",
+          "label": "Page width"
+        },
+        {
+          "value": "container-narrow",
+          "label": "Page width narrow"
+        },
+        {
+          "value": "container-xs-narrow",
+          "label": "Page width extra narrow"
+        }
+      ]
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color Schema",
+      "default":"scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "paragraph",
+      "content": "Desktop"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 40
+    },
+    {
+      "type": "paragraph",
+      "content": "Tablet"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_tablet",
+      "min": 0,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_tablet",
+      "min": 0,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 30
+    },
+    {
+      "type": "paragraph",
+      "content": "Mobile"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 20
+    }
+  ],
+
+"presets": [
+  {
+    "name": "Collage Grid",
+    "category": "Card",
+    "blocks": {
+       "collage-grid-header": {
+          "type": "_section-header",
+          "name": "Section Header",
+          "static": true,
+          "settings": {
+            "heading": "Collage Grid [Title]",
+            "text": "<p>Discover our latest visual collection.Real moments captured beautifully. A showcase of style, quality & inspiration.</p>",
+            
+          }
+          },
+        "collage-grid_Drc1":{
+          "type": "_collage-grid-video",
+          "name": "Video",
+          "settings": {
+            "column_desktop":2,
+            "row_desktop":2,
+            "row_tablet":"2", 
+            "column_tablet":"2"
+          }
+        },
+         "collage-grid_Drc2":{
+          "type": "_collage-grid-image",
+          "name": "Image",
+          "blocks": {
+            "collage-grid-title":{
+              "type": "heading",
+              "static": true,
+              "settings": {
+                "heading":"Title"
+              }
+            },
+            "collage-grid-button":{
+              "type": "button",
+              "name": "Button",
+              "static": true,
+              "settings": {
+                "button_type":"with-none",
+                "button_style":"link",
+                 "button_label":"Shop now"
+              }
+            }
+            
+          }
+        }
+        ,
+         "collage-grid_Drc3":{
+          "type": "_collage-grid-image",
+          "name": "Image",
+          "blocks": {
+            "collage-grid-title":{
+              "type": "heading",
+              "static": true,
+              "settings": {
+                "heading":"Title"
+              }
+            },
+            "collage-grid-button":{
+              "type": "button",
+              "name": "Button",
+              "static": true,
+              "settings": {
+                "button_type":"with-none",
+                "button_style":"link",
+                 "button_label":"Shop now"
+              }
+            }
+            
+          }
+        },
+         "collage-grid_Drc4":{
+          "type": "_collage-grid-image",
+          "name": "Image",
+            "settings": {
+            "column_desktop":2,
+            "row_desktop":2,
+            "row_tablet":"2", 
+            "column_tablet":"2"
+          },
+          "blocks": {
+            "collage-grid-title":{
+              "type": "heading",
+              "static": true,
+              "settings": {
+                "heading":"Title"
+              }
+            },
+            "collage-grid-button":{
+              "type": "button",
+              "name": "Button",
+              "static": true,
+              "settings": {
+                "button_type":"with-none",
+                "button_style":"link",
+                 "button_label":"Shop now"
+              }
+            }
+            
+          }
+        },
+         "collage-grid_Drc5":{
+          "type": "_collage-grid-image",
+          "name": "Image",
+          "blocks": {
+            "collage-grid-title":{
+              "type": "heading",
+              "static": true,
+              "settings": {
+                "heading":"Title"
+              }
+            },
+            "collage-grid-button":{
+              "type": "button",
+              "name": "Button",
+              "static": true,
+              "settings": {
+                "button_type":"with-none",
+                "button_style":"link",
+                 "button_label":"Shop now"
+              }
+            }
+            
+          }
+        },
+         "collage-grid_Drc6":{
+          "type": "_collage-grid-image",
+          "name": "Image",
+          "blocks": {
+            "collage-grid-title":{
+              "type": "heading",
+              "static": true,
+              "settings": {
+                "heading":"Title"
+              }
+            },
+            "collage-grid-button":{
+              "type": "button",
+              "name": "Button",
+              "static": true,
+              "settings": {
+                "button_type":"with-none",
+                "button_style":"link",
+                 "button_label":"Shop now"
+              }
+            }
+            
+          }
+        }
+    } ,
+     "block_order": ["collage-grid_Drc1","collage-grid_Drc2","collage-grid_Drc3","collage-grid_Drc4","collage-grid_Drc5","collage-grid_Drc6"]
+  }
+  
+]
+
+
+}
+ 
+{% endschema %}

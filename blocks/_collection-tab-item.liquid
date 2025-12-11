@@ -1,0 +1,59 @@
+{% liquid
+  assign uniqueId = 'now' | date: '%N' | modulo: 1000
+  assign collection = block.settings.collection
+  assign colelction_title = block.settings.title
+  if block.settings.title != blank
+    assign colelction_title = block.settings.title
+  else
+    assign colelction_title = collection.title
+  endif
+%}
+
+{% if colelction_title != blank %}
+  <li role="presentation" {{ block.shopify_attributes }}>
+    <button
+      type="button"
+      class="tabs-button-list__tab  {%if uniqueId ==  block.id  %}  is-active  {% endif %}"
+      id="tab-{{ section.id }}-{{  colelction_title |  downcase  }}"
+      role="tab"
+      aria-controls="panel-{{ section.id }}-{{ colelction_title |  downcase }}"
+      aria-selected="{% if uniqueId ==  block.id  %}true{% else %}false{% endif %}"
+      {% unless block.settings.default_active %}
+        tabindex="-1"
+      {% endunless %}
+    >
+      {{ colelction_title }}
+
+      {% if collection.products_count > 0 %}
+        (
+        {{- collection.products_count -}}
+        )
+      {% endif %}
+    </button>
+  </li>
+{% endif %}
+
+
+{% schema %}
+{
+  "name": "Tab item",
+  "tag": null,
+  "settings": [
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Select collection"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Collection title"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Tab item"
+    }
+  ]
+}
+{% endschema %}

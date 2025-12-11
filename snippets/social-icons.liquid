@@ -1,0 +1,93 @@
+{% comment %}
+  Renders social icons.
+  Accepts:
+  - class: {String} a class to be added to the <ul> element (optional).
+
+  Usage:
+  {% render 'social-icons',
+    class: 'my-class'
+  %}
+{% endcomment %}
+
+<ul class="ft-list-social list-flex {% if class %} {{ class}}{% endif %}" role="list">
+  {%- if settings.social_facebook_link != blank -%}
+    <li class="ft-list-social__item">
+      <a href="{{ settings.social_facebook_link }}" class="ft-list-social__link">
+        {% render 'icon' with 'facebook' , width: '24', height: '24'%}
+        <span class="visually-hidden">{{ 'general.social.links.facebook' | t }}</span>
+      </a>
+    </li>
+  {%- endif -%}
+  {%- if settings.social_instagram_link != blank -%}
+    <li class="ft-list-social__item">
+      <a href="{{ settings.social_instagram_link }}" class="ft-list-social__link">
+        {% render 'icon' with 'instagram' , width: '24', height: '24'%}
+        <span class="visually-hidden">{{ 'general.social.links.instagram' | t }}</span>
+      </a>
+    </li>
+  {%- endif -%}
+  {%- if settings.social_youtube_link != blank -%}
+    <li class="ft-list-social__item">
+      <a href="{{ settings.social_youtube_link }}" class="ft-list-social__link">
+        {% render 'icon' with 'youtube' , width: '24', height: '24'%}
+        <span class="visually-hidden">{{ 'general.social.links.youtube' | t }}</span>
+      </a>
+    </li>
+  {%- endif -%}
+  {%- if settings.social_tiktok_link != blank -%}
+    <li class="ft-list-social__item">
+      <a href="{{ settings.social_tiktok_link }}" class="ft-list-social__link">
+        {% render 'icon' with 'tiktok' , width: '24', height: '24'%}
+        <span class="visually-hidden">{{ 'general.social.links.tiktok' | t }}</span>
+      </a>
+    </li>
+  {%- endif -%}
+  {%- if settings.social_twitter_link != blank -%}
+    <li class="ft-list-social__item">
+      <a href="{{ settings.social_twitter_link }}" class="ft-list-social__link">
+        {% render 'icon' with 'twitter' , width: '24', height: '24'%}
+        <span class="visually-hidden">{{ 'general.social.links.twitter' | t }}</span>
+      </a>
+    </li>
+  {%- endif -%}
+  {%- if settings.social_pinterest_link != blank -%}
+    <li class="ft-list-social__item">
+      <a href="{{ settings.social_pinterest_link }}" class="ft-list-social__link">
+        {% render 'icon' with 'pinterest' , width: '24', height: '24'%}
+        <span class="visually-hidden">{{ 'general.social.links.pinterest' | t }}</span>
+      </a>
+    </li>
+  {%- endif -%}
+  {%- if settings.social_linkedin_link != blank -%}
+    <li class="ft-list-social__item">
+      <a href="{{ settings.social_linkedin_link }}" class="ft-list-social__link">
+        {% render 'icon' with 'linkedin' , width: '24', height: '24'%}
+        <span class="visually-hidden">{{ 'general.social.links.linkedin' | t }}</span>
+      </a>
+    </li>
+  {%- endif -%}
+  {%- if settings.social_snapchat_link != blank -%}
+    <li class="ft-list-social__item">
+      <a href="{{ settings.social_snapchat_link }}" class="ft-list-social__link">
+        {% render 'icon' with 'snapchat' , width: '24', height: '24'%}
+        <span class="visually-hidden">{{ 'general.social.links.snapchat' | t }}</span>
+      </a>
+    </li>
+  {%- endif -%}
+  {%- if settings.social_tumblr_link != blank -%}
+    <li class="ft-list-social__item">
+      <a href="{{ settings.social_tumblr_link }}" class="ft-list-social__link">
+        {% render 'icon' with 'tumblr' , width: '24', height: '24'%}
+        <span class="visually-hidden">{{ 'general.social.links.tumblr' | t }}</span>
+      </a>
+    </li>
+  {%- endif -%}
+  {%- if settings.social_vimeo_link != blank -%}
+    <li class="ft-list-social__item">
+      <a href="{{ settings.social_vimeo_link }}" class="ft-list-social__link">
+        {% render 'icon' with 'vimeo' , width: '24', height: '24'%}
+        <span class="visually-hidden">{{ 'general.social.links.vimeo' | t }}</span>
+      </a>
+    </li>
+  {%- endif -%}
+</ul>

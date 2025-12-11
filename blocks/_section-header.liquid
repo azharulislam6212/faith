@@ -1,0 +1,123 @@
+{% liquid
+    assign text_align = block.settings.text_align 
+    assign heading = block.settings.heading 
+    assign text = block.settings.text 
+%}
+{% if heading != blank or text != blank %} 
+  <div class="{{ container }}">
+  <div class="section-header {{ text_align }}">
+  {% render 'section-header', block: block %}
+   </div>
+  </div>  
+{% endif %}
+
+{% schema %}
+{
+  "name": "Section header", 
+  "tag":null,
+  "settings": [
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "default": "Heading [Title]",
+      "label": "Heading"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        {
+          "value": "h2",
+          "label": "H2"
+        },
+        {
+          "value": "h1",
+          "label": "H1"
+        },
+        {
+          "value": "heading-small",
+          "label": "t:sections.all.heading_size.options__1.label"
+        },
+        {
+          "value": "heading-medium",
+          "label": "t:sections.all.heading_size.options__2.label"
+        },
+        {
+          "value": "heading-large",
+          "label": "t:sections.all.heading_size.options__3.label"
+        },
+        {
+          "value": "heading-xlarge",
+          "label": "t:sections.all.heading_size.options__4.label"
+        }
+      ],
+      "default": "h1",
+      "label": "t:sections.all.heading_size.label"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "default": "<p>Pair text with an image to focus on your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.</p>",
+      "label": "t:sections.image-with-text.blocks.text.settings.text.label"
+    },
+    {
+      "type": "select",
+      "id": "text_style",
+      "options": [
+        {
+          "value": "body",
+          "label": "Body"
+        },
+        {
+          "value": "subtitle",
+          "label": "Subtitle"
+        }
+      ],
+      "default": "body",
+      "label": "Body"
+    },
+    {
+      "type": "select",
+      "id": "text_size",
+      "options": [
+        {
+          "value": "small",
+          "label": "Small"
+        },
+        {
+          "value": "medium",
+          "label": "Medium"
+        },
+        {
+          "value": "large",
+          "label": "Large"
+        }
+      ],
+      "default": "medium",
+      "label": "Caption Size"
+    },
+    {
+      "type": "select",
+      "id": "text_align",
+      "label": "Align",
+      "options": [
+        {
+          "value": "text-start",
+          "label": "Left"
+        },
+        {
+          "value": "text-center",
+          "label": "Center"
+        },
+        {
+          "value": "text-end",
+          "label": "Right"
+        }
+      ],
+      "default": "text-center"
+    }
+  ],
+  
+  "presets": [{"name": "Section header"}]
+}
+{% endschema %}

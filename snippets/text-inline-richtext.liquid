@@ -1,0 +1,13 @@
+{% liquid
+     assign text = block.settings.text 
+     assign text_style = block.settings.text_style 
+     assign text_size = block.settings.text_size 
+     assign class = calss | default: "text-body"
+
+ %}
+
+{% if text_size != blank %}
+    <p class="{{ text_style }} {{text_style}}--{{ text_size }} {{ class }}">
+     {{ text }}
+      </p>
+{% endif %}

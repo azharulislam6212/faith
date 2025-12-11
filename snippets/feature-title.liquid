@@ -1,0 +1,35 @@
+{% comment %}
+  Renders  section headomg block
+  Usage:
+  {% render 'section-heading-block' %}
+{% endcomment %}
+
+{% liquid
+  assign heading = block.settings.heading
+  assign heading_size = block.settings.heading_size
+  assign override_color = block.settings.override_title_color
+  assign color = block.settings.color
+
+assign color = color | color_to_rgb | replace: 'rgb(', '' | replace: ')', '' | replace: ' ', ''
+%}
+
+{% unless heading == blank %}
+  {% assign title = heading %}
+
+  {% if heading contains '[' or heading contains ']' %}
+    {% assign parts = heading | split: '[' %}
+    {% assign pre_bracket = parts[0] %}
+    {% assign rest = parts[1] | split: ']' %}
+    {% assign bracket_content = rest[0] %}
+    {% assign post_bracket = rest[1] %}
+
+    {% capture title %}
+      {{ pre_bracket | strip }}<span>{{ bracket_content | strip }}</span> {{ post_bracket | strip }}
+    {% endcapture %}
+  {% endif %}
+
+<div class="feature-heading__inner" {% if override_color %} style="--override-color-heading:{{ color }}" {% endif %}>
+  <h2 class="section-heading inline-richtext {{ heading_size }}">{{ title }}</h2>
+  
+  </div>
+{% endunless %}

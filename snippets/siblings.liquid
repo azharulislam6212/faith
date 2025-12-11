@@ -1,0 +1,74 @@
+{% liquid
+  assign has_siblings = false
+
+
+  assign has_siblings = false
+  if settings.show_siblings and product.metafields.theme.siblings.value != blank and product.metafields.theme.siblings.type == 'single_line_text_field'
+    assign has_siblings = true
+  endif
+
+  if settings.show_siblings and product.metafields.theme.sibling_products != blank and product.metafields.theme.sibling_products.type == 'list.product_reference'
+    assign has_siblings = true
+  endif
+
+  %}
+
+{%- if has_siblings  -%}
+
+{%- liquid
+    assign sibling_products = product.metafields.theme.sibling_products.value | default: collections[product.metafields.theme.siblings.value].products
+    assign count = product.metafields.theme.sibling_products.value.count | default: collections[product.metafields.theme.siblings.value].products.size
+   
+          assign  swatch_limit = 50
+    if count > settings.swatch_limit and settings.product_card_swatch_style == 'limited'
+      assign siblingSwatchesLeft = count | minus: settings.swatch_limit
+      assign  swatch_limit = settings.swatch_limit
+    endif
+
+  -%}
+
+  <div class="product-card__siblings-holder">
+       
+              {% if sibling_products != blank %}
+         
+    <div class="sibs__inner flex">
+      {%- for sib_product in sibling_products limit: swatch_limit -%}
+        {% liquid
+                  assign title_safe = sib_product.title | strip_html | escape
+                 assign sib_cutline = sib_product.metafields.theme.cutline |  default: title_safe
+                assign sib_color = sib_product.metafields.theme.sibling_color.value | default: sib_product.metafields.theme.sibling_colour.value | default: sib_product.metafields.theme.siblings_color.value | default: sib_product.metafields.theme.siblings_colour.value | default: sib_product.metafields.theme.siblings_colors.value | default: sib_product.metafields.theme.siblings_colours.value
+              
+        %}
+   
+        <div class="siblings__link__holder {% if sib_product.available == false %} sold-out{% endif %}">
+          <a
+            href="{{ sib_product.url }}"
+            class="siblings__link"
+            data-grid-item-variant="{{ sib_product.variants[0].id }}"
+            title="{{ sib_cutline }}"
+            {% if sib_product.handle == product.handle %}
+              aria-current="true"
+            {%- endif -%}
+          >
+            <div class="siblings__swatch">
+              <div class="sibling__image sibling__image-size--{{ settings.swatch_size }} sibling__image-shape--{{ settings.swatch_box_style }}">
+                {% render 'icon-img' with image: sib_product.featured_media.preview_image %}
+              </div>
+
+              {% if sib_color != blank %}
+                             <span class="tooltip">{{ sib_color }}</span>
+              {% endif %}
+ 
+            </div>
+          </a>
+        </div>
+      {%- endfor -%}
+          {%- if settings.product_card_swatch_style == 'limited' and siblingSwatchesLeft > 0 -%}
+              <div class="swatch-limited">{{ '+' | append: siblingSwatchesLeft }}</div>
+            {%- endif -%}
+    </div>
+
+          {% endif %}
+  </div>
+
+{% endif %}

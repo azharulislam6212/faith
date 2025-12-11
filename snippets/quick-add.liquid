@@ -1,0 +1,91 @@
+
+
+{%- liquid
+
+  assign product_form_id = 'quick-add-' | append: section.id | append: '-' | append: product.id
+  assign current_variant = product.selected_or_first_available_variant
+  assign has_preorder_meta = false
+  assign has_preorder_tag = false
+  assign sibling_property_name = 'general.siblings.label' | t | strip_html | escape
+  assign sibling_property_value = ''
+
+   assign sibling_products = product.metafields.theme.sibling_products.value | default: collections[product.metafields.theme.siblings.value].products
+
+  if sibling_products != blank
+    assign title_down = product.title | downcase
+    assign sibling = product.metafields.theme.sibling_color.value | default: product.metafields.theme.sibling_colour.value | default: product.metafields.theme.siblings_color.value | default: product.metafields.theme.siblings_colour.value | default: product.metafields.theme.siblings_colors.value | default: product.metafields.theme.siblings_colours.value
+    assign sibling_down = sibling | downcase
+    unless title_down contains sibling_down
+      assign sibling_property_value = sibling | strip_html | escape
+    endunless
+  endif
+
+  if current_variant.available and product.metafields.theme.preorder.type == 'boolean' and product.metafields.theme.preorder.value == true
+    assign has_preorder_meta = true
+  endif
+
+  if current_variant.available and product.tags contains '_preorder'
+    assign has_preorder_tag = true
+  endif
+
+  if current_variant.available and current_variant.metafields.theme.preorder.type == 'boolean' and current_variant.metafields.theme.preorder.value == true
+    assign has_preorder_meta = true
+  endif
+
+  if has_preorder_meta or has_preorder_tag
+    assign preorder_name = 'products.product.sale_type' | t | strip_html | escape
+    assign preorder_value = 'products.product.preorder' | t | strip_html | escape
+  endif
+
+%}
+
+
+<product-form data-section-id="{{ section.id }}">
+    
+  <div class="quick-add__holder">
+    {%- form 'product', product, id: product_form_id, class: "js-product-form", novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}
+      <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+
+      {%- if sibling_property_value != blank and settings.show_siblings -%}
+        <input type="hidden" name="properties[{{ sibling_property_name }}]" value="{{ sibling_property_value }}">
+      {%- endif -%}
+
+      {%- if preorder_value != blank -%}
+        <input type="hidden" name="properties[{{ preorder_name }}]" value="{{ preorder_value }}">
+      {%- endif -%}
+
+      <button
+        class="quick-add__button {{ button_class }}"
+        type="submit"
+        name="add"
+        aria-label="{{ 'products.product.add_to_cart' | t }}"
+        aria-labelledby="{{ product_form_id }}-submit title-{{ section.id }}-{{ product.id }}"
+        aria-haspopup="dialog"
+        aria-live="polite"
+      data-sold-out="{% if current_variant.available == false %}  true {% else %} false {% endif %}" 
+      {% if current_variant.available == false %}   disabled {% endif %}
+      >
+      {%- render 'loading-overlay' -%}
+        <span class="button--text">
+           {% if button_type contains "icon-only" %}
+            {% render 'icon' with 'cart', width: '16', height: '16', class: 'icon-cart' %}
+           {% else %}
+            {% render 'icon' with 'arrow', width: '14', height: '14', class: 'icon-arrow' %}
+
+            <span class="add-text">
+          {%- if preorder -%}
+              {{ 'products.product.preorder' | t }}
+            {%- else -%}
+              {{ 'products.product.add_to_cart' | t }}
+            {%- endif -%}
+            </span>
+  
+          {% endif %}
+      {% if current_variant.available == false %}
+          <span class="sold-out hidden"> {{ 'products.product.sold_out' | t }} </span>
+          {% endif %}
+        </span>
+        </button>
+    {%- endform -%}
+  </div>
+</product-form>

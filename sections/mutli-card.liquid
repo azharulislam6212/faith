@@ -1,0 +1,448 @@
+{{- 'section-multicard.css' | asset_url | stylesheet_tag -}}
+
+ 
+{%- liquid
+ 
+  assign loop = section.settings.loop_enabled
+  assign autoplay = section.settings.autoplay_enabled
+  assign delay = section.settings.autoplay_timeout | times: 1000
+
+  assign desktop_grid = section.settings.desktop_grid
+  assign tab_grid = section.settings.tab_grid
+  assign mobile_grid = section.settings.mobile_grid
+-%}
+{% capture data_config %}
+  data-option = '{
+    "desktopSlider": true,
+    "spaceBetween": 24,
+    "centeredSlides": false,
+    "loop": {{loop}},
+    "speed": 700,
+    "freeMode": false,
+    "autoplay": {
+      "enabled": {{autoplay}},
+      "delay": {{delay}},
+      "disableOnInteraction": false
+    },
+    "breakpoints": {
+      "300":{"slidesPerView":{{mobile_grid}}}
+       ,"750":{"slidesPerView":{{tab_grid}}}
+       ,"990":{"slidesPerView":{{desktop_grid}}}
+    }
+  }'
+{% endcapture %}
+
+  <div class="multi-card-section section--padding" data-color-scheme="{{ section.settings.color_scheme }}"  style="{%render "section-spacing"%}">
+          
+        {% comment %} {% content_for 'block', type: "_section-header" , id:"multi-card-header"  %}  {% endcomment %}
+        {% content_for 'block', type: "_feature-title" , id:"multi-feature-ttile"  %} 
+
+          <div class="{{ section.settings.width }}">
+            <slideshow-swiper>
+              <div class="multi-card-wrap swiper slideshow__swiper " {{ data_config }}>
+                <div class="swiper-wrapper flex-grid flex-grid--2-col flex-grid--{{ mobile_grid }}-col-mobile  flex-grid--{{ tab_grid }}-col-tablet  flex-grid--{{ desktop_grid }}-col-desktop">
+                  
+                {% content_for "blocks" %}
+                    
+                </div>
+              </div>
+            </slideshow-swiper>
+          </div>
+  </div>
+{% schema %}
+{
+  "name": "Multi card",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout Wdith"
+    },
+    {
+      "type": "select",
+      "id": "width",
+      "label": "Width",
+      "default": "container",
+      "options": [
+        { "value": "container-full", "label": "Full width" },
+        { "value": "container-full-with-padding", "label": "Full width padded" },
+        { "value": "container-full-mobile", "label": "Full width mobile only" },
+        { "value": "container", "label": "Page width" },
+        { "value": "container-narrow", "label": "Page width narrow" },
+        { "value": "container-xs-narrow", "label": "Page width extra narrow" }
+      ]
+    },
+
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    },
+
+    {
+      "type": "header",
+      "content": "t:settings_schema.global.settings.slider.heading.label"
+    },
+
+    {
+      "type": "checkbox",
+      "id": "autoplay_enabled",
+      "label": "t:settings_schema.global.settings.slider.autoplay.label",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "autoplay_timeout",
+      "label": "t:settings_schema.global.settings.slider.autoplay_time.label",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "default": 5,
+      "unit": "s"
+    },
+    {
+      "type": "checkbox",
+      "id": "loop_enabled",
+      "label": "t:settings_schema.global.settings.slider.loop.label",
+      "default": false
+    },
+
+    {
+      "type": "select",
+      "id": "desktop_grid",
+      "label": "Desktop",
+      "options": [
+        { "label": "2", "value": "2" },
+        { "label": "3", "value": "3" },
+        { "label": "4", "value": "4" },
+        { "label": "5", "value": "5" }
+      ],
+      "default": "3"
+    },
+
+    {
+      "type": "select",
+      "id": "tab_grid",
+      "label": "Tablet",
+      "options": [
+        { "label": "1", "value": "1" },
+        { "label": "2", "value": "2" },
+        { "label": "3", "value": "3" }
+      ],
+      "default": "2"
+    },
+
+    {
+      "type": "select",
+      "id": "mobile_grid",
+      "label": "Mobile",
+      "options": [
+        { "label": "1", "value": "1" },
+        { "label": "2", "value": "2" }
+      ],
+      "default": "1"
+    },
+
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+
+    {
+      "type": "paragraph",
+      "content": "Desktop"
+    },
+
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 120
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 120
+    },
+
+    {
+      "type": "paragraph",
+      "content": "Tablet"
+    },
+
+    {
+      "type": "range",
+      "id": "padding_top_tablet",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_tablet",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 80
+    },
+
+    {
+      "type": "paragraph",
+      "content": "Mobile"
+    },
+
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 60
+    }
+  ],
+ 
+  "blocks": [
+    {
+      "type": "_multi-card-item"
+    }
+  ],
+
+  "presets": [
+    {
+      "name": "Multi card",
+       "category": "Card",
+      "blocks": {
+      
+        "multi-feature-ttile":{
+          "type": "_feature-title",
+          "name": "Feature Title",
+          "static": true,
+          "settings": {
+            "heading":"New [Arrival]",
+            "heading_size":"heading-xlarge"
+          }
+        },
+
+        "multicard_GCD1": {
+          "name": "Card",
+          "type": "_multi-card-item",
+          "blocks": {
+            "multi-card": {
+              "type": "_image",
+              "name": "Image",
+              "static": true
+            },
+            "title": {
+              "type": "heading",
+              "name": "Title",
+              "static": true,
+              "settings": {
+                "heading": "Casual Wear"
+              }
+            },
+            "multi-card-text": {
+              "type": "inline-richtext",
+              "name": "Inline richtext",
+              "static": true,
+              "settings": {
+                "text": "These are comfortable, casual outfits worn for day-to-day activities, like running errands or meeting friends. Common items include t-shirts, jeans"
+              }
+            },
+            "multi-card-button": {
+              "type": "button",
+              "name": "Button",
+              "static": true,
+              "settings": {
+                "button_label": "Shop Now",
+                "button_style": "primary",
+                "button_type": "with-icon"
+              }
+            }
+          }
+        },
+        "multicard_GCD2": {
+          "name": "Card",
+          "type": "_multi-card-item",
+          "blocks": {
+            "multi-card": {
+              "type": "_image",
+              "name": "Image",
+              "static": true
+            },
+            "title": {
+              "type": "heading",
+              "name": "Title",
+              "static": true,
+              "settings": {
+                "heading": "Jackets & Coats"
+              }
+            },
+            "multi-card-text": {
+              "type": "inline-richtext",
+              "name": "Inline richtext",
+              "static": true,
+              "settings": {
+                "text": "These are comfortable, casual outfits worn for day-to-day activities, like running errands or meeting friends. Common items include t-shirts, jeans"
+              }
+            },
+            "multi-card-button": {
+              "type": "button",
+              "name": "Button",
+              "static": true,
+              "settings": {
+                "button_label": "Shop Now",
+                "button_style": "primary",
+                "button_type": "with-icon"
+              }
+            }
+          }
+        },
+        "multicard_GCD3": {
+          "name": "Card",
+          "type": "_multi-card-item",
+          "blocks": {
+            "multi-card": {
+              "type": "_image",
+              "name": "Image",
+              "static": true
+            },
+            "title": {
+              "type": "heading",
+              "name": "Title",
+              "static": true,
+              "settings": {
+                "heading": "Outer Clothing"
+              }
+            },
+            "multi-card-text": {
+              "type": "inline-richtext",
+              "name": "Inline richtext",
+              "static": true,
+              "settings": {
+                "text": "Typical examples are suits, dresses, and ties, which are often made from finer materials to create a polished and professional look."
+              }
+            },
+            "multi-card-button": {
+              "type": "button",
+              "name": "Button",
+              "static": true,
+              "settings": {
+                "button_label": "Shop Now",
+                "button_style": "primary",
+                "button_type": "with-icon"
+              }
+            }
+          }
+        },
+        "multicard_GCD4": {
+          "name": "Card",
+          "type": "_multi-card-item",
+          "blocks": {
+            "multi-card": {
+              "type": "_image",
+              "name": "Image",
+              "static": true
+            },
+            "title": {
+              "type": "heading",
+              "name": "Title",
+              "static": true,
+              "settings": {
+                "heading": "Casual Wear"
+              }
+            },
+            "multi-card-text": {
+              "type": "inline-richtext",
+              "name": "Inline richtext",
+              "static": true,
+              "settings": {
+                "text": "These are comfortable, casual outfits worn for day-to-day activities, like running errands or meeting friends. Common items include t-shirts, jeans"
+              }
+            },
+            "multi-card-button": {
+              "type": "button",
+              "name": "Button",
+              "static": true,
+              "settings": {
+                "button_label": "Shop Now",
+                "button_style": "primary",
+                "button_type": "with-icon"
+              }
+            }
+          }
+        },
+        "multicard_GCD5": {
+          "name": "Card",
+          "type": "_multi-card-item",
+          "blocks": {
+            "multi-card": {
+              "type": "_image",
+              "name": "Image",
+              "static": true
+            },
+            "title": {
+              "type": "heading",
+              "name": "Title",
+              "static": true,
+              "settings": {
+                "heading": "Outer Clothing"
+              }
+            },
+            "multi-card-text": {
+              "type": "inline-richtext",
+              "name": "Inline richtext",
+              "static": true,
+              "settings": {
+                "text": "These are comfortable, casual outfits worn for day-to-day activities, like running errands or meeting friends. Common items include t-shirts, jeans"
+              }
+            },
+            "multi-card-button": {
+              "type": "button",
+              "name": "Button",
+              "static": true,
+              "settings": {
+                "button_label": "Shop Now",
+                "button_style": "primary",
+                "button_type": "with-icon"
+              }
+            }
+          }
+        }
+      },
+      "block_order": ["multicard_GCD1","multicard_GCD2","multicard_GCD3","multicard_GCD4","multicard_GCD5"]
+    }
+  ],
+    "enabled_on": {
+    "templates": ["*"],
+    "groups": ["aside"]
+  }
+}
+
+{% endschema %}

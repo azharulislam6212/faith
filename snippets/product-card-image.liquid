@@ -1,0 +1,152 @@
+{% liquid
+  if collection and settings.card_url_within_coll and product.collections contains collection
+    assign product_url = product.url | within: collection
+  else
+    assign product_url = product.url
+  endif
+
+  assign product_images = product.media | where: 'media_type', 'image'
+
+  if settings.card_hover_action == 'second_image' and product_images.size > 1
+    assign show_hover_image = true
+
+    assign featured_index = product.featured_media.position | minus: 1
+    assign next_index = featured_index | plus: 1
+    assign first_media = product.media[featured_index]
+    assign second_media = product.media[next_index]
+    assign hover_media = second_media | default: first_media
+  else
+    assign show_hover_image = false
+  endif
+
+  if settings.card_hover_action == 'slideshow' and product_images.size > 1
+    assign show_slideshow = true
+  endif
+%}
+
+<a href="{{ product_url }}">
+  <div
+    class="product-media media {% if image_ratio != false %} media media--no-hover  media--{{ image_ratio }} {% endif %}"
+    {% if image_ratio == 'aspect-ratio' %}
+      style="padding-bottom: {% render 'aspect-ratio' with product.featured_media.aspect_ratio as aspect_ratio %}%;"
+    {% endif %}
+  >
+    {% if show_slideshow %}
+      <hover-images>
+        <div class="swiper product-card__media-slider">
+          <div class="swiper-wrapper">
+            {%- for media in product.media -%}
+              <div class="product-card-media__slide swiper-slide" data-media-id="{{- media.id -}}">
+                {%- if media.media_type == 'video' or media.media_type == 'external_video' -%}
+                  {%- case media.media_type -%}
+                    {%- when 'video' -%}
+                      {{
+                        media
+                        | media_tag:
+                          image_size: '400x400',
+                          class: 'media-video',
+                          autoplay: true,
+                          loop: true,
+                          controls: false,
+                          preload: 'none',
+                          muted: true
+                      }}
+                    {%- when 'external_video' -%}
+                      {%- if media.host == 'youtube' -%}
+                        {{
+                          media
+                          | external_video_tag:
+                            autoplay: true,
+                            playsinline: true,
+                            loop: true,
+                            muted: true,
+                            controls: false,
+                            playlist: media.external_id,
+                            loading: 'lazy',
+                            data_host: media.host
+                        }}
+                      {%- else -%}
+                        {{
+                          media
+                          | external_video_tag:
+                            autoplay: true,
+                            playsinline: true,
+                            loop: true,
+                            muted: true,
+                            controls: false,
+                            data_host: media.host
+                        }}
+                      {%- endif -%}
+                  {%- endcase -%}
+                {%- else -%}
+                  {% render 'image',
+                    image: media.preview_image,
+                    height: media.preview_image.height,
+                    alt: media.title,
+                    lazy_load: true,
+                    fetchpriority: 'high',
+                    attributes: 'decoding="async"',
+                    sizes: '(max-width: 640px) 100vw, 50vw'
+                  %}
+                {%- endif -%}
+              </div>
+            {%- endfor -%}
+          </div>
+          <nav
+            class="swiper-navigation"
+            aria-label="Slideshow Navigation"
+          >
+            <button class="swiper-button-prev arrow-prev-button-js" aria-label="Previous Slide">
+              {% render 'icon' with 'arrow-left', width: '16', height: '16' %}
+            </button>
+            <button class="swiper-button-next arrow-next-button-js" aria-label="Next Slide">
+              {% render 'icon' with 'arrow-right', width: '16', height: '16' %}
+            </button>
+          </nav>
+        </div>
+      </hover-images>
+
+    {% else %}
+      {%
+        render 'image',
+        image: product.featured_media,
+        height: product.featured_media.height,
+        alt: product.featured_media.title,
+        lazy_load: true,
+        fetchpriority: "high",
+        attributes: 'decoding="async"',
+        sizes: "(max-width: 640px) 100vw, 50vw"
+      %}
+
+      {% if show_hover_image and settings.show_secondary_image %}
+        <div class="hover-media">
+          {%- if hover_media.media_type == 'video' or hover_media.media_type == 'external_video' -%}
+            {%- liquid
+              case hover_media.media_type
+                when 'video'
+                  echo hover_media | media_tag: image_size: '1024x1024', class: 'media-video', autoplay: true, loop: true, controls: false, preload: 'none', muted: true
+                when 'external_video'
+                  if hover_media.host == 'youtube'
+                    echo hover_media | external_video_url: autoplay: true, playsinline: true, loop: true, playlist: hover_media.external_id, controls: false, mute: true, showinfo: 0 | external_video_tag: loading: 'lazy', data-host: hover_media.host
+                  else
+                    echo hover_media | external_video_url: autoplay: true, playsinline: true, loop: true, controls: 0, muted: true | external_video_tag: data-host: hover_media.host
+                  endif
+              endcase
+            -%}
+          {%- else -%}
+            {% render 'image',
+              image: hover_media.preview_image,
+              height: hover_media.preview_image.height,
+              class: 'product-hero-img',
+              alt: hover_media.title,
+              lazy_load: true,
+              fetchpriority: 'high',
+              attributes: 'decoding="async"',
+              sizes: '(max-width: 640px) 100vw, 50vw'
+            %}
+          {%- endif -%}
+        </div>
+      {% endif %}
+    {% endif %}
+  </div>
+</a>

@@ -1,0 +1,33 @@
+{%- doc -%}
+  Intended for use in a block similar to the button block.
+
+  @param {string} link - link to render
+  @param {object} [block] - The block
+
+  @example
+  {% render 'button', link: '/collections/all' %}
+{%- enddoc -%}
+
+{% assign block_settings = block.settings %}
+
+{% if block_settings.button_label != blank %}
+  <a
+    class="button button--{{ block_settings.button_style }} button--{{ block_settings.button_type }}"
+    {% if block_settings.button_link == blank %}
+      role="button" aria-disabled="true" aria-label="{{ block_settings.button_label }}"
+    {% else %}
+      href="{{ block_settings.button_link }}"
+      aria-label="{{ block_settings.button_label }}"
+    {% endif %}
+  >
+    <span class="button--text">
+     {% if block_settings.button_type contains "with-icon" %}
+    
+      {% render 'icon' with 'arrow', width: '16', height: '16', class: 'icon-arrow' %}
+ 
+    {%endif %}
+ 
+      {{ block_settings.button_label | escape }}
+    </span>
+  </a>
+{% endif %}

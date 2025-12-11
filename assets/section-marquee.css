@@ -1,0 +1,11 @@
+ .marquee-scroll .marquee-item {
+    gap: 24px;
+ }
+
+ .marquee-scroll .running-content-item {
+    gap: 24px;
+ }
+
+ .marquee-scroll .running-content-item p {
+    margin: 0;
+ }

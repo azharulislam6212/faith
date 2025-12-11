@@ -1,0 +1,61 @@
+<div class="product-rating">
+  <div
+    class="rating"
+    data-color-scheme="{{ settings.review_color_scheme }}"
+    role="img"
+    aria-label="{{ 'accessibility.star_reviews_info' | t: rating_value: product.metafields.reviews.rating.value, rating_max: product.metafields.reviews.rating.value.scale_max }}"
+  >
+    {% if product.metafields.reviews.rating.value.rating != blank %}
+      <div class="rating--icon">
+        {% assign rating_count = product.metafields.reviews.rating.value.rating | floor %}
+
+        {%- for i in (1..product.metafields.reviews.rating.value.scale_max) -%}
+          {%- if i <= rating_count -%}
+            <span>
+              {%- render 'icon' with 'rating-star' -%}
+            </span>
+          {%- else -%}
+            <span>
+              {%- render 'icon' with 'rating-star-empty' -%}
+            </span>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+    <p class="rating__text">
+      <span aria-hidden="true">
+        {{- product.metafields.reviews.rating.value }} /{{ product.metafields.reviews.rating.value.scale_max -}}
+      </span>
+    </p>
+
+    {% if settings.show_text_and_stars %}
+      <p class="rating__count">
+        {% if product.metafields.reviews.rating_count != blank %}
+          <span aria-hidden="true">
+            {% if settings.show_only_count %}
+              ({{ product.metafields.reviews.rating_count }})
+            {% else %}
+              (
+              {{- 'products.product.rating_counts' | t: rating_count: product.metafields.reviews.rating_count -}}
+              )
+            {% else %}
+              (
+              {{- 'products.product.rating_count' | t: rating_count: product.metafields.reviews.rating_count -}}
+              )
+            {% endif %}
+          </span>
+        {% else %}
+          <span aria-hidden="true"
+            >(
+            {{- 'products.product.no-reviews' | t -}}
+            )</span
+          >
+        {% endif %}
+        <span class="visually-hidden">
+          {{- product.metafields.reviews.rating_count }}
+          {{ 'accessibility.total_reviews' | t -}}
+        </span>
+      </p>
+    {% endif %}
+  </div>
+</div>

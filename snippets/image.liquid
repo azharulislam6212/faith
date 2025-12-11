@@ -1,0 +1,74 @@
+{%- doc -%}
+  Renders a responsive <picture> tag with mobile + desktop srcset.
+
+  Params:
+  - image
+  - height
+  - class
+  - alt
+  - style
+  - unset_image_tag
+  - lazy_load
+  - fetchpriority
+  - sizes
+  - attributes (any custom HTML attribute)
+{%- enddoc -%}
+
+{% if image != blank %}
+
+  {%- assign image_height = height | default: image.height -%}
+  {%- assign image_height_2x = image_height | times: 2 -%}
+  {%- assign image_height_3x = image_height | times: 3 -%}
+
+  {%- capture desktop_srcset -%}
+    {{ image | image_url: height: image_height }} 1x,
+    {{ image | image_url: height: image_height_2x }} 2x,
+    {{ image | image_url: height: image_height_3x }} 3x
+  {%- endcapture -%}
+
+  {%- capture mobile_srcset -%}
+    {{ image | image_url: height: image_height }} 1x,
+    {{ image | image_url: height: image_height_2x }} 2x
+  {%- endcapture -%}
+
+  {% assign style_value = style | default: '' %}
+  {% if unset_image_tag %}
+    {% assign style_value = style_value | append: 'object-position: inherit;' %}
+  {% endif %}
+
+  {% assign loading_attr = 'lazy' %}
+  {% if lazy_load == false %}
+    {% assign loading_attr = 'eager' %}
+  {% endif %}
+
+  {% assign fetchpriority_attr = fetchpriority | default: 'auto' %}
+  {% assign sizes_attr = sizes | default: '100vw' %}
+  {% assign extra_attrs = attributes | default: '' %}
+  {% assign alt_text = alt | default: image.alt | default: '' %}
+
+  <picture>
+    <!-- Mobile image -->
+    <source
+      srcset="{{ mobile_srcset }}"
+      media="(max-width: 640px)"
+      sizes="{{ sizes_attr }}"
+    >
+
+    <!-- Desktop image -->
+    <img
+      src="{{ image | image_url: height: image_height }}"
+      srcset="{{ desktop_srcset }}"
+      sizes="{{ sizes_attr }}"
+      alt="{{ alt_text }}"
+      class="{{ class }}"
+      loading="{{ loading_attr }}"
+      fetchpriority="{{ fetchpriority_attr }}"
+      style="{{ style_value }}"
+      {{ extra_attrs }}
+    >
+  </picture>
+
+{% elsif text_fallback %}
+  {{ text_fallback }}
+{% endif %}
+

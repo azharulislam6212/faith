@@ -1,0 +1,228 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "name": "t:sections.header.name",
+  "type": "header",
+  "sections": {
+    "announcement-bar": {
+      "type": "announcement-bar",
+      "blocks": {
+        "slide_BGP97C": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/announcement-image.jpg",
+            "image_ratio": "3-4",
+            "image_link": "",
+            "enable_video": true,
+            "video_source": "video_hosted",
+            "video": "https://www.youtube.com/watch?v=_9VUPq3SxOc",
+            "video_hosted": "shopify://files/videos/4919748-uhd_2732_1440_25fps.mp4",
+            "video_ratio": "3-4",
+            "enable_autoplay": true,
+            "enable_video_loop": true,
+            "enable_video_mute": false,
+            "hide_play_button": false,
+            "caption": "New Arrival. Up to",
+            "caption_type": "subtitle",
+            "caption_size": "large",
+            "heading": "<em>50% OFF</em>",
+            "heading_size": "h2",
+            "text": "<p>Pair text with an image to focus on your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.</p>",
+            "text_style": "body",
+            "text_size": "medium",
+            "button_label": "Button label",
+            "button_link": "shopify://collections",
+            "button_style": "primary",
+            "override_colors": false,
+            "colors_subtitle": "#ffffff",
+            "colors_text": "#ffffff",
+            "colors_heading": "#bffd3b"
+          }
+        },
+        "slide_CjtLhE": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/announcement-image.jpg",
+            "image_ratio": "3-4",
+            "image_link": "",
+            "enable_video": false,
+            "video_source": "video_external",
+            "video": "https://www.youtube.com/watch?v=_9VUPq3SxOc",
+            "video_ratio": "landscape",
+            "enable_autoplay": true,
+            "enable_video_loop": true,
+            "enable_video_mute": false,
+            "hide_play_button": false,
+            "caption": "New Arrival. Up to",
+            "caption_type": "subtitle",
+            "caption_size": "large",
+            "heading": "<em>50% OFF</em>",
+            "heading_size": "heading-large",
+            "text": "<p>Pair text with an image to focus on your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.</p>",
+            "text_style": "body",
+            "text_size": "medium",
+            "button_label": "Button label",
+            "button_link": "",
+            "button_style": "primary",
+            "override_colors": false,
+            "colors_subtitle": "#ffffff",
+            "colors_text": "#ffffff",
+            "colors_heading": "#bffd3b"
+          }
+        }
+      },
+      "block_order": [
+        "slide_BGP97C",
+        "slide_CjtLhE"
+      ],
+      "settings": {
+        "width": "container",
+        "text": "Up to 50% Off. On New Arrival",
+        "show_social": true,
+        "contact_details": "Call Us: <a href=\"tel:+99 (123) 456780\" title=\"tel:+99 (123) 456780\">+99 (123) 456780</a>",
+        "color_scheme": "",
+        "bg_image": "shopify://shop_images/bg_344c502b-9e4f-497b-9fb8-64758fabbfaf.png",
+        "color_scheme_drawer": "",
+        "autoplay_enabled": false,
+        "autoplay_timeout": 5,
+        "loop_enabled": false,
+        "enable_pagination": false,
+        "enable_navigation": true,
+        "color_scheme_navigation": "",
+        "padding_top": 16,
+        "padding_bottom": 16,
+        "padding_top_tablet": 16,
+        "padding_bottom_tablet": 16,
+        "padding_top_mobile": 16,
+        "padding_bottom_mobile": 16
+      }
+    },
+    "header": {
+      "type": "header",
+      "blocks": {
+        "image_block_Tbtz4h": {
+          "type": "image_block",
+          "settings": {
+            "position": "2",
+            "image": "shopify://shop_images/payday-banner.jpg",
+            "image_ratio": "16-9",
+            "image_link": "",
+            "heading": "Off work on payday.",
+            "heading_size": "h5",
+            "heading_position": "top",
+            "text": "New Arrival Sale 20% Discount",
+            "text_style": "subtitle",
+            "text_size": "medium",
+            "button_label": "Shop Now",
+            "button_link": "",
+            "button_style": "link"
+          }
+        },
+        "image_block_3EBrwE": {
+          "type": "image_block",
+          "settings": {
+            "position": "3",
+            "image": "shopify://shop_images/01-collection-image.jpg",
+            "hover_image": "shopify://shop_images/01-collection-image-hover.jpg",
+            "image_ratio": "1-1",
+            "image_link": "",
+            "heading": "Outfit wear for Women",
+            "heading_size": "h5",
+            "heading_position": "bottom",
+            "text": "Start From $16.00",
+            "text_style": "body",
+            "text_size": "medium",
+            "button_label": "",
+            "button_link": "",
+            "button_style": "link"
+          }
+        },
+        "image_block_BJKBFx": {
+          "type": "image_block",
+          "settings": {
+            "position": "3",
+            "image": "shopify://shop_images/01-collection-image.jpg",
+            "hover_image": "shopify://shop_images/01-collection-image-hover.jpg",
+            "image_ratio": "1-1",
+            "image_link": "shopify://collections",
+            "heading": "Outfit wear for Women",
+            "heading_size": "h5",
+            "heading_position": "bottom",
+            "text": "Start From $16.00",
+            "text_style": "body",
+            "text_size": "medium",
+            "button_label": "",
+            "button_link": "",
+            "button_style": "link"
+          }
+        },
+        "product_list_zyGwjM": {
+          "type": "product_list",
+          "settings": {
+            "position": "3",
+            "product_list": [
+              "ardene-microfiber-tights",
+              "high-waisted-skinny-jeans",
+              "breasted-trench-coat"
+            ],
+            "products_to_show": 3,
+            "image_ratio": "portrait",
+            "enable_quick_add": true,
+            "button_style": "secondary",
+            "button_type": "icon-only"
+          }
+        }
+      },
+      "block_order": [
+        "image_block_Tbtz4h",
+        "image_block_3EBrwE",
+        "image_block_BJKBFx",
+        "product_list_zyGwjM"
+      ],
+      "settings": {
+        "logo_position": "menu-center",
+        "logo": "shopify://shop_images/faith-white-logo.svg",
+        "logo_width": 95,
+        "logo_width_mobile": 90,
+        "menu": "main-menu",
+        "menu_type": "inline",
+        "mobile_menu_position": "burger-left",
+        "enable_first_level_arrow": true,
+        "enable_search": true,
+        "enable_border_bottom": true,
+        "enable_sticky_header": true,
+        "header_behavior_mode": "on-scroll-down",
+        "transparent": false,
+        "transparent_logo": "shopify://shop_images/faith-white-logo_f62832be-69da-40a1-8a95-79293000acc5.svg",
+        "transparent_color": "#000000",
+        "enable_country": true,
+        "enable_country_name": true,
+        "enable_country_flag": true,
+        "enable_language": true,
+        "margin_bottom": 0,
+        "color_scheme": "scheme-1",
+        "color_scheme_menu": "scheme-1",
+        "transparent_header_color": "#f6f7f8",
+        "sticky_header_background": "#f6f7f8",
+        "sticky_text_color": "#454545",
+        "padding_top": 30,
+        "padding_bottom": 30,
+        "padding_top_tab": 24,
+        "padding_bottom_tab": 24,
+        "padding_top_mobile": 16,
+        "padding_bottom_mobile": 16
+      }
+    }
+  },
+  "order": [
+    "announcement-bar",
+    "header"
+  ]
+}

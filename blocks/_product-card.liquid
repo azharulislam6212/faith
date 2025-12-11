@@ -1,0 +1,117 @@
+  
+  
+  {% liquid
+    
+  assign image_ratio = block.settings.image_ratio | default: 'portrait'
+  assign button_style = block.settings.button_style
+  assign enable_quick_add = block.settings.enable_quick_add
+  assign button_type = block.settings.button_type
+  capture button_class
+    echo 'button button--' | append: button_style | append: ' button-' | append: button_type
+  endcapture
+
+  %}
+
+
+  {% render 'product-card', product: product, image_ratio: image_ratio, show_quick_add: enable_quick_add, button_class: button_class, button_type: button_type, block: block %}
+
+
+
+
+  {% schema %}
+{
+  "name": "Product card",
+  "tag": null,
+  "settings": [
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "options": [
+        {
+          "label": "Portrait",
+          "value": "portrait"
+        },
+        {
+          "label": "Square",
+          "value": "1-1"
+        },
+        {
+          "label": "Large",
+          "value": "5-4"
+        },
+        {
+          "label": "Medium",
+          "value": "3-4"
+        },
+        {
+          "label": "Small",
+          "value": "2-3"
+        },
+        {
+          "label": "Original",
+          "value": "aspect-ratio"
+        }
+      ],
+      "default": "portrait",
+      "label": "Image Ratio"
+    },
+    {
+      "type": "header",
+      "content": "Quick add"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_quick_add",
+      "label": "Enable quick add",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "Button style",
+      "default": "primary",
+      "options": [
+        {
+          "value": "primary",
+          "label": "Primary"
+        },
+        {
+          "value": "secondary",
+          "label": "Secondary"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "button_type",
+      "label": "Button type",
+      "default": "icon-only",
+      "options": [
+        {
+          "value": "icon-only",
+          "label": "Icon only"
+        },
+        {
+          "value": "with-icon",
+          "label": "With icon & text"
+        },
+        {
+          "value": "with-none",
+          "label": "None"
+        }
+      ]
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_schema",
+      "label": "Color schema",
+      "default": "scheme-3"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product card"
+    }
+  ]
+}
+{% endschema %}

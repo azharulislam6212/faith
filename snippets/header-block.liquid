@@ -1,0 +1,165 @@
+{{ 'component-product-card.css' | asset_url | stylesheet_tag: preload: true }}
+{{ 'component-price.css' | asset_url | stylesheet_tag: preload: true }}
+
+
+{% case block.type %}
+  {% when 'product_list' %}
+    {% liquid
+      assign product_list = block.settings.product_list
+      assign products_to_show = block.settings.products_to_show
+      assign image_ratio = false
+      assign image_ratio = block.settings.image_ratio | default: 'portrait'
+  
+
+    capture  button_class
+    echo  'button button--' | append: block.settings.button_style | append:' button-' | append: block.settings.button_type 
+     endcapture
+
+    %}
+
+    <div role="list" class="megamenu-collection-product-list">
+      {% for product in product_list limit: products_to_show %}
+        {% render 'product-card-list-small',
+          product: product,
+          image_ratio: image_ratio,
+          show_quick_add: block.settings.enable_quick_add
+          button_class: button_class
+          button_type: block.settings.button_type
+        %}
+
+      {%- else -%}
+        {%- for i in (1..block.settings.products_to_show) -%}
+          {% if i == 1 %}
+            {% capture j %}{% cycle 1, 2, 3, 4, 5, 6 %}{% endcapture %}
+          {% else %}
+            {% capture j %}{% cycle 6, 5, 4, 3, 2, 1 %}{% endcapture %}
+          {% endif %}
+
+          {%- assign placeholder_image = 'product-' | append: j -%}
+          {% render 'product-card-list-small', image_ratio: image_ratio, placeholder_image: placeholder_image %}
+        {%- endfor -%}
+      {% endfor %}
+    </div>
+
+  {% when 'image_block' %}
+    {% liquid
+      assign image = block.settings.image | default: false
+      assign hover_image = block.settings.hover_image
+      assign image_ratio = false
+      assign image_ratio = block.settings.image_ratio | default: '16-9'
+      if image_ratio == 'aspect-ratio' and image == false
+        assign image_ratio = false
+      endif
+
+      assign image_link = block.settings.image_link
+
+      assign heading = block.settings.heading
+      assign heading_size = block.settings.heading_size
+      assign heading_position = block.settings.heading_position
+      assign text = block.settings.text
+      assign text_style = block.settings.text_style
+      assign text_size = block.settings.text_size
+
+      assign button_label = block.settings.button_label
+      assign button_link = block.settings.button_link
+      assign button_style = block.settings.button_style
+    %}
+    <div
+      class="megamenu-image-block  {% if hover_image != blank %} megamenu-image-hover {% endif %}"
+      role="complementary"
+      aria-label="Promotional banner"
+      {{ block.shopify_attributes }}
+    >
+      {% if image_link %}
+        <a href="{{ image_link }}">
+      {% endif %}
+
+      {% if heading != blank and heading_position contains 'top' %}
+        <h5 class="megamenu-image-title {% if image_link %} link-animation {% endif %} inline-richtext {{ heading_size }}">
+          {{ heading | strip_html | escape }}
+        </h5>
+      {% endif %}
+
+      {%- if image != blank -%}
+        <figure class="megamenu-image">
+          <div
+            class="megamenu-image__media {% if image_ratio != false %}  media media--no-hover  media--{{ image_ratio }} {% endif %}"
+            {% if image_ratio == 'aspect-ratio' %}
+              style="padding-bottom: {% render 'aspect-ratio' with image.aspect_ratio as aspect_ratio %}%;"
+            {% endif %}
+          >
+            {% render 'image',
+              image: image,
+              class: 'normal-image',
+              widths: '480, 550, 960',
+              mobile_widths: '320, 480, 550',
+              src_width: 1280,
+              sizes: '(max-width: 600px) 100vw, 50vw',
+              lazy_load: true,
+              alt_text: image.title
+            %}
+
+            {% if hover_image != blank %}
+              {% render 'image',
+                image: hover_image,
+                class: 'hover-image',
+                widths: '480, 550, 960',
+                mobile_widths: '320, 480, 550',
+                src_width: 1280,
+                sizes: '(max-width: 600px) 100vw, 50vw',
+                lazy_load: true,
+                alt_text: hover_image.title
+              %}
+            {% endif %}
+          </div>
+
+          <figcaption class="visually-hidden">{{ heading | default: image.alt }}</figcaption>
+        </figure>
+
+      {%- else -%}
+        <figure class="megamenu-image">
+          <div
+            class="megamenu-image__media {% if image_ratio != false %}  media media--no-hover  media--{{ image_ratio }} {% endif %}"
+            {% if image_ratio == 'aspect-ratio' %}
+              style="padding-bottom: {% render 'aspect-ratio' with image.aspect_ratio as aspect_ratio %}%;"
+            {% endif %}
+          >
+            {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+          </div>
+
+          <figcaption class="visually-hidden">{{ heading | default: image.alt }}</figcaption>
+        </figure>
+      {%- endif -%}
+
+      {% if heading != blank and heading_position contains 'bottom' %}
+        <h5 class="megamenu-image-title  {% if image_link %} link-animation {% endif %} inline-richtext {{ heading_size }}">
+          {{ heading | strip_html | escape }}
+        </h5>
+      {% endif %}
+
+      {% if image_link %} </a> {% endif %}
+
+      {% if text != blank %}
+        <div class="megamenu-block-content">
+          <div class="rte {{ text_style }} body--{{text_size}}">
+            <p>{{ text }}</p>
+          </div>
+          {%- if button_label != blank -%}
+            <a
+              class="button button--{{ button_style }} button--with-icon"
+              {% if button_link == blank %}
+                role="link" aria-disabled="true"
+              {% else %}
+                href="{{ button_link }}"
+              {% endif %}
+            >
+              <span class="button--text">
+                {% render 'icon' with 'arrow', width: '16', height: '16', class: 'icon-arrow' %}
+                {{ button_label | escape }}
+              </span>
+            </a>
+          {%- endif -%}
+        </div>
+      {% endif %}
+    </div>
+{% endcase %}

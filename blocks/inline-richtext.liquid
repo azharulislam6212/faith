@@ -1,0 +1,63 @@
+{% liquid
+  assign text = block.settings.text
+%}
+{% if text != blank %}
+  {% render 'text-inline-richtext', block: block %}
+{% endif %}
+
+
+{% schema %}
+{
+  "name": "Inline richtext",
+  "tag": null,
+  "settings": [
+    {
+      "type": "inline_richtext",
+      "id": "text",
+      "default": "We create durable, efficient products that address practical needs with a focus on simplicity and quality materials.",
+      "label": "t:sections.image-with-text.blocks.text.settings.text.label"
+    },
+    {
+      "type": "select",
+      "id": "text_style",
+      "options": [
+        {
+          "value": "body",
+          "label": "Body"
+        },
+        {
+          "value": "subtitle",
+          "label": "Subtitle"
+        }
+      ],
+      "default": "body",
+      "label": "Body"
+    },
+    {
+      "type": "select",
+      "id": "text_size",
+      "options": [
+        {
+          "value": "small",
+          "label": "Small"
+        },
+        {
+          "value": "medium",
+          "label": "Medium"
+        },
+        {
+          "value": "large",
+          "label": "Large"
+        }
+      ],
+      "default": "medium",
+      "label": "Size"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Inline richtext"
+    }
+  ]
+}
+{% endschema %}

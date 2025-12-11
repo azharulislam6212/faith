@@ -1,0 +1,3417 @@
+{{ 'section-product.css' | asset_url | stylesheet_tag }}
+{{ 'component-accordion.css' | asset_url | stylesheet_tag }}
+{{ 'component-price.css' | asset_url | stylesheet_tag }}
+{{ 'component-slider.css' | asset_url | stylesheet_tag }}
+{{ 'component-rating.css' | asset_url | stylesheet_tag }}
+{{ 'component-deferred-media.css' | asset_url | stylesheet_tag }}
+{{ 'component-list-payment.css' | asset_url | stylesheet_tag }}
+
+{% unless product.has_only_default_variant %}
+  {{ 'component-product-variant-picker.css' | asset_url | stylesheet_tag }}
+  {{ 'component-swatch-input.css' | asset_url | stylesheet_tag }}
+  {{ 'component-swatch.css' | asset_url | stylesheet_tag }}
+{% endunless %}
+{%- if product.quantity_price_breaks_configured? -%}
+  {{ 'component-volume-pricing.css' | asset_url | stylesheet_tag }}
+{%- endif -%}
+
+{%- style -%}
+     .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top_mobile}}px;
+    padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+
+<script src="{{ 'product-info.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
+{%- if product.quantity_price_breaks_configured? -%}
+  <script src="{{ 'show-more.js' | asset_url }}" defer="defer"></script>
+  <script src="{{ 'price-per-item.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}
+
+<product-info   {% if section.settings.allow_transparent_header %}
+    allow-transparent-header
+  {% endif %}
+  id="MainProduct-{{ section.id }}"
+  class="product-wrapper section-{{ section.id }}-padding gradient color-{{ section.settings.color_scheme }}  {% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}"
+  data-section="{{ section.id }}"
+  data-product-id="{{ product.id }}"
+  data-update-url="true"
+  data-url="{{ product.url }}"
+  {% if section.settings.image_zoom == 'hover' %}
+    data-zoom-on-hover
+  {% endif %}
+>
+  {%- liquid
+    if product == null
+      assign placeholder = true
+    endif
+
+    assign first_3d_model = product.media | where: 'media_type', 'model'
+
+    capture section_class
+      echo 'product--gallery-type-' | append: section.settings.gallery_type | append: ' product--gallery-size-' | append: section.settings.gallery_image_size | append: ' ' | append: class
+    endcapture
+
+    if section.settings.gallery_size == '8'
+      assign grid_left = 'col-lg-7 col-xl-8'
+      assign grid_right = 'col-lg-5 col-xl-4'
+    elsif section.settings.gallery_size == '7'
+      assign grid_left = 'col-md-6 col-lg-7'
+      assign grid_right = 'col-md-6 col-lg-5'
+    elsif section.settings.gallery_size == '6'
+      assign grid_left = 'col-md-6'
+      assign grid_right = 'col-md-6'
+    elsif section.settings.gallery_size == '5'
+      assign grid_left = 'col-md-5'
+      assign grid_right = 'col-md-7'
+    else
+      assign grid_left = 'col-md-6'
+      assign grid_right = 'col-md-6'
+    endif
+  -%}
+
+  {%- if first_3d_model -%}
+    <link
+      id="ModelViewerStyle"
+      rel="stylesheet"
+      href="https://cdn.shopify.com/shopifycloud/model-viewer-ui/assets/v1.0/model-viewer-ui.css"
+      media="print"
+      onload="this.media='all'"
+    >
+    <link
+      id="ModelViewerOverride"
+      rel="stylesheet"
+      href="{{- 'component-model-viewer-ui.css' | asset_url -}}"
+      media="print"
+      onload="this.media='all'"
+    >
+  {%- endif -%}
+
+  {%- if product.media.size > 0 -%}
+    {%- if section.settings.enable_zoom -%}
+      <link rel="stylesheet" href="{{- 'photoswipe.css' | asset_url -}}" media="print" onload="this.media='all'">
+
+      <script src="{{- 'photoswipe-lightbox.umd.min.js' | asset_url -}}" defer="defer" data-theme-script></script>
+      <script src="{{- 'photoswipe.umd.min.js' | asset_url -}}" defer="defer" data-theme-script></script>
+    {%- endif -%}
+
+    <script src="{{- 'product-popup.js' | asset_url -}}" defer="defer" data-theme-script></script>
+    <script src="{{- 'product-media.js' | asset_url -}}" defer="defer" data-theme-script></script>
+  {%- endif -%}
+
+  {%- capture thumbs_html -%}
+    <div class="product__media-thumbs {%- unless section.settings.gallery_type contains 'thumbs' %}   large-up-hide  {%- endunless -%}  {%- if section.settings.enable_mobile_thumbs == false %}  small-hide    medium-hide {%- endif -%}">
+      <div class="swiper" data-thumbs>
+        <div class="swiper-wrapper">
+  
+          {%- for media in product.media -%}
+        
+            <div
+              class="swiper-slide"
+              data-thumbnail
+            >
+              {%- render 'product-thumbnail', media: media, media_size: section.settings.gallery_image_size -%}
+            </div>
+          {%- endfor -%}
+        </div>
+
+        {% if section.settings.enable_navigation_thumbs %}
+          
+    
+  
+        <div class="product__media-thumbs-arrows">
+          <button class="button-arrow button-arrow--small product__media-thumbs-arrow product__media-thumbs-arrow--prev" data-thumbs-prev aria-label="previous">
+            {%- if section.settings.gallery_type != 'thumbs-bottom' -%}
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M6 14L12 8L18 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+
+            {%- else -%}
+    
+            <svg width="12" height="21" viewBox="0 0 12 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9.26987 20.4933L0.687061 11.5355C0.477577 11.3187 0.37356 11.0376 0.37356 10.7578C0.37356 10.478 0.477577 10.1967 0.687061 9.98014L9.26987 1.02233C9.69887 0.572613 10.4108 0.557989 10.8589 0.988644C11.3101 1.41638 11.3248 2.13146 10.8926 2.57818L3.01762 10.8L10.8913 18.9375C11.3234 19.3828 11.3087 20.0991 10.8576 20.527C10.4094 20.9578 9.69644 20.9428 9.26987 20.4933Z" fill="currentColor"/>
+            </svg>
+
+
+            {%- endif -%}
+          </button>
+
+
+            {% comment %} <div class="swiper-pagination"></div> {% endcomment %}
+
+           
+      
+  
+          <button class="button-arrow button-arrow--small product__media-thumbs-arrow product__media-thumbs-arrow--next" data-thumbs-next aria-label="next">
+            {%- if section.settings.gallery_type != 'thumbs-bottom' -%}
+               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M18 10L12 16L6 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+
+            {%- else -%}
+                <svg width="12" height="21" viewBox="0 0 12 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M2.73013 1.10671L11.3129 10.0645C11.5224 10.2813 11.6264 10.5623 11.6264 10.8422C11.6264 11.122 11.5224 11.4033 11.3129 11.6198L2.73012 20.5776C2.30112 21.0274 1.58919 21.042 1.14106 20.6113C0.68989 20.1836 0.675218 19.4685 1.10737 19.0218L8.98237 10.7999L1.10872 2.66249C0.67658 2.21717 0.691252 1.50092 1.14241 1.07296C1.5906 0.642175 2.30356 0.657175 2.73013 1.10671Z" fill="currentColor"/>
+</svg>
+
+
+            {%- endif -%}
+          </button>
+        </div><!-- /.product__media-thumbs-arrows -->
+            {% endif %}
+      </div>
+    </div><!-- /.product__media-thumbs -->
+  {%- endcapture -%}
+
+  {%- style -%}
+    #MainProduct-{{- section.id }} {
+      {%- liquid
+        assign partial_slide_ratio = 0.9
+        assign slide_width = 100.0 | divided_by: section.settings.slides_per_view
+        if section.settings.partial_slide
+          assign slide_width = slide_width | times: partial_slide_ratio
+        endif
+      -%}
+
+      --slide-width: {{ slide_width }}%;
+    }
+  {%- endstyle -%}
+
+  {% assign variant_images = product.images | where: 'attached_to_variant?', true | map: 'src' %}
+  
+  
+  <div class="product-block__wrapper  product {{ section_class }} js-main-product" id="MainProduct-{{- section.id }}">
+    <div class="{{ section.settings.width }}">
+      <div class="row product-row {% if section.settings.layout == 'text_first' %} flex-row-reverse {% endif %}">
+        <div class="col-12  {{grid_left}} ">
+               {%- unless placeholder -%}
+            <div class="product-gallery__wrapper">
+              <product-media
+                class="product__media"
+                {% if section.settings.gallery_image_size == 'aspect-ratio' %}
+                  data-slider-autoheight
+                {% endif %}
+                {% if section.settings.gallery_type contains 'grid' %}
+                  data-slider-desktop-disabled
+                {%- elsif section.settings.gallery_type != 'thumbs-bottom' -%}
+                  data-thumbs-layout="{{- section.settings.gallery_type | remove: 'thumbs-' -}}"
+                {% endif %}
+              >
+                {%- if product.media.size > 1 -%}
+                  {%- if section.settings.gallery_type == 'thumbs-left' -%}
+                    {{- thumbs_html -}}
+                  {%- endif -%}
+
+                  <div class="product__media-slider">
+                    <div class="swiper product__swiper" data-slider>
+                      <div class="product__media-track swiper-wrapper">
+                        {%- for media in product.media -%}
+                          <div
+                            class="product__media-slide swiper-slide"
+                            data-media-item
+                            data-media-id="{{- media.id -}}"
+                            data-index="{{- forloop.index0 -}}"
+                          >
+                            {%- render 'product-media',
+                              media: media,
+                              product_ref: product,
+                              preload_media: forloop.first,
+                              media_size: section.settings.gallery_image_size,
+                              disable_zoom_icon: section.settings.disable_zoom_icon,
+                              enable_zoom: section.settings.enable_zoom
+                            -%}
+                          </div>
+                          <!-- /.product__media-slide -->
+                        {%- endfor -%}
+                      </div>
+                      <!-- /.product__media-track -->
+
+                      {%- if section.settings.enable_navigation -%}
+                        <div class="swiper-navigation">
+                          <button
+                            class="product__media-arrow button-arrow motion-reduce"
+                            data-arrow-prev
+                            aria-label="previous"
+                          >
+                            <svg
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path d="M14 6L8 12L14 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                          </button>
+
+                          <button
+                            class="product__media-arrow button-arrow motion-reduce"
+                            data-arrow-next
+                            aria-label="next"
+                          >
+                            <svg
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path d="M10 6L16 12L10 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                          </button>
+                        </div>
+                        <!-- /.swiper-navigation -->
+                      {%- endif -%}
+
+                      <div class="swiper-pagination"></div>
+                    </div>
+                  </div>
+                  <!-- /.product__media-slider -->
+
+                  {%- if section.settings.gallery_type == 'thumbs-bottom'
+                    or section.settings.gallery_type == 'thumbs-right'
+                  -%}
+                    {{- thumbs_html -}}
+                  {%- endif -%}
+
+                  {%- unless section.settings.gallery_type contains 'thumbs'
+                    or section.settings.enable_mobile_thumbs == false
+                  -%}
+                    {{- thumbs_html -}}
+                  {%- endunless -%}
+
+                {%- else -%}
+                  <div class="product__media-slider">
+                    {%- render 'product-media',
+                      media: product.featured_media,
+                      product_ref: product,
+                      media_size: section.settings.gallery_image_size,
+                      disable_zoom_icon: section.settings.disable_zoom_icon,
+                      enable_zoom: section.settings.enable_zoom
+                    -%}
+                  </div>
+                  <!-- /.product__media-slider -->
+                {%- endif -%}
+              </product-media>
+            </div>
+          {%- else -%}
+            <div class="product__media-item">
+              <div
+                class="product-media-container global-media-settings gradient{% if section.settings.constrain_to_viewport %} constrain-height{% endif %}"
+                style="--ratio: 1.0; --preview-ratio: 1.0;"
+              >
+                {{ 'product-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+              </div>
+            </div>
+          {%- endunless -%}
+
+        </div>
+        <div class="col-12 {{ grid_right }}">
+          <section
+            id="ProductInfo-{{ section.id }}"
+            class="product__info-container{% if section.settings.enable_sticky_info %} product__column-sticky{% endif %}"
+          >
+            {%- assign product_form_id = 'product-form-' | append: section.id -%}
+
+            {%- for block in section.blocks -%}
+              {%- case block.type -%}
+                {%- when '@app' -%}
+                  {% render block %}
+
+                {%- when 'vendor' -%}
+                  <p
+                    class="product__text-vendor inline-richtext{% if block.settings.text_style == 'uppercase' %} caption-with-letter-spacing{% elsif block.settings.text_style == 'subtitle' %} subtitle{% endif %}"
+                    {{ block.shopify_attributes }}
+                  >
+                    {{- block.settings.text -}}
+                  </p>
+
+                {%- when 'product_description' -%}
+                  {% if block.settings.text != blank %}
+                    <div
+                      class="product__description inline-richtext {% if block.settings.text_style == 'uppercase' %} caption-with-letter-spacing{% elsif block.settings.text_style == 'subtitle' %} subtitle{% endif %}"
+                      {{ block.shopify_attributes }}
+                    >
+                      {{- block.settings.text -}}
+                    </div>
+                  {% endif %}
+
+                {%- when 'Kapseln' -%}
+                    <p
+                    class="product__Kapseln-text inline-richtext"
+                    {{ block.shopify_attributes }}
+                  >
+                  <span class="svg-icon">
+                    <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M8.28365 4.59551C8.33624 2.08401 10.6707 0.306915 13.073 0.958275C14.1508 1.25048 15.0474 2.03471 15.5177 3.05768C16.5624 5.88889 17.9639 8.67287 18.98 11.5041C20.7364 16.3968 14.1396 19.036 12.038 14.6363C11.6755 13.8775 11.4452 13.0372 11.0582 12.2919L7.83535 18.2227C6.06922 21.4125 1.2569 20.5167 0.762652 16.852C0.621219 15.8036 0.904086 15.0697 1.36311 14.1692C2.76417 11.4195 4.34751 8.74449 5.82516 6.03992C6.42408 5.25621 7.32016 4.75069 8.28365 4.59551ZM12.5685 8.98894L16.5761 7.3006L14.8299 3.09712C13.2343 0.282521 9.06281 1.33196 8.89942 4.56074C11.1562 4.59239 12.9259 6.71567 12.5685 8.98894ZM8.81007 5.19652C7.66481 5.20223 6.63802 5.83699 6.06411 6.82622L4.04575 10.5237L9.56778 13.6466L9.67041 13.522C10.2351 12.2395 11.2155 10.957 11.7337 9.6756C12.593 7.54972 11.0812 5.18511 8.81007 5.19652ZM16.8442 7.94521L16.6961 7.95922L12.4005 9.77057L11.4764 11.5139L11.4953 11.6504C12.3178 13.3533 12.5558 15.5768 14.6619 16.1264C17.1046 16.7643 19.2169 14.4983 18.5118 12.0579L16.8442 7.94521ZM3.76237 11.1293L3.61838 11.3333C2.58138 13.5765 -0.152836 16.5291 2.46037 18.7785C4.2025 20.2785 6.33677 19.5353 7.41513 17.6793C8.07175 16.5494 8.63493 15.3567 9.27879 14.2185L3.76237 11.1293Z" fill="#10120F"/>
+                      <path d="M8.12889 4.45968C8.26144 1.91617 10.6521 0.134439 13.1156 0.802365C14.2416 1.10772 15.1748 1.92603 15.664 2.99014L15.6672 2.99565L15.6688 3.00195C16.1893 4.41256 16.7992 5.81201 17.4076 7.21685C18.0154 8.62008 18.6215 10.0287 19.1316 11.4499C19.5837 12.7095 19.5016 13.8358 19.078 14.7441C18.6554 15.6501 17.8986 16.3287 17.0194 16.7035C15.2588 17.454 12.9856 16.9939 11.8925 14.7055C11.7078 14.3188 11.5569 13.912 11.4066 13.5163C11.2931 13.2176 11.1791 12.9248 11.0499 12.6438L7.9769 18.2998L7.97611 18.3006C6.13389 21.6279 1.11807 20.6904 0.603196 16.8736C0.455192 15.7765 0.754962 15.0064 1.21905 14.096C2.62117 11.3442 4.20988 8.65968 5.68359 5.9623L5.68989 5.95206L5.69698 5.94183C6.29578 5.15833 7.1766 4.64388 8.12889 4.45968ZM13.073 0.958275C10.7458 0.327289 8.48219 1.9752 8.29506 4.36203L8.28365 4.59551C7.32016 4.75069 6.42408 5.25621 5.82516 6.03992L5.26699 7.05304C3.95485 9.41451 2.58905 11.7632 1.36311 14.1692L1.19936 14.5C0.839678 15.258 0.638904 15.9347 0.762652 16.852C1.2569 20.5167 6.06922 21.4125 7.83535 18.2227L11.0582 12.2919C11.4452 13.0372 11.6755 13.8775 12.038 14.6363C14.1068 18.9672 20.5311 16.4776 19.056 11.7318L18.98 11.5041C18.0274 8.84978 16.7361 6.23698 15.7176 3.58788L15.5177 3.05768C15.0769 2.09871 14.2613 1.34965 13.2731 1.01894L13.073 0.958275ZM9.27879 14.2185C8.63493 15.3567 8.07175 16.5494 7.41513 17.6793L7.31064 17.8502C6.23908 19.5237 4.27962 20.1883 2.6248 18.9125L2.46037 18.7785C-0.152836 16.5291 2.58138 13.5765 3.61838 11.3333L3.76237 11.1293L9.27879 14.2185ZM3.75885 11.4136C3.49604 11.9794 3.12784 12.5891 2.77207 13.2068C2.41091 13.834 2.05969 14.474 1.82151 15.1103C1.58344 15.7464 1.46291 16.3673 1.55218 16.9579C1.64079 17.5438 1.93851 18.1167 2.56574 18.6566C3.39838 19.3734 4.31333 19.5477 5.14571 19.3315C5.98326 19.1138 6.75455 18.4956 7.27599 17.5982C7.60216 17.0369 7.90505 16.4591 8.20843 15.8774C8.48653 15.3441 8.76564 14.8073 9.05976 14.2803L3.81004 11.3412L3.75885 11.4136ZM18.5118 12.0579C19.1949 14.422 17.2339 16.6222 14.8899 16.1774L14.6619 16.1264C12.5558 15.5768 12.3178 13.3533 11.4953 11.6504L11.4764 11.5139L12.4005 9.77057L16.6961 7.95922L16.8442 7.94521L18.5118 12.0579ZM16.7335 8.11779L12.5163 9.89604L11.6429 11.5436L11.6508 11.6042C11.8552 12.0313 12.0247 12.4881 12.1918 12.9344C12.363 13.3918 12.5326 13.8385 12.7407 14.248C13.1544 15.062 13.7104 15.7113 14.7025 15.9703C17.015 16.5742 19.0253 14.4337 18.3574 12.1082L16.7398 8.117L16.7335 8.11779ZM8.80932 5.19603C11.0804 5.18461 12.593 7.54972 11.7337 9.6756C11.2155 10.957 10.2351 12.2395 9.67041 13.522L9.56778 13.6466L4.04575 10.5237L6.06411 6.82622C6.63802 5.83699 7.66481 5.20223 8.81007 5.19652L8.80932 5.19603ZM8.81011 5.35747C7.72617 5.36316 6.75039 5.96444 6.20337 6.90735L4.26288 10.4615L9.52913 13.4392L9.53386 13.4337C9.82 12.7895 10.2063 12.1466 10.5805 11.516C10.9618 10.8735 11.33 10.2425 11.5838 9.61489C12.4031 7.58791 10.9585 5.34667 8.81011 5.35747ZM8.89942 4.56074C9.06281 1.33196 13.2343 0.282521 14.8299 3.09712L16.5761 7.3006L12.569 8.98802C12.9255 6.71528 11.1558 4.59239 8.89942 4.56074ZM14.6859 3.17049C13.1985 0.558944 9.35847 1.46142 9.07472 4.40692C11.2554 4.53715 12.9461 6.53141 12.7604 8.73207L16.3649 7.21448L14.6859 3.17049Z" fill="#10120F"/>
+                      <path d="M3.42334 13.3481C3.63217 13.3201 3.85326 13.5692 3.76952 13.7794C3.09758 15.0728 1.8834 16.5302 3.33909 17.8075C3.55048 17.9928 3.92167 18.0742 3.73429 18.4448C3.48563 18.9363 2.70136 18.1095 2.52317 17.8604C1.36821 16.251 2.45271 14.9238 3.20991 13.482C3.25127 13.4281 3.36054 13.3564 3.42334 13.3481Z" fill="#10120F"/>
+                      <path d="M13.6903 14.8029C13.0791 14.1645 12.856 13.0419 12.4684 12.253C12.4138 11.9131 12.8825 11.7371 13.0597 12.0444C13.5928 13.2583 13.9144 15.0468 15.6065 14.9321C15.9272 14.9103 16.4996 14.5413 16.6231 14.9913C16.7737 15.5399 15.559 15.5845 15.2256 15.5539C14.7013 15.5062 14.0548 15.1833 13.6903 14.8029Z" fill="#10120F"/>
+                      <path d="M7.9774 4.32715C8.18523 1.75025 10.6328 -0.037626 13.1578 0.646991C14.3297 0.964814 15.298 1.81393 15.8071 2.91588L15.8181 2.93478L15.8228 2.95447C16.3408 4.35728 16.9477 5.74966 17.5554 7.15283C18.1629 8.55553 18.7712 9.96858 19.2833 11.3953C19.7486 12.6916 19.6672 13.8624 19.2242 14.8124C18.7833 15.7576 17.9952 16.4631 17.0829 16.8521C15.2542 17.6317 12.8828 17.1519 11.7473 14.7754C11.5591 14.3813 11.4054 13.9669 11.2559 13.5736C11.1831 13.382 11.1083 13.1955 11.0323 13.0129L8.11837 18.3768L8.10735 18.3973L8.10499 18.3988C6.17742 21.8391 0.97752 20.8562 0.443046 16.8954C0.28847 15.7496 0.606181 14.9431 1.07544 14.0225L1.61017 12.9924C2.87529 10.5953 4.25635 8.23866 5.54234 5.88489L5.54628 5.87781L5.55258 5.86757L5.55731 5.86048L5.56439 5.85024L5.56833 5.84394C6.16725 5.06034 7.03559 4.53732 7.9774 4.32715ZM13.1156 0.802365C10.6521 0.134439 8.26144 1.91617 8.12889 4.45968C7.1766 4.64388 6.29578 5.15833 5.69698 5.94183L5.68989 5.95206L5.68359 5.9623C5.31512 6.63672 4.93918 7.31043 4.56107 7.98447C3.99401 8.99532 3.42151 10.0073 2.85921 11.0244C2.2969 12.0415 1.74484 13.0641 1.21905 14.096C1.10304 14.3236 0.997161 14.5423 0.906117 14.7596C0.814978 14.977 0.738989 15.1931 0.681669 15.4149C0.65306 15.5257 0.629284 15.638 0.610791 15.7527C0.601517 15.8101 0.593696 15.8681 0.587165 15.9268C0.57414 16.0441 0.566346 16.1643 0.565114 16.2882C0.56386 16.4121 0.569227 16.5396 0.580865 16.6718C0.586676 16.7378 0.59397 16.8052 0.603196 16.8736C1.11807 20.6904 6.13389 21.6279 7.97611 18.3006L7.9769 18.2998L11.0499 12.6438C11.1791 12.9248 11.2931 13.2176 11.4066 13.5163C11.5569 13.912 11.7078 14.3188 11.8925 14.7055C12.0292 14.9917 12.1843 15.2493 12.3545 15.4794C12.7801 16.0548 13.3003 16.4591 13.8635 16.7112C13.9758 16.7615 14.0899 16.8059 14.2052 16.8442C14.3209 16.8827 14.4378 16.9152 14.5557 16.9419C14.7324 16.9819 14.9111 17.0085 15.0904 17.023C15.1502 17.0279 15.2101 17.0312 15.27 17.0333C15.8687 17.0541 16.4691 16.938 17.0194 16.7035C17.3492 16.5629 17.6618 16.3796 17.946 16.1575C18.2776 15.8986 18.5703 15.5869 18.8068 15.229C18.9081 15.0757 18.9988 14.9139 19.078 14.7441C19.1309 14.6306 19.1784 14.5136 19.2203 14.3934C19.3041 14.1531 19.3655 13.9 19.4006 13.635C19.4445 13.3038 19.4474 12.9543 19.4046 12.5892C19.3789 12.3701 19.3365 12.1456 19.2762 11.9158C19.236 11.7627 19.1881 11.6073 19.1316 11.4499C19.0041 11.0948 18.8708 10.7401 18.7328 10.3865C18.5946 10.0324 18.4517 9.6792 18.3059 9.32643C18.0147 8.62132 17.7115 7.91837 17.4076 7.21685C17.2555 6.86561 17.103 6.5145 16.9522 6.16368C16.6504 5.46217 16.3546 4.76076 16.0749 4.05781C15.935 3.70632 15.7989 3.35458 15.6688 3.00195L15.6672 2.99565L15.664 2.99014C15.6335 2.92376 15.6008 2.85821 15.5669 2.79381C15.4989 2.66472 15.4249 2.53931 15.344 2.41895C15.2227 2.23847 15.0868 2.06888 14.9392 1.91099C14.7918 1.75318 14.6323 1.60723 14.462 1.47548C14.3482 1.38749 14.2296 1.30561 14.1068 1.23056C13.9229 1.11812 13.7293 1.02123 13.528 0.940742C13.4608 0.913906 13.3928 0.888951 13.324 0.865926C13.2553 0.842931 13.1859 0.821427 13.1156 0.802365ZM4.68078 19.5715C4.66821 19.5724 4.65557 19.5723 4.64298 19.5731C4.65927 19.5721 4.67554 19.5712 4.6918 19.5699C4.68811 19.5702 4.68447 19.5712 4.68078 19.5715ZM4.85089 19.5542C4.8292 19.5571 4.80727 19.558 4.78552 19.5605C4.81177 19.5575 4.83812 19.5555 4.86427 19.5518C4.85979 19.5524 4.85537 19.5535 4.85089 19.5542ZM5.01942 19.5258C4.99146 19.5313 4.96324 19.5353 4.93515 19.54C4.96669 19.5347 4.99829 19.5298 5.02966 19.5234L5.01942 19.5258ZM3.69163 19.4652C3.67626 19.4607 3.66053 19.4573 3.64517 19.4526C3.63195 19.4485 3.619 19.4435 3.60579 19.4392C3.63435 19.4485 3.66304 19.4568 3.69163 19.4652ZM5.35176 19.4392C5.34946 19.4399 5.34697 19.44 5.34467 19.4408L5.41634 19.4163L5.35176 19.4392ZM9.05976 14.2803C8.76564 14.8073 8.48653 15.3441 8.20843 15.8774C7.90505 16.4591 7.60216 17.0369 7.27599 17.5982C7.24341 17.6542 7.21018 17.7094 7.17569 17.7633C6.83073 18.3022 6.39248 18.7288 5.90618 19.0139C5.66294 19.1565 5.4075 19.2635 5.14571 19.3315C5.09374 19.345 5.04127 19.3571 4.9887 19.3675C4.93594 19.378 4.88291 19.387 4.82962 19.3943C4.72339 19.4088 4.61615 19.4165 4.50831 19.4179C4.3464 19.4201 4.18297 19.4075 4.01925 19.3785C3.91037 19.3592 3.8013 19.3328 3.69242 19.299C3.36492 19.1973 3.03892 19.0284 2.72296 18.7847C2.67027 18.7441 2.61782 18.7014 2.56574 18.6566C1.93851 18.1167 1.64079 17.5438 1.55218 16.9579C1.46291 16.3673 1.58344 15.7464 1.82151 15.1103C2.05969 14.474 2.41091 13.834 2.77207 13.2068C3.12784 12.5891 3.49604 11.9794 3.75885 11.4136L3.81004 11.3412L9.05976 14.2803ZM5.51478 19.3817C5.51177 19.3829 5.50834 19.3829 5.50533 19.3841L5.57069 19.3581L5.51478 19.3817ZM3.19155 19.2683C3.17104 19.2581 3.14978 19.2491 3.12933 19.2384C3.12341 19.2352 3.11792 19.2313 3.11201 19.2281C3.13836 19.2422 3.16511 19.2551 3.19155 19.2683ZM3.86647 11.5575C3.60279 12.1097 3.24915 12.7023 2.91197 13.2877L2.91118 13.2869C2.55022 13.9137 2.20554 14.5441 1.97244 15.1668C1.73949 15.7892 1.62817 16.3809 1.71177 16.934C1.79404 17.4776 2.06982 18.0168 2.67099 18.5343C3.4654 19.2182 4.32643 19.3776 5.10526 19.1754C5.89423 18.9703 6.63268 18.3836 7.13632 17.5168C7.46032 16.9593 7.76215 16.385 8.06561 15.8031C8.31886 15.3175 8.57517 14.8271 8.84212 14.343L3.86647 11.5575ZM3.02774 19.1809C3.00511 19.1679 2.98178 19.1559 2.95922 19.1423L2.93875 19.1289C2.96823 19.147 2.99812 19.1639 3.02774 19.1809ZM6.13929 19.0588C6.12906 19.0655 6.11808 19.0711 6.10779 19.0777L6.19442 19.0202L6.13929 19.0588ZM6.28656 18.9564C6.27174 18.9673 6.25583 18.9765 6.24089 18.9871C6.2713 18.9656 6.30153 18.9436 6.33145 18.921C6.31623 18.9325 6.30192 18.9452 6.28656 18.9564ZM3.40182 13.1885C3.57591 13.1651 3.73452 13.2564 3.83024 13.3712C3.92696 13.4873 3.9891 13.6636 3.91923 13.839L3.91608 13.8469L3.91293 13.854C3.74503 14.1771 3.53513 14.5247 3.35535 14.8526C3.1713 15.1883 3.00897 15.5196 2.91118 15.8457C2.81373 16.1707 2.78269 16.4831 2.85448 16.7836C2.92586 17.0824 3.10217 17.3851 3.44513 17.6861C3.48705 17.7229 3.53903 17.7559 3.60343 17.7972C3.66268 17.8352 3.73584 17.8822 3.79637 17.9389C3.85908 17.9977 3.91947 18.0776 3.93971 18.1854C3.95987 18.2932 3.9356 18.4044 3.87828 18.5178C3.83504 18.6032 3.7738 18.6715 3.69321 18.7139C3.61308 18.7559 3.52751 18.7652 3.4475 18.7564C3.29457 18.7395 3.13978 18.6545 3.00884 18.5619C2.74239 18.3733 2.48986 18.0904 2.3922 17.9539C1.78114 17.1024 1.76114 16.3148 1.99528 15.5606C2.11064 15.189 2.28716 14.8266 2.47883 14.4714C2.67604 14.1059 2.87555 13.7714 3.06712 13.4067L3.07342 13.3948L3.08208 13.3838C3.11886 13.3359 3.17411 13.2924 3.22226 13.2617C3.26795 13.2327 3.33494 13.1975 3.40182 13.1885ZM6.70711 18.5981C6.6941 18.6109 6.68008 18.6225 6.66694 18.6351C6.68729 18.6156 6.70755 18.596 6.72758 18.576C6.72048 18.5831 6.71425 18.5911 6.70711 18.5981ZM3.42334 13.3481C3.36054 13.3564 3.25127 13.4281 3.20991 13.482L2.91591 14.0178C2.21683 15.2598 1.51277 16.4521 2.52317 17.8604C2.70136 18.1095 3.48563 18.9363 3.73429 18.4448C3.92167 18.0742 3.55048 17.9928 3.33909 17.8075C2.06556 16.6898 2.83605 15.4342 3.49869 14.2714L3.76952 13.7794C3.84251 13.5956 3.68274 13.3819 3.50184 13.3499L3.42334 13.3481ZM7.08513 18.1712C7.07165 18.1887 7.05707 18.2052 7.04339 18.2224C7.06208 18.199 7.08099 18.1756 7.0993 18.1516L7.08513 18.1712ZM15.2542 16.871C15.2422 16.8705 15.2301 16.8708 15.218 16.8702L15.1849 16.8671L15.2542 16.871ZM15.0826 16.86C15.0713 16.859 15.06 16.8587 15.0487 16.8576L15.0117 16.8529L15.0826 16.86ZM15.8945 16.8435C15.8783 16.8455 15.8619 16.8463 15.8457 16.8482L15.9047 16.8411L15.8945 16.8435ZM14.9085 16.8411C14.8988 16.8398 14.889 16.8393 14.8794 16.8379L14.8305 16.8293L14.9085 16.8411ZM14.5699 16.7781C14.5616 16.7762 14.553 16.7754 14.5447 16.7734L14.4958 16.76L14.5699 16.7781ZM16.393 16.7474C16.367 16.7542 16.3405 16.7592 16.3143 16.7655L16.4174 16.7395L16.393 16.7474ZM14.4061 16.7364C14.3969 16.7338 14.3876 16.7319 14.3785 16.7293L14.2832 16.6986L14.4061 16.7364ZM16.556 16.7009C16.5438 16.7047 16.5313 16.7075 16.519 16.7112L16.5773 16.693L16.556 16.7009ZM14.2525 16.6891C14.24 16.6849 14.2272 16.6816 14.2147 16.6773L14.1462 16.6513L14.2525 16.6891ZM14.0792 16.6261C14.0704 16.6226 14.0612 16.6202 14.0525 16.6166L13.9816 16.5851L14.0792 16.6261ZM13.6099 16.4001C13.658 16.4279 13.7066 16.4543 13.7556 16.4796C13.6966 16.4492 13.6377 16.4177 13.5799 16.3835L13.5193 16.345L13.6099 16.4001ZM17.3357 16.3686C17.3295 16.372 17.323 16.3746 17.3168 16.378L17.3514 16.3591L17.3357 16.3686ZM15.9851 16.1969C15.9778 16.1981 15.9703 16.1981 15.963 16.1993L16.056 16.1827L15.9851 16.1969ZM17.7641 16.0929C17.7538 16.1006 17.743 16.1075 17.7326 16.115L17.7893 16.0732L17.7641 16.0929ZM16.393 16.1032C16.3847 16.1057 16.3761 16.107 16.3678 16.1095L16.4852 16.0717L16.393 16.1032ZM18.3574 12.1082C19.0045 14.3611 17.1379 16.4405 14.918 16.0189C14.8465 16.0053 14.7745 15.9891 14.7025 15.9703C13.7104 15.7113 13.1544 15.062 12.7407 14.248C12.5326 13.8385 12.363 13.3918 12.1918 12.9344C12.0247 12.4881 11.8552 12.0313 11.6508 11.6042L11.6429 11.5436L12.5163 9.89604L16.7335 8.11779L16.7398 8.117L18.3574 12.1082ZM12.631 10.0218L11.8111 11.5685C12.0121 11.9934 12.1806 12.4443 12.3427 12.8774C12.5143 13.3359 12.6812 13.7751 12.8845 14.1753C13.2863 14.9657 13.812 15.5711 14.7431 15.8142C16.9259 16.3842 18.8342 14.3686 18.2036 12.1584L16.6513 8.32704L12.631 10.0218ZM18.0295 15.8779C18.0267 15.8804 18.0237 15.8826 18.0209 15.885L18.0437 15.8646L18.0295 15.8779ZM12.3089 12.2789C12.2322 11.802 12.8438 11.5299 13.1436 11.8843L13.1996 11.9639L13.2074 11.9796C13.3423 12.2869 13.4662 12.6355 13.5949 12.9648C13.7257 13.2995 13.8645 13.6225 14.0359 13.902C14.207 14.181 14.4063 14.4098 14.6541 14.5628C14.8996 14.7142 15.2032 14.798 15.5952 14.7715C15.654 14.7675 15.7328 14.7462 15.8362 14.7148C15.932 14.6856 16.048 14.6479 16.1575 14.6265C16.2652 14.6055 16.3948 14.5941 16.5135 14.6384C16.6457 14.6876 16.7366 14.7945 16.7789 14.9486C16.8055 15.0455 16.8038 15.1406 16.7718 15.229C16.7403 15.3159 16.6836 15.3853 16.6183 15.4393C16.4914 15.544 16.3137 15.6074 16.1426 15.6472C15.8829 15.7076 15.5904 15.7242 15.3842 15.722L15.2109 15.7149C14.6459 15.6635 13.9637 15.3218 13.5736 14.9148C13.2448 14.5713 13.0268 14.1053 12.8452 13.6437C12.6587 13.1697 12.514 12.7109 12.3238 12.3238L12.3128 12.3025L12.3089 12.2789ZM12.7365 15.6913C12.7326 15.687 12.7285 15.683 12.7247 15.6787L12.6577 15.5999L12.7365 15.6913ZM18.2744 15.6409C18.2699 15.6458 18.2649 15.6502 18.2603 15.6551L18.2965 15.6165L18.2744 15.6409ZM13.0597 12.0444C12.8825 11.7371 12.4138 11.9131 12.4684 12.253C12.856 13.0419 13.0791 14.1645 13.6903 14.8029C14.0548 15.1833 14.7013 15.5062 15.2256 15.5539C15.559 15.5845 16.7737 15.5399 16.6231 14.9913C16.4996 14.5413 15.9272 14.9103 15.6065 14.9321C13.9144 15.0468 13.5928 13.2583 13.0597 12.0444ZM18.4989 15.381C18.4934 15.388 18.4871 15.3945 18.4816 15.4015L18.5328 15.3345L18.4989 15.381ZM17.7673 15.2463C17.7584 15.2558 17.7487 15.2645 17.7397 15.2739L17.8082 15.1999L17.7673 15.2463ZM18.6021 15.2424C18.5969 15.2497 18.5908 15.2564 18.5855 15.2637L18.6383 15.1888L18.6021 15.2424ZM18.6989 15.0991C18.6962 15.1034 18.693 15.1074 18.6903 15.1117L18.7123 15.0754L18.6989 15.0991ZM0.944706 15.1101C0.950775 15.0929 0.955744 15.0753 0.962032 15.0581L1.04787 14.8423L0.944706 15.1101ZM18.9494 14.6384C18.9479 14.6416 18.9461 14.6446 18.9446 14.6478L18.9533 14.6281L18.9494 14.6384ZM18.4934 14.0146C18.4878 14.032 18.4803 14.0486 18.4745 14.0658L18.5005 13.9886L18.4934 14.0146ZM8.81011 5.35747C9.0114 5.35646 9.20653 5.37508 9.39418 5.41159C9.51942 5.43594 9.64139 5.4681 9.7596 5.50766C9.81888 5.5275 9.87706 5.5496 9.93443 5.57303C10.1631 5.66644 10.3763 5.78764 10.5708 5.93215C10.6193 5.96818 10.6664 6.00592 10.7125 6.04476C11.5914 6.78457 12.0331 8.01905 11.7111 9.23271C11.6772 9.36051 11.635 9.48817 11.5838 9.61489C11.33 10.2425 10.9618 10.8735 10.5805 11.516C10.2063 12.1466 9.82 12.7895 9.53386 13.4337L9.52913 13.4392L4.26288 10.4615L6.20337 6.90735C6.75039 5.96444 7.72617 5.36316 8.81011 5.35747ZM8.81062 5.51869C7.7879 5.52418 6.86351 6.09164 6.34327 6.98823L6.34248 6.98744L4.47996 10.3991L9.45718 13.2129C9.73897 12.6107 10.0984 12.0122 10.4416 11.4339C10.8236 10.7901 11.1854 10.1692 11.4339 9.55481C12.2131 7.62692 10.8366 5.5085 8.81062 5.51869ZM2.07561 12.8066C2.15237 12.6625 2.2281 12.5179 2.30557 12.3742L2.39141 12.2167L2.07561 12.8066ZM12.5687 8.98542L15.7283 7.65764L12.569 8.98802L12.5687 8.98542ZM9.07472 4.40692C9.35847 1.46142 13.1985 0.558944 14.6859 3.17049L16.3649 7.21448L12.7604 8.73207C12.9461 6.53141 11.2554 4.53715 9.07472 4.40692ZM14.5415 3.24429C13.1612 0.832947 9.64845 1.59614 9.25715 4.26021C11.3603 4.47886 12.9764 6.359 12.9334 8.48376L16.1544 7.12841L14.5415 3.24429ZM4.70125 8.06479C4.62514 8.20048 4.54912 8.33627 4.47287 8.47195L5.26699 7.05304C5.07944 7.39058 4.89042 7.72757 4.70125 8.06479ZM16.6348 5.82819C16.9065 6.46524 17.1822 7.10228 17.457 7.73875C17.3911 7.58625 17.3253 7.43368 17.2593 7.2812C17.1072 6.93009 16.9552 6.57877 16.8041 6.22747C16.747 6.09462 16.6915 5.96111 16.6348 5.82819ZM11.7851 7.32136C11.8284 7.44233 11.8648 7.56617 11.8938 7.69229C11.8793 7.62917 11.8624 7.56677 11.8442 7.50486C11.8261 7.44308 11.8067 7.38178 11.7851 7.32136ZM10.9598 6.04791L11.0937 6.18337C11.0297 6.11482 10.9619 6.04999 10.8921 5.98727C10.9146 6.00753 10.9378 6.02703 10.9598 6.04791ZM9.57847 5.28794C9.74748 5.32977 9.90969 5.38613 10.0652 5.45411C10.042 5.444 10.0193 5.43296 9.99586 5.4234C9.86171 5.36865 9.72233 5.32359 9.57847 5.28794ZM8.357 3.90975C8.32819 4.05711 8.30714 4.20811 8.29506 4.36203C8.30677 4.2128 8.3264 4.06622 8.35385 3.92314L8.357 3.90975ZM14.8746 2.07873C14.8878 2.09341 14.9003 2.10874 14.9132 2.12362L14.8479 2.05038L14.8746 2.07873ZM14.7408 1.93698C14.7553 1.9516 14.769 1.967 14.7833 1.98187L14.7132 1.91099L14.7408 1.93698ZM14.6006 1.80309C14.6094 1.8111 14.6179 1.81942 14.6266 1.82751L14.577 1.78262L14.6006 1.80309ZM14.3013 1.5566C14.3123 1.56472 14.3227 1.57355 14.3336 1.5818L14.2564 1.52509L14.3013 1.5566ZM10.9275 1.00138C10.9422 0.996665 10.9569 0.991746 10.9716 0.987207L10.9882 0.982482L10.9275 1.00138ZM11.3268 0.897428C11.3415 0.894445 11.3561 0.890785 11.3709 0.887977L11.4906 0.868289L11.3268 0.897428ZM12.638 0.865926C12.6929 0.874282 12.7476 0.885019 12.8026 0.895853C12.7429 0.884091 12.6834 0.873195 12.6239 0.864351L12.638 0.865926Z" fill="#10120F"/>
+                      </svg>
+
+                  </span>
+                    {{- block.settings.Kapseln_text -}}
+                  </p>
+                {%- when 'text' -%}
+                  <p
+                    class="product__text inline-richtext {% if block.settings.text_style == 'uppercase' %} caption-with-letter-spacing{% elsif block.settings.text_style == 'subtitle' %} subtitle{% endif %}"
+                    {{ block.shopify_attributes }}
+                  >
+                    {{- block.settings.text -}}
+                  </p>
+
+                  {%- when 'custom_tags' -%}
+                    {% assign custom_tags = product.metafields.custom.custom_tags.value %}
+
+                    <div class="custom-tag-list">
+                      {% for tag in custom_tags %}
+
+                        <div class="tag-badge">{{ tag }}</div>
+                        
+                      {% endfor %}
+
+                    </div>
+
+                {%- when 'product_info' -%}
+                  <div class="product-info-box" {{ block.shopify_attributes }}>
+                  
+
+
+                  <div class="product-card-info">
+
+                    <div id="price-{{ section.id }}" role="status" {{ block.shopify_attributes }}>
+                      {%- render 'price',
+                        product: product,
+                        use_variant: true,
+                        show_badges: false,
+                        price_class: 'price--large'
+                      -%}
+
+                      {% assign current = product.selected_or_first_available_variant %}
+                      {% assign  per_dose_size =  current.metafields.custom.per_dose_size %}
+
+                      {%if per_dose_size != blank %}
+                 
+                        <span class="price-per-dose">  {{ current.price |  divided_by: per_dose_size  |  money  | append: " Per Piece"}}</span>
+                      {% endif %}
+                      
+                    </div>
+
+                  
+                    {% assign discount_info = product.metafields.custom.discount_info.value %}
+
+
+
+
+                    <button class="discount-info" data-code="{{ discount_info.discount_code }}" id="copybtn">{{ discount_info.discount_text }}</button>
+
+                    {%- if product.quantity_price_breaks_configured? -%}
+                      <div class="volume-pricing-note" id="Volume-Note-{{ section.id }}">
+                        <span>{{ 'products.product.volume_pricing.note' | t }}</span>
+                      </div>
+                    {%- endif -%}
+
+
+
+                    {% render 'product-variant-picker',
+                      product: product,
+                      block: block,
+                      product_form_id: product_form_id
+                    %}
+
+                       <div
+                    id="Quantity-Form-{{ section.id }}"
+                    class="product-form__input product-form__quantity{% if settings.inputs_shadow_vertical_offset != 0 and settings.inputs_shadow_vertical_offset < 0 %} product-form__quantity-top{% endif %}"
+                    {{ block.shopify_attributes }}
+                  >
+                    {%- assign cart_qty = cart | item_count_for_variant: product.selected_or_first_available_variant.id -%}
+
+                    <label class="quantity__label form__label hidden" for="Quantity-{{ section.id }}">
+                      {{ 'products.product.quantity.label' | t }}
+                      <span class="quantity__rules-cart{% if cart_qty == 0 %} hidden{% endif %}">
+                        {%- render 'loading-overlay' -%}
+                        <span>({{- 'products.product.quantity.in_cart_html' | t: quantity: cart_qty -}})</span >
+                      </span>
+                    </label>
+                  <div class="price-per-item__container">
+                    <quantity-input class="quantity" data-url="{{ product.url }}" data-section="{{ section.id }}">
+                      <button class="quantity__button" name="minus" type="button">
+                        <span class="visually-hidden">
+                          {{- 'products.product.quantity.decrease' | t: product: product.title | escape -}}
+                        </span>
+                        <span class="svg-wrapper">
+                          {{- 'icon-minus.svg' | inline_asset_content -}}
+                        </span>
+                      </button>
+                      <input
+                        class="quantity__input"
+                        type="number"
+                        name="quantity"
+                        id="Quantity-{{ section.id }}"
+                        data-cart-quantity="{{ cart_qty }}"
+                        data-min="{{ product.selected_or_first_available_variant.quantity_rule.min }}"
+                        min="{{ product.selected_or_first_available_variant.quantity_rule.min }}"
+                        {% if product.selected_or_first_available_variant.quantity_rule.max != null %}
+                          data-max="{{ product.selected_or_first_available_variant.quantity_rule.max }}"
+                          max="{{ product.selected_or_first_available_variant.quantity_rule.max }}"
+                        {% endif %}
+                        step="{{ product.selected_or_first_available_variant.quantity_rule.increment }}"
+                        value="{{ product.selected_or_first_available_variant.quantity_rule.min }}"
+                        form="{{ product_form_id }}"
+                      >
+                      <button class="quantity__button" name="plus" type="button">
+                        <span class="visually-hidden">
+                          {{- 'products.product.quantity.increase' | t: product: product.title | escape -}}
+                        </span>
+                        <span class="svg-wrapper">
+                          {{- 'icon-plus.svg' | inline_asset_content -}}
+                        </span>
+                      </button>
+                    </quantity-input>
+                    {%- liquid
+                      assign volume_pricing_array = product.selected_or_first_available_variant.quantity_price_breaks | sort: 'quantity' | reverse
+                      assign current_qty_for_volume_pricing = cart_qty | plus: product.selected_or_first_available_variant.quantity_rule.min
+                      if cart_qty > 0
+                        assign current_qty_for_volume_pricing = cart_qty | plus: product.selected_or_first_available_variant.quantity_rule.increment
+                      endif
+                    -%}
+                    {%- if product.quantity_price_breaks_configured? -%}
+                      <price-per-item
+                        id="Price-Per-Item-{{ section.id }}"
+                        data-section-id="{{ section.id }}"
+                        data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+                      >
+                        {%- if product.selected_or_first_available_variant.quantity_price_breaks.size > 0 -%}
+                          {%- assign variant_price_compare = product.selected_or_first_available_variant.compare_at_price -%}
+                          <div class="price-per-item">
+                            {%- if variant_price_compare -%}
+                              <dl class="price-per-item--current">
+                                <dt class="visually-hidden">
+                                  {{ 'products.product.price.regular_price' | t }}
+                                </dt>
+                                <dd>
+                                  <s class="variant-item__old-price">
+                                    {{ variant_price_compare | money_with_currency }}
+                                  </s>
+                                </dd>
+                              </dl>
+                            {%- endif -%}
+                            {%- if current_qty_for_volume_pricing < volume_pricing_array.last.minimum_quantity -%}
+                              {%- assign variant_price = product.selected_or_first_available_variant.price
+                                | money_with_currency
+                              -%}
+                              <span class="price-per-item--current">
+                                {{- 'products.product.volume_pricing.price_at_each_html' | t: price: variant_price -}}
+                              </span>
+                            {%- else -%}
+                              {%- for price_break in volume_pricing_array -%}
+                                {%- if current_qty_for_volume_pricing >= price_break.minimum_quantity -%}
+                                  {%- assign price_break_price = price_break.price | money_with_currency -%}
+                                  <span class="price-per-item--current">
+                                    {{-
+                                      'products.product.volume_pricing.price_at_each_html'
+                                      | t: price: price_break_price
+                                    -}}
+                                  </span>
+                                  {%- break -%}
+                                {%- endif -%}
+                              {%- endfor -%}
+                            {%- endif -%}
+                          </div>
+                        {%- else -%}
+                          {%- assign variant_price = product.selected_or_first_available_variant.price
+                            | money_with_currency
+                          -%}
+                          {%- assign variant_price_compare = product.selected_or_first_available_variant.compare_at_price -%}
+                          <div class="price-per-item">
+                            {%- if variant_price_compare -%}
+                              <dl class="price-per-item--current">
+                                <dt class="visually-hidden">
+                                  {{ 'products.product.price.regular_price' | t }}
+                                </dt>
+                                <dd>
+                                  <s class="variant-item__old-price">
+                                    {{ variant_price_compare | money_with_currency }}
+                                  </s>
+                                </dd>
+                                <dt class="visually-hidden">
+                                  {{ 'products.product.price.sale_price' | t }}
+                                </dt>
+                                <dd>
+                                  <span class="price-per-item--current">
+                                    {{-
+                                      'products.product.volume_pricing.price_at_each_html'
+                                      | t: price: variant_price
+                                    -}}
+                                  </span>
+                                </dd>
+                              </dl>
+                            {%- else -%}
+                              <span class="price-per-item--current">
+                                {{- 'products.product.volume_pricing.price_at_each_html' | t: price: variant_price -}}
+                              </span>
+                            {%- endif -%}
+                          </div>
+                        {%- endif -%}
+                      </price-per-item>
+                    {%- endif -%}
+                  </div>
+                    <div class="quantity__rules caption" id="Quantity-Rules-{{ section.id }}">
+                      {%- if product.selected_or_first_available_variant.quantity_rule.increment > 1 -%}
+                        <span class="divider">
+                          {{-
+                            'products.product.quantity.multiples_of'
+                            | t: quantity: product.selected_or_first_available_variant.quantity_rule.increment
+                          -}}
+                        </span>
+                      {%- endif -%}
+                      {%- if product.selected_or_first_available_variant.quantity_rule.min > 1 -%}
+                        <span class="divider">
+                          {{-
+                            'products.product.quantity.minimum_of'
+                            | t: quantity: product.selected_or_first_available_variant.quantity_rule.min
+                          -}}
+                        </span>
+                      {%- endif -%}
+                      {%- if product.selected_or_first_available_variant.quantity_rule.max != null -%}
+                        <span class="divider">
+                          {{-
+                            'products.product.quantity.maximum_of'
+                            | t: quantity: product.selected_or_first_available_variant.quantity_rule.max
+                          -}}
+                        </span>
+                      {%- endif -%}
+                    </div>
+                    {%- if product.quantity_price_breaks_configured? -%}
+                      <volume-pricing class="parent-display" id="Volume-{{ section.id }}">
+                        {%- if product.selected_or_first_available_variant.quantity_price_breaks.size > 0 -%}
+                          <span class="caption-large">{{ 'products.product.volume_pricing.title' | t }}</span>
+                          <ul class="list-unstyled">
+                            <li>
+                              <span>{{ product.selected_or_first_available_variant.quantity_rule.min }}+</span>
+                              {%- assign price = product.selected_or_first_available_variant.price
+                                | money_with_currency
+                              -%}
+                              <span data-text="{{ 'products.product.volume_pricing.price_at_each_html' | t: price: variant_price }}">
+                                {{- 'sections.quick_order_list.each' | t: money: price -}}
+                              </span>
+                            </li>
+                            {%- for price_break in product.selected_or_first_available_variant.quantity_price_breaks -%}
+                              {%- assign price_break_price = price_break.price | money_with_currency -%}
+                              <li class="{%- if forloop.index >= 3 -%}show-more-item hidden{%- endif -%}">
+                                <span>
+                                  {{- price_break.minimum_quantity -}}
+                                  <span aria-hidden="true">+</span></span
+                                >
+                                <span data-text="{{ 'products.product.volume_pricing.price_at_each_html' | t: price: price_break_price }}">
+                                  {{- 'sections.quick_order_list.each' | t: money: price_break_price -}}
+                                </span>
+                              </li>
+                            {%- endfor -%}
+                          </ul>
+                          {%- if product.selected_or_first_available_variant.quantity_price_breaks.size >= 3 -%}
+                            <show-more-button>
+                              <button
+                                class="button-show-more link underlined-link"
+                                id="Show-More-{{ section.id }}"
+                                type="button"
+                              >
+                                <span class="label-show-more label-text"
+                                  ><span aria-hidden="true">+ </span>{{ 'products.facets.show_more' | t }}
+                                </span>
+                              </button>
+                            </show-more-button>
+                          {%- endif -%}
+                        {%- endif -%}
+                      </volume-pricing>
+                    {%- endif -%}
+                  </div>
+
+
+
+                    {%- render 'buy-buttons',
+                      block: block,
+                      product: product,
+                      product_form_id: product_form_id,
+                      section_id: section.id,
+                      show_pickup_availability: true
+                    -%}
+
+                    <div class="payment-method-accept">
+                   
+                        <span class="payment-title">Rabattcodes können im Warenkorb eingelöst werden.</span>
+                        <ul class="payment-icons--custom list list-payment">
+                          <li>
+                            <span>
+                             <svg width="54" height="14" viewBox="0 0 54 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M19.8986 2.91132H16.9537C16.7522 2.91132 16.5808 3.05802 16.5494 3.25736L15.3583 10.8241C15.3346 10.9733 15.45 11.108 15.6012 11.108H17.0071C17.2086 11.108 17.38 10.9613 17.4114 10.7615L17.7326 8.72064C17.7637 8.52087 17.9355 8.37417 18.1366 8.37417H19.0688C21.0087 8.37417 22.1282 7.43356 22.4206 5.56961C22.5524 4.75413 22.4262 4.11339 22.0451 3.66466C21.6266 3.17192 20.8842 2.91132 19.8986 2.91132ZM20.2383 5.67489C20.0773 6.73371 19.2699 6.73371 18.4892 6.73371H18.0448L18.3566 4.75628C18.3751 4.63677 18.4785 4.54875 18.599 4.54875H18.8027C19.3345 4.54875 19.8361 4.54875 20.0954 4.8525C20.2499 5.03372 20.2973 5.30296 20.2383 5.67489Z" fill="#253B80"/>
+<path d="M28.7012 5.64089H27.291C27.1709 5.64089 27.0671 5.72891 27.0486 5.84843L26.9862 6.24365L26.8876 6.1004C26.5823 5.65642 25.9015 5.508 25.222 5.508C23.6636 5.508 22.3327 6.69066 22.0734 8.34966C21.9387 9.17722 22.1303 9.96854 22.5988 10.5204C23.0285 11.0278 23.6434 11.2392 24.375 11.2392C25.6306 11.2392 26.3269 10.4302 26.3269 10.4302L26.264 10.8229C26.2404 10.973 26.3558 11.1076 26.506 11.1076H27.7763C27.9783 11.1076 28.1488 10.9609 28.1806 10.7612L28.9428 5.9248C28.9669 5.77594 28.852 5.64089 28.7012 5.64089ZM26.7356 8.39108C26.5995 9.19836 25.96 9.74029 25.1445 9.74029C24.735 9.74029 24.4077 9.60869 24.1976 9.3593C23.9892 9.11164 23.9099 8.75913 23.9763 8.36649C24.1033 7.56611 24.7535 7.00649 25.5566 7.00649C25.957 7.00649 26.2826 7.13982 26.497 7.39136C26.7119 7.6455 26.7971 8.00017 26.7356 8.39108Z" fill="#253B80"/>
+<path d="M36.212 5.64185H34.7949C34.6597 5.64185 34.5326 5.70916 34.456 5.82177L32.5015 8.70658L31.673 5.93438C31.6209 5.76093 31.4612 5.64185 31.2803 5.64185H29.8877C29.7185 5.64185 29.601 5.80753 29.6548 5.96717L31.2157 10.5572L29.7482 12.633C29.6328 12.7965 29.7491 13.0213 29.9485 13.0213H31.3638C31.4982 13.0213 31.6239 12.9557 31.7001 12.8452L36.4135 6.02801C36.5263 5.86492 36.4105 5.64185 36.212 5.64185Z" fill="#253B80"/>
+<path d="M40.9037 2.91132H37.9584C37.7573 2.91132 37.5859 3.05802 37.5545 3.25736L36.3634 10.8241C36.3398 10.9733 36.4552 11.108 36.6054 11.108H38.1168C38.2572 11.108 38.3774 11.0053 38.3993 10.8655L38.7373 8.72064C38.7683 8.52087 38.9402 8.37417 39.1413 8.37417H40.0731C42.0134 8.37417 43.1325 7.43356 43.4253 5.56961C43.5575 4.75413 43.4305 4.11339 43.0494 3.66466C42.6313 3.17192 41.8893 2.91132 40.9037 2.91132ZM41.2434 5.67489C41.0828 6.73371 40.2755 6.73371 39.4943 6.73371H39.0504L39.3626 4.75628C39.3811 4.63677 39.4836 4.54875 39.6046 4.54875H39.8082C40.3396 4.54875 40.8417 4.54875 41.1009 4.8525C41.2555 5.03372 41.3024 5.30296 41.2434 5.67489Z" fill="#179BD7"/>
+<path d="M49.7062 5.64089H48.2969C48.1759 5.64089 48.073 5.72891 48.0549 5.84843L47.9924 6.24365L47.8934 6.1004C47.5881 5.65642 46.9078 5.508 46.2283 5.508C44.6699 5.508 43.3394 6.69066 43.0802 8.34966C42.9458 9.17722 43.1366 9.96854 43.6051 10.5204C44.0357 11.0278 44.6497 11.2392 45.3813 11.2392C46.6369 11.2392 47.3332 10.4302 47.3332 10.4302L47.2703 10.8229C47.2466 10.973 47.362 11.1076 47.5132 11.1076H48.783C48.9841 11.1076 49.1555 10.9609 49.1869 10.7612L49.9495 5.9248C49.9728 5.77594 49.8574 5.64089 49.7062 5.64089ZM47.7405 8.39108C47.6053 9.19836 46.965 9.74029 46.1495 9.74029C45.7408 9.74029 45.4127 9.60869 45.2026 9.3593C44.9942 9.11164 44.9158 8.75913 44.9813 8.36649C45.1091 7.56611 45.7585 7.00649 46.5616 7.00649C46.962 7.00649 47.2876 7.13982 47.502 7.39136C47.7177 7.6455 47.803 8.00017 47.7405 8.39108Z" fill="#179BD7"/>
+<path d="M51.3688 3.11928L50.1601 10.8245C50.1364 10.9738 50.2518 11.1084 50.4021 11.1084H51.6172C51.8192 11.1084 51.9906 10.9617 52.0216 10.7619L53.2135 3.19566C53.2371 3.04637 53.1217 2.91132 52.9715 2.91132H51.6108C51.4906 2.91175 51.3873 2.99977 51.3688 3.11928Z" fill="#179BD7"/>
+<path d="M3.12866 12.5787L3.35387 11.1454L2.85222 11.1337H0.456787L2.12149 0.557101C2.12666 0.525173 2.14345 0.495401 2.16799 0.474259C2.19254 0.453117 2.22397 0.441467 2.2567 0.441467H6.29573C7.63662 0.441467 8.56199 0.72106 9.04512 1.27291C9.27162 1.53179 9.41587 1.80233 9.48562 2.10004C9.55883 2.41243 9.56012 2.78565 9.48864 3.24085L9.48347 3.27407V3.56575L9.70997 3.69432C9.90072 3.79572 10.0523 3.91179 10.1686 4.04468C10.3623 4.26602 10.4876 4.54734 10.5406 4.88087C10.5953 5.22389 10.5772 5.63206 10.4876 6.09416C10.3843 6.62574 10.2172 7.08871 9.99158 7.46754C9.78403 7.8166 9.51964 8.10611 9.20573 8.33048C8.90603 8.54362 8.54993 8.70543 8.14732 8.80898C7.75719 8.91081 7.31238 8.96215 6.82451 8.96215H6.51017C6.2854 8.96215 6.06708 9.04327 5.89571 9.18867C5.7239 9.3371 5.61022 9.53989 5.57534 9.76167L5.55166 9.89068L5.15378 12.4169L5.13569 12.5097C5.13096 12.539 5.12278 12.5537 5.11072 12.5636C5.09996 12.5727 5.08445 12.5787 5.06938 12.5787H3.12866Z" fill="#253B80"/>
+<path d="M9.92434 3.30756C9.91228 3.38479 9.8985 3.46375 9.883 3.54487C9.35034 6.28514 7.52804 7.23178 5.20065 7.23178H4.01563C3.73101 7.23178 3.49116 7.43889 3.44681 7.72021L2.84009 11.5758L2.66828 12.6687C2.63943 12.8534 2.78153 13.02 2.96755 13.02H5.06931C5.3182 13.02 5.52962 12.8387 5.56881 12.5928L5.58948 12.4858L5.9852 9.96946L6.01061 9.83139C6.04936 9.58459 6.26122 9.40337 6.5101 9.40337H6.82444C8.86075 9.40337 10.4548 8.57495 10.9207 6.1777C11.1154 5.17626 11.0146 4.34007 10.4996 3.75197C10.3437 3.57464 10.1504 3.42751 9.92434 3.30756Z" fill="#179BD7"/>
+<path d="M9.36735 3.08549C9.28597 3.06176 9.202 3.04019 9.11588 3.02077C9.02933 3.00179 8.94063 2.98496 8.84934 2.97029C8.52983 2.91851 8.17975 2.89392 7.8047 2.89392H4.63892C4.56099 2.89392 4.48692 2.91161 4.42061 2.94354C4.27464 3.01387 4.16612 3.15237 4.13986 3.32194L3.4664 7.59609L3.44702 7.72078C3.49137 7.43946 3.73122 7.23236 4.01585 7.23236H5.20086C7.52826 7.23236 9.35056 6.28528 9.88321 3.54544C9.89914 3.46433 9.91249 3.38537 9.92455 3.30813C9.78977 3.23651 9.6438 3.17524 9.48663 3.12303C9.44787 3.11009 9.40783 3.09758 9.36735 3.08549Z" fill="#222D65"/>
+<path d="M4.13979 3.32189C4.16606 3.15232 4.27457 3.01382 4.42054 2.94392C4.48729 2.912 4.56092 2.89431 4.63886 2.89431H7.80463C8.17969 2.89431 8.52977 2.9189 8.84927 2.97068C8.94056 2.98535 9.02926 3.00217 9.11581 3.02116C9.20193 3.04057 9.2859 3.06215 9.36728 3.08588C9.40776 3.09796 9.44781 3.11047 9.48699 3.12298C9.64416 3.17519 9.79013 3.23689 9.92491 3.30809C10.0834 2.29542 9.92362 1.60593 9.37719 0.981596C8.77478 0.294263 7.68751 0 6.29624 0H2.2572C1.97301 0 1.73058 0.207106 1.68666 0.488856L0.0043012 11.1742C-0.0288551 11.3856 0.133912 11.5764 0.346629 11.5764H2.84024L3.46633 7.59604L4.13979 3.32189Z" fill="#253B80"/>
+</svg>
+
+                            </span>
+                          </li>
+                          <li>
+                            <span>
+                             <svg width="38" height="21" viewBox="0 0 38 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M33.7872 6.10352e-05H3.58894C1.60682 6.10352e-05 0 1.61381 0 3.60447V17.2497C0 19.2403 1.60682 20.8541 3.58894 20.8541H33.7872C35.7693 20.8541 37.3761 19.2403 37.3761 17.2497V3.60447C37.3761 1.61381 35.7693 6.10352e-05 33.7872 6.10352e-05Z" fill="#FFB3C7"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M33.8764 12.2389C33.3874 12.2389 32.991 12.6406 32.991 13.1362C32.991 13.6317 33.3874 14.0335 33.8764 14.0335C34.3654 14.0335 34.7619 13.6317 34.7619 13.1362C34.7619 12.6406 34.3655 12.2389 33.8764 12.2389ZM30.9634 11.5452C30.9634 10.8667 30.3911 10.3168 29.6852 10.3168C28.9792 10.3168 28.4069 10.8667 28.4069 11.5452C28.4069 12.2237 28.9792 12.7737 29.6852 12.7737C30.3912 12.7737 30.9634 12.2237 30.9634 11.5452ZM30.9681 9.15764H32.3787V13.9325H30.9681V13.6274C30.5696 13.9028 30.0885 14.0647 29.5696 14.0647C28.1966 14.0647 27.0835 12.9367 27.0835 11.5452C27.0835 10.1536 28.1966 9.02565 29.5696 9.02565C30.0885 9.02565 30.5696 9.18756 30.9681 9.46309V9.15764ZM19.6788 9.77961V9.15771H18.2345V13.9325H19.6821V11.7032C19.6821 10.9511 20.4865 10.5468 21.0446 10.5468C21.0504 10.5468 21.0557 10.5474 21.0614 10.5475V9.15809C20.4885 9.15809 19.9616 9.40657 19.6788 9.77961ZM16.0811 11.5452C16.0811 10.8667 15.5088 10.3168 14.8028 10.3168C14.0969 10.3168 13.5246 10.8667 13.5246 11.5452C13.5246 12.2237 14.0969 12.7737 14.8028 12.7737C15.5088 12.7737 16.0811 12.2237 16.0811 11.5452ZM16.0857 9.15766H17.4965V13.9326H16.0857V13.6274C15.6872 13.9028 15.2061 14.0647 14.6874 14.0647C13.3142 14.0647 12.2011 12.9367 12.2011 11.5452C12.2011 10.1536 13.3142 9.02567 14.6874 9.02567C15.2062 9.02567 15.6872 9.18758 16.0857 9.4631V9.15766ZM24.5768 9.02923C24.0132 9.02923 23.4799 9.20653 23.1233 9.69568V9.15794H21.7187V13.9326H23.1406V11.4234C23.1406 10.6973 23.6211 10.3417 24.1996 10.3417C24.8196 10.3417 25.176 10.717 25.176 11.4135V13.9326H26.585V10.8962C26.585 9.78498 25.7132 9.02923 24.5768 9.02923ZM10.1462 13.9326H11.6228V7.02983H10.1462V13.9326ZM3.66016 13.9345H5.22364V7.02858H3.66016V13.9345ZM9.1287 7.02858C9.1287 8.52365 8.55378 9.91444 7.52933 10.9482L9.69051 13.9348H7.75941L5.41069 10.689L6.01686 10.229C7.02211 9.46586 7.5987 8.29941 7.5987 7.02856L9.1287 7.02858Z" fill="#0A0B09"/>
+</svg>
+
+                            </span>
+                          </li>
+
+                          <li>
+                            <span>
+                          <svg width="38" height="21" viewBox="0 0 38 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M33.7872 6.10352e-05H3.58894C1.60682 6.10352e-05 0 1.61381 0 3.60447V17.2497C0 19.2403 1.60682 20.8541 3.58894 20.8541H33.7872C35.7693 20.8541 37.3761 19.2403 37.3761 17.2497V3.60447C37.3761 1.61381 35.7693 6.10352e-05 33.7872 6.10352e-05Z" fill="black"/>
+<path d="M11.1232 6.61668C10.8207 6.9865 10.3368 7.27818 9.85285 7.23651C9.79236 6.73648 10.0293 6.2052 10.3065 5.87705C10.609 5.49682 11.1383 5.22597 11.5668 5.20514C11.6172 5.726 11.4206 6.23645 11.1232 6.61668ZM11.5618 7.33547C10.8611 7.29381 10.2612 7.74696 9.92847 7.74696C9.59072 7.74696 9.08157 7.35631 8.52705 7.36673C7.80618 7.37714 7.13571 7.79904 6.76772 8.47096C6.01155 9.81479 6.57111 11.8045 7.30207 12.8983C7.65999 13.44 8.08848 14.0338 8.65308 14.013C9.18743 13.9921 9.39916 13.6536 10.0444 13.6536C10.6947 13.6536 10.8812 14.013 11.4458 14.0025C12.0306 13.9921 12.3986 13.4608 12.7565 12.9191C13.1648 12.3045 13.3312 11.7055 13.3413 11.6743C13.3312 11.6639 12.2121 11.2211 12.202 9.88771C12.1919 8.77306 13.0842 8.24178 13.1245 8.21053C12.6204 7.43965 11.834 7.35631 11.5618 7.33547ZM15.6098 5.82497V13.9452H16.8297V11.169H18.5185C20.061 11.169 21.1449 10.0752 21.1449 8.49179C21.1449 6.90837 20.0812 5.82497 18.5588 5.82497H15.6098ZM16.8297 6.88753H18.2362C19.2948 6.88753 19.8997 7.4709 19.8997 8.497C19.8997 9.52311 19.2948 10.1117 18.2311 10.1117H16.8297V6.88753ZM23.373 14.0077C24.1393 14.0077 24.85 13.6067 25.1727 12.9712H25.1979V13.9452H26.3271V9.90334C26.3271 8.73139 25.4197 7.97614 24.0233 7.97614C22.7278 7.97614 21.7699 8.74181 21.7347 9.79395H22.8336C22.9244 9.29392 23.373 8.96578 23.988 8.96578C24.7341 8.96578 25.1525 9.32518 25.1525 9.98667V10.4346L23.6301 10.5284C22.2136 10.6169 21.4473 11.2159 21.4473 12.2576C21.4473 13.3098 22.2388 14.0077 23.373 14.0077ZM23.7007 13.0441C23.0504 13.0441 22.637 12.7212 22.637 12.2264C22.637 11.7159 23.0353 11.4191 23.7965 11.3722L25.1525 11.2836V11.742C25.1525 12.5024 24.5274 13.0441 23.7007 13.0441ZM27.8344 16.1537C29.0241 16.1537 29.5836 15.6849 30.0726 14.263L32.2151 8.05427H30.9749L29.5382 12.8514H29.513L28.0763 8.05427H26.8009L28.8678 13.9661L28.7569 14.3255C28.5704 14.9349 28.2679 15.1693 27.7285 15.1693C27.6327 15.1693 27.4462 15.1589 27.3706 15.1484V16.1225C27.4412 16.1433 27.7436 16.1537 27.8344 16.1537Z" fill="white"/>
+</svg>
+
+                            </span>
+                          </li>
+                          <li>
+                            <span>
+                              <svg width="38" height="18" viewBox="0 0 38 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_304_4107)">
+<path d="M17.6602 9.20278V13.5472H16.2585V2.80292H19.9027C20.7904 2.80292 21.6314 3.12992 22.2854 3.7372C22.9395 4.29778 23.2666 5.13863 23.2666 6.02621C23.2666 6.91378 22.9395 7.70792 22.2854 8.31521C21.6314 8.9225 20.8371 9.2495 19.9027 9.2495L17.6602 9.20278ZM17.6602 4.11092V7.84807H19.9962C20.5101 7.84807 21.024 7.66121 21.351 7.2875C22.0986 6.58678 22.0986 5.41892 21.3978 4.71821L21.351 4.67149C20.9773 4.29778 20.5101 4.0642 19.9962 4.11092H17.6602Z" fill="#5F6368"/>
+<path d="M26.4903 5.97931C27.5181 5.97931 28.3124 6.2596 28.9197 6.82017C29.5271 7.38074 29.8074 8.12817 29.8074 9.06246V13.547H28.4993V12.5193H28.4525C27.8919 13.3602 27.0977 13.7806 26.1633 13.7806C25.369 13.7806 24.6682 13.547 24.1076 13.0799C23.5936 12.6127 23.2666 11.9587 23.2666 11.258C23.2666 10.5106 23.5469 9.90331 24.1076 9.43617C24.6682 8.96903 25.4625 8.78217 26.3969 8.78217C27.2378 8.78217 27.8919 8.92231 28.4058 9.24931V8.92231C28.4058 8.45517 28.2189 7.98803 27.8452 7.70774C27.4714 7.38074 27.0042 7.19388 26.4903 7.19388C25.6961 7.19388 25.0887 7.52088 24.6682 8.17488L23.4535 7.42745C24.201 6.44645 25.1821 5.97931 26.4903 5.97931ZM24.7149 11.3047C24.7149 11.6785 24.9018 12.0055 25.1821 12.1923C25.5092 12.4259 25.8829 12.566 26.2567 12.566C26.8173 12.566 27.378 12.3325 27.7985 11.912C28.2657 11.4916 28.4993 10.9777 28.4993 10.4172C28.0788 10.0902 27.4714 9.90331 26.6772 9.90331C26.1165 9.90331 25.6493 10.0435 25.2756 10.3237C24.9018 10.5573 24.7149 10.8843 24.7149 11.3047Z" fill="#5F6368"/>
+<path d="M37.3758 6.21307L32.7505 16.8172H31.3489L33.0776 13.1268L30.0408 6.25979H31.5358L33.7317 11.5385H33.7784L35.9275 6.25979H37.3758V6.21307Z" fill="#5F6368"/>
+<path d="M12.1005 8.26867C12.1005 7.84824 12.0537 7.42781 12.007 7.00739H6.16699V9.38982H9.48412C9.34396 10.1372 8.92348 10.838 8.2694 11.2584V12.8H10.2784C11.4464 11.7255 12.1005 10.1372 12.1005 8.26867Z" fill="#4285F4"/>
+<path d="M6.16679 14.2949C7.84872 14.2949 9.25032 13.7344 10.2782 12.8001L8.2692 11.2585C7.70856 11.6322 7.00775 11.8658 6.16679 11.8658C4.5783 11.8658 3.1767 10.7914 2.7095 9.29651H0.653809V10.8848C1.72837 12.9869 3.83078 14.2949 6.16679 14.2949Z" fill="#34A853"/>
+<path d="M2.70949 9.29653C2.42917 8.5491 2.42917 7.70824 2.70949 6.91409V5.32581H0.6538C-0.233884 7.05424 -0.233884 9.10967 0.6538 10.8848L2.70949 9.29653Z" fill="#FBBC04"/>
+<path d="M6.16695 4.39162C7.05463 4.39162 7.89559 4.71862 8.54967 5.32591L10.325 3.55076C9.20376 2.52305 7.70871 1.91576 6.21367 1.96247C3.87766 1.96247 1.72853 3.27048 0.700684 5.37262L2.75637 6.96091C3.17685 5.46605 4.57846 4.39162 6.16695 4.39162Z" fill="#EA4335"/>
+</g>
+<defs>
+<clipPath id="clip0_304_4107">
+<rect width="37.2952" height="17.8369" fill="white"/>
+</clipPath>
+</defs>
+</svg>
+
+                            </span>
+                          </li>
+
+                 
+                        </ul>
+                   
+                    </div>
+                    
+                  </div>
+
+                    </div>
+
+                {%- when 'title' -%}
+                  <div class="product__title" {{ block.shopify_attributes }}>
+                    <h1>{{ product.title | escape }}</h1>
+                    <a href="{{ product.url }}" class="product__title">
+                      <h2 class="h1">
+                        {{ product.title | escape }}
+                      </h2>
+                    </a>
+                  </div>
+                {%- when 'price' -%}
+                  <div id="price-{{ section.id }}" role="status" {{ block.shopify_attributes }}>
+                    {%- render 'price',
+                      product: product,
+                      use_variant: true,
+                      show_badges: false,
+                      price_class: 'price--large'
+                    -%}
+                  </div>
+                  {%- if product.quantity_price_breaks_configured? -%}
+                    <div class="volume-pricing-note" id="Volume-Note-{{ section.id }}">
+                      <span>{{ 'products.product.volume_pricing.note' | t }}</span>
+                    </div>
+                  {%- endif -%}
+                  {% comment %}
+                    {%- if cart.taxes_included or cart.duties_included or shop.shipping_policy.body != blank -%}
+                      <div class="product__tax caption rte">
+                        {%- if cart.duties_included and cart.taxes_included -%}
+                          {{ 'products.product.duties_and_taxes_included' | t }}
+                        {%- elsif cart.taxes_included -%}
+                          {{ 'products.product.taxes_included' | t }}
+                        {%- elsif cart.duties_included -%}
+                          {{ 'products.product.duties_included' | t }}
+                        {%- endif -%}
+                        {%- if shop.shipping_policy.body != blank -%}
+                          {{ 'products.product.shipping_policy_html' | t: link: shop.shipping_policy.url }}
+                        {%- endif -%}
+                      </div>
+                    {%- endif -%}
+                  {% endcomment %}
+                  <div class="installment-form" {{ block.shopify_attributes }}>
+                    {%- assign product_form_installment_id = 'product-form-installment-' | append: section.id -%}
+                    {%- form 'product', product, id: product_form_installment_id, class: 'installment caption-large' -%}
+                      <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+                      {{ form | payment_terms }}
+                    {%- endform -%}
+                  </div>
+                {%- when 'inventory' -%}
+                  <p
+                    class="product__inventory{% if block.settings.text_style == 'uppercase' %} caption-with-letter-spacing{% elsif block.settings.text_style == 'subtitle' %} subtitle{% endif %}{% if product.selected_or_first_available_variant.inventory_management != 'shopify' %} visibility-hidden{% endif %}"
+                    {{ block.shopify_attributes }}
+                    id="Inventory-{{ section.id }}"
+                    role="status"
+                  >
+                    {%- if product.selected_or_first_available_variant.inventory_management == 'shopify' -%}
+                      {%- if product.selected_or_first_available_variant.inventory_quantity > 0 -%}
+                        {%- if product.selected_or_first_available_variant.inventory_quantity
+                            <= block.settings.inventory_threshold
+                        -%}
+                          <span class="orange_pulse">
+                            {{- 'icon-inventory-status.svg' | inline_asset_content -}}
+                          </span>
+                          {%- if block.settings.show_inventory_quantity -%}
+                            {{-
+                              'products.product.inventory_low_stock_show_count'
+                              | t: quantity: product.selected_or_first_available_variant.inventory_quantity
+                            -}}
+                          {%- else -%}
+                            {{- 'products.product.inventory_low_stock' | t -}}
+                          {%- endif -%}
+                        {%- else -%}
+                          <span class="green-dot">
+                            {{- 'icon-inventory-status.svg' | inline_asset_content -}}
+                          </span>
+                          {%- if block.settings.show_inventory_quantity -%}
+                            {{-
+                              'products.product.inventory_in_stock_show_count'
+                              | t: quantity: product.selected_or_first_available_variant.inventory_quantity
+                            -}}
+                          {%- else -%}
+                            {{- 'products.product.inventory_in_stock' | t -}}
+                          {%- endif -%}
+                        {%- endif -%}
+                      {%- else -%}
+                        {%- if product.selected_or_first_available_variant.inventory_policy == 'continue' -%}
+                          <span class="green-dot">
+                            {{- 'icon-inventory-status.svg' | inline_asset_content -}}
+                          </span>
+                          {{- 'products.product.inventory_out_of_stock_continue_selling' | t -}}
+                        {%- else -%}
+                          <span class="sold_out_pulse">
+                            {{- 'icon-inventory-status.svg' | inline_asset_content -}}
+                          </span>
+                          {{- 'products.product.inventory_out_of_stock' | t -}}
+                        {%- endif -%}
+                      {%- endif -%}
+                    {%- endif -%}
+                  </p>
+                {%- when 'description' -%}
+                  {%- if product.description != blank -%}
+                    <div class="product__description rte quick-add-hidden" {{ block.shopify_attributes }}>
+                      {{ product.description }}
+                    </div>
+                  {%- endif -%}
+                {%- when 'sku' -%}
+                  <p
+                    class="product__sku{% if block.settings.text_style == 'uppercase' %} caption-with-letter-spacing{% elsif block.settings.text_style == 'subtitle' %} subtitle{% endif %}{% if product.selected_or_first_available_variant.sku.size == 0 %} visibility-hidden{% endif %}"
+                    id="Sku-{{ section.id }}"
+                    role="status"
+                    {{ block.shopify_attributes }}
+                  >
+                    <span>{{ 'products.product.sku' | t }}:</span>
+                    {{- product.selected_or_first_available_variant.sku -}}
+                  </p>
+                {%- when 'shipping' -%}
+                  <div class="shipping-text" {{ block.shopify_attributes }}>
+                    {% if block.settings.shipping_icon != blank %}
+                      <span class="shipping__icon">
+                        {{ block.settings.shipping_icon }}
+                      </span>
+                    {% endif %}
+                    <span>
+                      {{ block.settings.text }}
+                    </span>
+                  </div>
+                {%- when 'custom_liquid' -%}
+                  {{ block.settings.custom_liquid }}
+                {%- when 'collapsible_tab' -%}
+
+                  {% if block.settings.content != blank or block.settings.page.content != blank %}
+                    <collapsible-content class="product__accordion quick-add-hidden" {{ block.shopify_attributes }}>
+                      <details class="disclosure disclosure--row color-{{ section.settings.card_color_scheme}} gradient" id="Details-{{ block.id }}-{{ section.id }}">
+                        <summary>
+                        <div class="disclosure-header">
+                          <h4 class="disclosure__title">
+                            {% if block.settings.icon_image %}
+                              <div class="icon-accordion">
+                                {% render 'icon-img', image: block.settings.icon_image %}
+                              </div>
+
+                            {% else %}
+                              {%- if block.settings.icon != 'none' -%}
+                                {% render 'icon-accordion', icon: block.settings.icon %}
+                              {%- endif -%}
+                            {% endif %}
+
+                            {{- block.settings.heading -}}
+                          </h4>
+                          <span class="disclosure__toggle">
+
+
+                          <svg  class="plus-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M20.4853 12.0001H3.51472" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M12 3.51477V20.4853" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+
+<svg   class="minus-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M20.4853 12.0001H3.51472" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+
+ 
+                         
+                          </span>
+                    </div>
+                        </summary>
+                        <div class="disclosure__panel has-motion">
+                          <div
+                            class="disclosure__content"
+                            id="ProductAccordion-{{ block.id }}-{{ section.id }}"
+                          >
+                            {{ block.settings.content }}
+                            {{ block.settings.page.content }}
+
+                       {%- if block.settings.button_text != blank -%}
+                        <a
+                          href="{{ block.settings.button_url }}"
+                          class="button button--{{ block.settings.button_style }}" {{ block.shopify_attributes }}
+                        >
+                          <span class="button--text">{{- block.settings.button_text -}}</span>
+                        </a>
+                      {%- endif -%}
+
+                          </div>
+                        </div>
+                      </details>
+                    </collapsible-content>
+
+                  {% endif %}
+                {%- when 'image_block' -%}
+                  
+
+                 {% if block.settings.image_block != blank %}
+                  <div class="image-block-mobile ">
+                  {% render 'responsive-img' with image: block.settings.image_block  %}
+                  </div>
+                 {% endif %}
+                {%- when 'quantity_selector' -%}
+                  <div
+                    id="Quantity-Form-{{ section.id }}"
+                    class="product-form__input product-form__quantity{% if settings.inputs_shadow_vertical_offset != 0 and settings.inputs_shadow_vertical_offset < 0 %} product-form__quantity-top{% endif %}"
+                    {{ block.shopify_attributes }}
+                  >
+                    {%- assign cart_qty = cart
+                      | item_count_for_variant: product.selected_or_first_available_variant.id
+                    -%}
+
+                    <label class="quantity__label form__label" for="Quantity-{{ section.id }}">
+                      {{ 'products.product.quantity.label' | t }}
+                      <span class="quantity__rules-cart{% if cart_qty == 0 %} hidden{% endif %}">
+                        {%- render 'loading-overlay' -%}
+                        <span
+                          >(
+                          {{- 'products.product.quantity.in_cart_html' | t: quantity: cart_qty -}}
+                          )</span
+                        >
+                      </span>
+                    </label>
+                    <div class="price-per-item__container">
+                      <quantity-input class="quantity" data-url="{{ product.url }}" data-section="{{ section.id }}">
+                        <button class="quantity__button" name="minus" type="button">
+                          <span class="visually-hidden">
+                            {{- 'products.product.quantity.decrease' | t: product: product.title | escape -}}
+                          </span>
+                          <span class="svg-icon quantity__icon">
+                            <svg
+                              width="17"
+                              height="17"
+                              viewBox="0 0 17 17"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path d="M4 9H13.3333" stroke="#445621" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                          </span>
+                        </button>
+                        <input
+                          class="quantity__input"
+                          type="number"
+                          name="quantity"
+                          id="Quantity-{{ section.id }}"
+                          data-cart-quantity="{{ cart_qty }}"
+                          data-min="{{ product.selected_or_first_available_variant.quantity_rule.min }}"
+                          min="{{ product.selected_or_first_available_variant.quantity_rule.min }}"
+                          {% if product.selected_or_first_available_variant.quantity_rule.max != null %}
+                            data-max="{{ product.selected_or_first_available_variant.quantity_rule.max }}"
+                            max="{{ product.selected_or_first_available_variant.quantity_rule.max }}"
+                          {% endif %}
+                          step="{{ product.selected_or_first_available_variant.quantity_rule.increment }}"
+                          value="{{ product.selected_or_first_available_variant.quantity_rule.min }}"
+                          form="{{ product_form_id }}"
+                        >
+                        <button class="quantity__button" name="plus" type="button">
+                          <span class="visually-hidden">
+                            {{- 'products.product.quantity.increase' | t: product: product.title | escape -}}
+                          </span>
+                          <span class="svg-icon quantity__icon">
+                            <svg
+                              width="17"
+                              height="17"
+                              viewBox="0 0 17 17"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path d="M4 8.66667H13.3333M8.66667 4V13.3333" stroke="#445621" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                          </span>
+                        </button>
+                      </quantity-input>
+                      {%- liquid
+                        assign volume_pricing_array = product.selected_or_first_available_variant.quantity_price_breaks | sort: 'quantity' | reverse
+                        assign current_qty_for_volume_pricing = cart_qty | plus: product.selected_or_first_available_variant.quantity_rule.min
+                        if cart_qty > 0
+                          assign current_qty_for_volume_pricing = cart_qty | plus: product.selected_or_first_available_variant.quantity_rule.increment
+                        endif
+                      -%}
+                      {%- if product.quantity_price_breaks_configured? -%}
+                        <price-per-item
+                          id="Price-Per-Item-{{ section.id }}"
+                          data-section-id="{{ section.id }}"
+                          data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+                        >
+                          {%- if product.selected_or_first_available_variant.quantity_price_breaks.size > 0 -%}
+                            {%- assign variant_price_compare = product.selected_or_first_available_variant.compare_at_price -%}
+                            <div class="price-per-item">
+                              {%- if variant_price_compare -%}
+                                <dl class="price-per-item--current">
+                                  <dt class="visually-hidden">
+                                    {{ 'products.product.price.regular_price' | t }}
+                                  </dt>
+                                  <dd>
+                                    <s class="variant-item__old-price">
+                                      {{ variant_price_compare | money_with_currency }}
+                                    </s>
+                                  </dd>
+                                </dl>
+                              {%- endif -%}
+                              {%- if current_qty_for_volume_pricing < volume_pricing_array.last.minimum_quantity -%}
+                                {%- assign variant_price = product.selected_or_first_available_variant.price
+                                  | money_with_currency
+                                -%}
+                                <span class="price-per-item--current">
+                                  {{- 'products.product.volume_pricing.price_at_each_html' | t: price: variant_price -}}
+                                </span>
+                              {%- else -%}
+                                {%- for price_break in volume_pricing_array -%}
+                                  {%- if current_qty_for_volume_pricing >= price_break.minimum_quantity -%}
+                                    {%- assign price_break_price = price_break.price | money_with_currency -%}
+                                    <span class="price-per-item--current">
+                                      {{-
+                                        'products.product.volume_pricing.price_at_each_html'
+                                        | t: price: price_break_price
+                                      -}}
+                                    </span>
+                                    {%- break -%}
+                                  {%- endif -%}
+                                {%- endfor -%}
+                              {%- endif -%}
+                            </div>
+                          {%- else -%}
+                            {%- assign variant_price = product.selected_or_first_available_variant.price
+                              | money_with_currency
+                            -%}
+                            {%- assign variant_price_compare = product.selected_or_first_available_variant.compare_at_price -%}
+                            <div class="price-per-item">
+                              {%- if variant_price_compare -%}
+                                <dl class="price-per-item--current">
+                                  <dt class="visually-hidden">
+                                    {{ 'products.product.price.regular_price' | t }}
+                                  </dt>
+                                  <dd>
+                                    <s class="variant-item__old-price">
+                                      {{ variant_price_compare | money_with_currency }}
+                                    </s>
+                                  </dd>
+                                  <dt class="visually-hidden">
+                                    {{ 'products.product.price.sale_price' | t }}
+                                  </dt>
+                                  <dd>
+                                    <span class="price-per-item--current">
+                                      {{-
+                                        'products.product.volume_pricing.price_at_each_html'
+                                        | t: price: variant_price
+                                      -}}
+                                    </span>
+                                  </dd>
+                                </dl>
+                              {%- else -%}
+                                <span class="price-per-item--current">
+                                  {{- 'products.product.volume_pricing.price_at_each_html' | t: price: variant_price -}}
+                                </span>
+                              {%- endif -%}
+                            </div>
+                          {%- endif -%}
+                        </price-per-item>
+                      {%- endif -%}
+                    </div>
+                    <div class="quantity__rules caption" id="Quantity-Rules-{{ section.id }}">
+                      {%- if product.selected_or_first_available_variant.quantity_rule.increment > 1 -%}
+                        <span class="divider">
+                          {{-
+                            'products.product.quantity.multiples_of'
+                            | t: quantity: product.selected_or_first_available_variant.quantity_rule.increment
+                          -}}
+                        </span>
+                      {%- endif -%}
+                      {%- if product.selected_or_first_available_variant.quantity_rule.min > 1 -%}
+                        <span class="divider">
+                          {{-
+                            'products.product.quantity.minimum_of'
+                            | t: quantity: product.selected_or_first_available_variant.quantity_rule.min
+                          -}}
+                        </span>
+                      {%- endif -%}
+                      {%- if product.selected_or_first_available_variant.quantity_rule.max != null -%}
+                        <span class="divider">
+                          {{-
+                            'products.product.quantity.maximum_of'
+                            | t: quantity: product.selected_or_first_available_variant.quantity_rule.max
+                          -}}
+                        </span>
+                      {%- endif -%}
+                    </div>
+                    {%- if product.quantity_price_breaks_configured? -%}
+                      <volume-pricing class="parent-display" id="Volume-{{ section.id }}">
+                        {%- if product.selected_or_first_available_variant.quantity_price_breaks.size > 0 -%}
+                          <span class="caption-large">{{ 'products.product.volume_pricing.title' | t }}</span>
+                          <ul class="list-unstyled">
+                            <li>
+                              <span>{{ product.selected_or_first_available_variant.quantity_rule.min }}+</span>
+                              {%- assign price = product.selected_or_first_available_variant.price
+                                | money_with_currency
+                              -%}
+                              <span data-text="{{ 'products.product.volume_pricing.price_at_each_html' | t: price: variant_price }}">
+                                {{- 'sections.quick_order_list.each' | t: money: price -}}
+                              </span>
+                            </li>
+                            {%- for price_break in product.selected_or_first_available_variant.quantity_price_breaks -%}
+                              {%- assign price_break_price = price_break.price | money_with_currency -%}
+                              <li class="{%- if forloop.index >= 3 -%}show-more-item hidden{%- endif -%}">
+                                <span>
+                                  {{- price_break.minimum_quantity -}}
+                                  <span aria-hidden="true">+</span></span
+                                >
+                                <span data-text="{{ 'products.product.volume_pricing.price_at_each_html' | t: price: price_break_price }}">
+                                  {{- 'sections.quick_order_list.each' | t: money: price_break_price -}}
+                                </span>
+                              </li>
+                            {%- endfor -%}
+                          </ul>
+                          {%- if product.selected_or_first_available_variant.quantity_price_breaks.size >= 3 -%}
+                            <show-more-button>
+                              <button
+                                class="button-show-more link underlined-link"
+                                id="Show-More-{{ section.id }}"
+                                type="button"
+                              >
+                                <span class="label-show-more label-text"
+                                  ><span aria-hidden="true">+ </span>{{ 'products.facets.show_more' | t }}
+                                </span>
+                              </button>
+                            </show-more-button>
+                          {%- endif -%}
+                        {%- endif -%}
+                      </volume-pricing>
+                    {%- endif -%}
+                  </div>
+                {%- when 'popup' -%}
+                  <modal-opener
+                    class="product-popup-modal__opener quick-add-hidden"
+                    data-modal="#PopupModal-{{ block.id }}"
+                    {{ block.shopify_attributes }}
+                  >
+                    <button
+                      id="ProductPopup-{{ block.id }}"
+                      class="product-popup-modal__button link"
+                      type="button"
+                      aria-haspopup="dialog"
+                    >
+                      {{ block.settings.text | default: block.settings.page.title | escape }}
+                    </button>
+                  </modal-opener>
+                {%- when 'share' -%}
+                  {% liquid
+                    assign share_url = product.selected_variant.url | default: product.url | prepend: request.origin
+                    render 'share-button', block: block, share_link: share_url
+                  %}
+
+                {%- when 'variant_picker' -%}
+                  {% render 'product-variant-picker',
+                    product: product,
+                    block: block,
+                    product_form_id: product_form_id
+                  %}
+                {%- when 'buy_buttons' -%}
+                  {%- render 'buy-buttons',
+                    block: block,
+                    product: product,
+                    product_form_id: product_form_id,
+                    section_id: section.id,
+                    show_pickup_availability: true
+                  -%}
+                {%- when 'rating' -%}
+                  {%- if product.metafields.reviews.rating.value != blank -%}
+                    <div class="rating-wrapper">
+                      {% liquid
+                        assign rating_decimal = 0
+                        assign decimal = product.metafields.reviews.rating.value.rating | modulo: 1
+                        if decimal >= 0.3 and decimal <= 0.7
+                          assign rating_decimal = 0.5
+                        elsif decimal > 0.7
+                          assign rating_decimal = 1
+                        endif
+                      %}
+                      <div
+                        class="rating"
+                        role="img"
+                        aria-label="{{ 'accessibility.star_reviews_info' | t: rating_value: product.metafields.reviews.rating.value, rating_max: product.metafields.reviews.rating.value.scale_max }}"
+                      >
+                        <span
+                          aria-hidden="true"
+                          class="rating-star"
+                          style="--rating: {{ product.metafields.reviews.rating.value.rating | floor }}; --rating-max: {{ product.metafields.reviews.rating.value.scale_max }}; --rating-decimal: {{ rating_decimal }};"
+                        ></span>
+                      </div>
+                      <p class="rating-text caption">
+                        <span aria-hidden="true">
+                          {{- product.metafields.reviews.rating.value }} /
+                          {{ product.metafields.reviews.rating.value.scale_max -}}
+                        </span>
+                      </p>
+                      <p class="rating-count caption">
+                        <span aria-hidden="true">({{ product.metafields.reviews.rating_count }})</span>
+                        <span class="visually-hidden">
+                          {{- product.metafields.reviews.rating_count }}
+                          {{ 'accessibility.total_reviews' | t -}}
+                        </span>
+                      </p>
+                    </div>
+                  {%- endif -%}
+
+                {%- when 'complementary' -%}
+                  <product-recommendations
+                    class="complementary-products quick-add-hidden{% if block.settings.make_collapsible_row %} is-accordion{% endif %}{% if block.settings.enable_quick_add %} complementary-products-contains-quick-add{% endif %}"
+                    data-url="{{ routes.product_recommendations_url }}?limit={{ block.settings.product_list_limit }}&intent=complementary"
+                    data-section-id="{{ section.id }}"
+                    data-product-id="{{ product.id }}"
+                  >
+                    {%- if recommendations.performed and recommendations.products_count > 0 -%}
+                      <aside
+                        aria-label="{{ 'accessibility.complementary_products' | t }}"
+                        {{ block.shopify_attributes -}}
+                        {% if block.settings.make_collapsible_row %}
+                          class="product__accordion accordion"
+                        {% endif %}
+                      >
+                        <div class="complementary-products__container">
+                          {%- if block.settings.make_collapsible_row -%}
+                            <details id="Details-{{ block.id }}-{{ section.id }}" open>
+                              <summary>
+                          {%- endif %}
+                          <div class="summary__title">
+                            {%- if block.settings.make_collapsible_row -%}
+                              {% render 'icon-accordion', icon: block.settings.icon %}
+                              <h2 class="h4 accordion__title">{{ block.settings.block_heading }}</h2>
+                            {%- else -%}
+                              <h2 class="h3 accordion__title">{{ block.settings.block_heading }}</h2>
+                            {%- endif -%}
+                          </div>
+                          {%- if block.settings.make_collapsible_row -%}
+                            {{- 'icon-caret.svg' | inline_asset_content -}}
+                            </summary>
+                          {%- endif -%}
+
+                          {% liquid
+                            assign enable_pagination = block.settings.enable_pagination
+                            assign enable_navigation = block.settings.enable_navigation
+                            assign enable_scroll = block.settings.enable_scroll
+                            assign autoplay = block.settings.autoplay_enabled
+                            assign loop = block.settings.loop_enabled
+                            assign delay = block.settings.autoplay_timeout | times: 1000
+                            assign freemode = false
+                          %}
+
+                          <slideshow-swiper>
+                            {%- assign number_of_slides = recommendations.products_count
+                              | plus: 0.0
+                              | divided_by: block.settings.products_per_page
+                              | ceil
+                            -%}
+
+                            <div
+                              id="Slider-{{ block.id }}"
+                              class="contains-card contains-card--product complementary-slider"
+                              role="list"
+                              {% if number_of_slides > 1 %}
+                                aria-label="{{ 'general.slider.name' | t }}"
+                              {% endif %}
+                            >
+                              {% assign skip_card_product_styles = false %}
+
+                              <div
+                                id="Slide-{{ block.id }}-{{ forloop.index }}"
+                                class="slideshow__swiper swiper product-feed complementary-slide complementary-slide--{{ settings.card_style }} "
+                                tabindex="-1"
+                                role="group"
+
+                                data-centeredslides="false"
+                                data-slidesDesktop="1.50"
+                                data-slidesTab="1.45"
+                                data-slidesMobile="1.35"
+                                data-autoPlay="{{ autoplay }}"
+                                data-delay="{{ delay }}"
+                                data-loop="{{ loop }}"
+                                data-paginationType="bullets"
+                                data-freemode="{{ freemode }}"
+                                data-freemomentum="false"
+                                data-mousewheel="false"
+                                data-desktopspace="15"
+                                data-tabspace="15"
+                                data-mobilespace="15"
+
+                                {% if number_of_slides > 1 %}
+                                  aria-roledescription="{{ 'sections.slideshow.slide' | t }}"
+                                  aria-label="{{ forloop.index }} {{ 'general.slider.of' | t }} {{ forloop.length }}"
+                                {% endif %}
+                              >
+                                <div
+                                  class="list-unstyled swiper-wrapper product-feed-container row row-cols-2"
+                                  role="list"
+                                >
+                                  {%- for product in recommendations.products
+                                    limit: block.settings.products_per_page
+                                  -%}
+                                    <div class="swiper-slide col">
+                                      {%- if block.settings.enable_quick_add -%}
+                                        {% assign quick_add = 'standard' %}
+                                      {%- else -%}
+                                        {% assign quick_add = 'none' %}
+                                      {%- endif -%}
+                                      {% render 'card-product',
+                                        card_product: product,
+                                        media_aspect_ratio: block.settings.image_ratio,
+                                        show_secondary_image: false,
+                                        lazy_load: false,
+                                        skip_styles: skip_card_product_styles,
+                                        quick_add: quick_add,
+                                        add_button_style: 'text',
+                                        section_id: section.id,
+                                        horizontal_class: true,
+                                        horizontal_quick_add: true,
+                                        badge: false,
+                                        siblings: false
+                                      %}
+                                    </div>
+                                    {%- assign skip_card_product_styles = true -%}
+                                  {%- endfor -%}
+                                </div>
+
+                                {% if enable_navigation %}
+                                  <div class="swiper-navigation-wrapper color-{{ section.settings.color_scheme_swiper }}">
+                                    <div class="swiper-button-prev">
+                                      <svg
+                                        width="15"
+                                        height="26"
+                                        viewBox="0 0 15 26"
+                                        fill="none"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                      >
+                                        <path d="M1.76123 13.1011L12.7612 24.1011" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M12.7612 2.10107L1.76123 13.1011" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                      </svg>
+                                    </div>
+                                    <div class="swiper-button-next">
+                                      <svg
+                                        width="15"
+                                        height="26"
+                                        viewBox="0 0 15 26"
+                                        fill="none"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                      >
+                                        <path d="M13.2388 12.8989L2.23877 1.89893" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M2.23877 23.8989L13.2388 12.8989" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                      </svg>
+                                    </div>
+                                  </div>
+                                {% endif %}
+                                {% if enable_pagination %}
+                                  <div class="pagination-wrap color-{{ section.settings.color_scheme_swiper }}">
+                                    <div class="swiper-pagination"></div>
+                                  </div>
+                                {% endif %}
+
+                                {% if enable_scroll %}
+                                  <div class="scrollbar-wrap color-{{ section.settings.color_scheme_swiper }}">
+                                    <div class="swiper-scrollbar"></div>
+                                  </div>
+                                {% endif %}
+                              </div>
+                            </div>
+                          </slideshow-swiper>
+
+                          {%- if block.settings.make_collapsible_row -%}
+                            </details>
+                          {%- endif -%}
+                        </div>
+                      </aside>
+                    {%- endif -%}
+                    {{ 'component-card.css' | asset_url | stylesheet_tag }}
+                    {{ 'component-complementary-products.css' | asset_url | stylesheet_tag }}
+                    {%- if block.settings.enable_quick_add -%}
+                      {{ 'quick-add.css' | asset_url | stylesheet_tag }}
+                      <script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
+                    {%- endif -%}
+                  </product-recommendations>
+
+                {%- when 'icon-with-text' -%}
+                  {% render 'icon-with-text', block: block %}
+              {%- endcase -%}
+            {%- endfor -%}
+          </section>
+        </div>
+      </div>
+
+      {% comment %} {% render 'product-media-modal', variant_images: variant_images %} {% endcomment %}
+
+      {% assign popups = section.blocks | where: 'type', 'popup' %}
+      {%- for block in popups -%}
+        <modal-dialog id="PopupModal-{{ block.id }}" class="product-popup-modal" {{ block.shopify_attributes }}>
+          <div
+            role="dialog"
+            aria-label="{{ block.settings.text }}"
+            aria-modal="true"
+            class="product-popup-modal__content"
+            tabindex="-1"
+          >
+            <button
+              id="ModalClose-{{ block.id }}"
+              type="button"
+              class="product-popup-modal__toggle"
+              aria-label="{{ 'accessibility.close' | t }}"
+            >
+              {{- 'icon-close.svg' | inline_asset_content -}}
+            </button>
+            <div class="product-popup-modal__content-info">
+              <h1 class="h2">{{ block.settings.page.title | escape }}</h1>
+              {{ block.settings.page.content }}
+            </div>
+          </div>
+        </modal-dialog>
+      {%- endfor -%}
+
+      {% assign size_chart = product.metafields.custom.size_chart.value %}
+
+      {% if size_chart != blank %}
+        <modal-dialog id="PopupModal-popup_size_chart" class="product-popup-modal" data-section="{{ section.id }}">
+          <div
+            role="dialog"
+            aria-label="Lien texte pop-up"
+            aria-modal="true"
+            class="product-popup-modal__content"
+            tabindex="-1"
+          >
+            <button
+              id="ModalClose-popup_size_chart"
+              type="button"
+              class="product-popup-modal__toggle"
+              aria-label="Fermer"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" class="icon icon-close" viewBox="0 0 18 17">
+                <path fill="currentColor" d="M.865 15.978a.5.5 0 0 0 .707.707l7.433-7.431 7.579 7.282a.501.501 0 0 0 .846-.37.5.5 0 0 0-.153-.351L9.712 8.546l7.417-7.416a.5.5 0 1 0-.707-.708L8.991 7.853 1.413.573a.5.5 0 1 0-.693.72l7.563 7.268z"></path>
+              </svg>
+            </button>
+            <div class="product-popup-modal__content-info">
+              <h1 class="h2  size-chart-header">Size Chart</h1>
+
+              <div class="size-chart-wrapper">
+                {% if size_chart != blank %}
+                  {% render 'responsive-img' with image: size_chart %}
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </modal-dialog>
+      {% endif %}
+
+      {%- if product.media.size > 0 -%}
+        <script src="{{ 'product-modal.js' | asset_url }}" defer="defer"></script>
+        <script src="{{ 'media-gallery.js' | asset_url }}" defer="defer"></script>
+      {%- endif -%}
+
+      {%- if first_3d_model -%}
+        <script type="application/json" id="ProductJSON-{{ product.id }}">
+          {{ product.media | where: 'media_type', 'model' | json }}
+        </script>
+        <script src="{{ 'product-model.js' | asset_url }}" defer></script>
+      {%- endif -%}
+
+      {%- liquid
+        if product.selected_or_first_available_variant.featured_media
+          assign seo_media = product.selected_or_first_available_variant.featured_media
+        else
+          assign seo_media = product.featured_media
+        endif
+      -%}
+
+      <script type="application/ld+json">
+        {{ product | structured_data }}
+      </script>
+    </div>
+  </div>
+</product-info>
+
+<script>
+  const pushHandleToRecentProducts = () => {
+    const handles = localStorage.getItem('recently-viewed');
+
+    if (!handles) {
+      localStorage.setItem('recently-viewed', '{{- product.handle -}}');
+      return;
+    }
+
+    if (handles.includes('{{- product.handle -}}')) return;
+
+    const handlesToAdd = ['{{- product.handle -}}', ...handles.split(',')];
+
+    if (handlesToAdd.length > 10) {
+      handlesToAdd.pop();
+    }
+
+    localStorage.setItem('recently-viewed', handlesToAdd.join(','));
+  };
+
+  pushHandleToRecentProducts();
+</script>
+
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org/",
+    "@type": "Product",
+    "name": {{ product.title | json }},
+    "url": {{ request.origin | append: product.url | json }},
+    {% if seo_media -%}
+      "image": [
+        {{ seo_media | image_url: width: seo_media.preview_image.width | prepend: "https:" | json }}
+      ],
+    {%- endif %}
+    "description": {{ product.description | strip_html | json }},
+    {% if product.selected_or_first_available_variant.sku != blank -%}
+      "sku": {{ product.selected_or_first_available_variant.sku | json }},
+    {%- endif %}
+    "brand": {
+      "@type": "Brand",
+      "name": {{ product.vendor | json }}
+    },
+    "offers": [
+      {%- for variant in product.variants -%}
+        {
+          "@type" : "Offer",
+          {%- if variant.sku != blank -%}
+            "sku": {{ variant.sku | json }},
+          {%- endif -%}
+          {%- if variant.barcode.size == 12 -%}
+            "gtin12": {{ variant.barcode }},
+          {%- endif -%}
+          {%- if variant.barcode.size == 13 -%}
+            "gtin13": {{ variant.barcode }},
+          {%- endif -%}
+          {%- if variant.barcode.size == 14 -%}
+            "gtin14": {{ variant.barcode }},
+          {%- endif -%}
+          "availability" : "http://schema.org/{% if variant.available %}InStock{% else %}OutOfStock{% endif %}",
+          "price" : {{ variant.price | divided_by: 100.00 | json }},
+          "priceCurrency" : {{ cart.currency.iso_code | json }},
+          "url" : {{ request.origin | append: variant.url | json }}
+        }{% unless forloop.last %},{% endunless %}
+      {%- endfor -%}
+    ]
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Main Product Custom",
+  "tag": "section",
+  "class": "section",
+  "blocks": [
+    {
+      "type": "@app"
+    },
+    {
+      "type": "product_info",
+      "name": "Product info",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "select",
+          "id": "picker_type",
+          "options": [
+            {
+              "value": "dropdown",
+              "label": "t:sections.main-product.blocks.variant_picker.settings.picker_type.options__1.label"
+            },
+            {
+              "value": "button",
+              "label": "t:sections.main-product.blocks.variant_picker.settings.picker_type.options__2.label"
+            }
+          ],
+          "default": "button",
+          "label": "t:sections.main-product.blocks.variant_picker.settings.picker_type.label"
+        },
+        {
+          "id": "swatch_shape",
+          "label": "t:sections.main-product.blocks.variant_picker.settings.swatch_shape.label",
+          "type": "select",
+          "info": "t:sections.main-product.blocks.variant_picker.settings.swatch_shape.info",
+          "options": [
+            {
+              "value": "circle",
+              "label": "t:sections.main-product.blocks.variant_picker.settings.swatch_shape.options__1.label"
+            },
+            {
+              "value": "square",
+              "label": "t:sections.main-product.blocks.variant_picker.settings.swatch_shape.options__2.label"
+            },
+            {
+              "value": "none",
+              "label": "t:sections.main-product.blocks.variant_picker.settings.swatch_shape.options__3.label"
+            }
+          ],
+          "default": "circle"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_quantity",
+          "default": false,
+          "label": "Show Qunantity"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_dynamic_checkout",
+          "default": true,
+          "label": "t:sections.main-product.blocks.buy_buttons.settings.show_dynamic_checkout.label",
+          "info": "t:sections.main-product.blocks.buy_buttons.settings.show_dynamic_checkout.info"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_gift_card_recipient",
+          "default": true,
+          "label": "t:sections.main-product.blocks.buy_buttons.settings.show_gift_card_recipient.label",
+          "info": "t:sections.main-product.blocks.buy_buttons.settings.show_gift_card_recipient.info"
+        }
+      ]
+    },
+    {
+      "type": "vendor",
+      "name": "Vdendor",
+      "settings": [
+        {
+          "type": "inline_richtext",
+          "id": "text",
+          "default": "t:sections.main-product.blocks.text.settings.text.default",
+          "label": "t:sections.main-product.blocks.text.settings.text.label"
+        },
+        {
+          "type": "select",
+          "id": "text_style",
+          "options": [
+            {
+              "value": "body",
+              "label": "t:sections.main-product.blocks.text.settings.text_style.options__1.label"
+            },
+            {
+              "value": "subtitle",
+              "label": "t:sections.main-product.blocks.text.settings.text_style.options__2.label"
+            },
+            {
+              "value": "uppercase",
+              "label": "t:sections.main-product.blocks.text.settings.text_style.options__3.label"
+            }
+          ],
+          "default": "body",
+          "label": "t:sections.main-product.blocks.text.settings.text_style.label"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "t:sections.main-product.blocks.text.name",
+      "settings": [
+        {
+          "type": "inline_richtext",
+          "id": "text",
+          "default": "t:sections.main-product.blocks.text.settings.text.default",
+          "label": "t:sections.main-product.blocks.text.settings.text.label"
+        },
+        {
+          "type": "select",
+          "id": "text_style",
+          "options": [
+            {
+              "value": "body",
+              "label": "t:sections.main-product.blocks.text.settings.text_style.options__1.label"
+            },
+            {
+              "value": "subtitle",
+              "label": "t:sections.main-product.blocks.text.settings.text_style.options__2.label"
+            },
+            {
+              "value": "uppercase",
+              "label": "t:sections.main-product.blocks.text.settings.text_style.options__3.label"
+            }
+          ],
+          "default": "body",
+          "label": "t:sections.main-product.blocks.text.settings.text_style.label"
+        }
+      ]
+    },
+    {
+      "type": "shipping",
+      "name": "Shipping Info",
+      "settings": [
+        {
+          "type": "liquid",
+          "id": "shipping_icon",
+          "label": "Svg Icon"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "default": "t:sections.main-product.blocks.text.settings.text.default",
+          "label": "t:sections.main-product.blocks.text.settings.text.label"
+        }
+      ]
+    },
+    {
+      "type": "title",
+      "name": "t:sections.main-product.blocks.title.name",
+      "limit": 1
+    },
+    {
+      "type": "price",
+      "name": "t:sections.main-product.blocks.price.name",
+      "limit": 1
+    },
+    {
+      "type": "sku",
+      "name": "t:sections.main-product.blocks.sku.name",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "select",
+          "id": "text_style",
+          "options": [
+            {
+              "value": "body",
+              "label": "t:sections.main-product.blocks.sku.settings.text_style.options__1.label"
+            },
+            {
+              "value": "subtitle",
+              "label": "t:sections.main-product.blocks.sku.settings.text_style.options__2.label"
+            },
+            {
+              "value": "uppercase",
+              "label": "t:sections.main-product.blocks.sku.settings.text_style.options__3.label"
+            }
+          ],
+          "default": "body",
+          "label": "t:sections.main-product.blocks.sku.settings.text_style.label"
+        }
+      ]
+    },
+    {
+      "type": "product_description",
+      "name": "Product Description",
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "text",
+          "default": "t:sections.main-product.blocks.text.settings.text.default",
+          "label": "t:sections.main-product.blocks.text.settings.text.label"
+        },
+        {
+          "type": "select",
+          "id": "text_style",
+          "options": [
+            {
+              "value": "body",
+              "label": "t:sections.main-product.blocks.text.settings.text_style.options__1.label"
+            },
+            {
+              "value": "subtitle",
+              "label": "t:sections.main-product.blocks.text.settings.text_style.options__2.label"
+            },
+            {
+              "value": "uppercase",
+              "label": "t:sections.main-product.blocks.text.settings.text_style.options__3.label"
+            }
+          ],
+          "default": "body",
+          "label": "t:sections.main-product.blocks.text.settings.text_style.label"
+        }
+      ]
+    },
+    {
+      "type": "inventory",
+      "name": "t:sections.main-product.blocks.inventory.name",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "select",
+          "id": "text_style",
+          "options": [
+            {
+              "value": "body",
+              "label": "t:sections.main-product.blocks.inventory.settings.text_style.options__1.label"
+            },
+            {
+              "value": "subtitle",
+              "label": "t:sections.main-product.blocks.inventory.settings.text_style.options__2.label"
+            },
+            {
+              "value": "uppercase",
+              "label": "t:sections.main-product.blocks.inventory.settings.text_style.options__3.label"
+            }
+          ],
+          "default": "body",
+          "label": "t:sections.main-product.blocks.inventory.settings.text_style.label"
+        },
+        {
+          "type": "range",
+          "id": "inventory_threshold",
+          "label": "t:sections.main-product.blocks.inventory.settings.inventory_threshold.label",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 10
+        },
+        {
+          "type": "checkbox",
+          "id": "show_inventory_quantity",
+          "label": "t:sections.main-product.blocks.inventory.settings.show_inventory_quantity.label",
+          "default": true
+        }
+      ]
+    },
+    {
+      "type": "quantity_selector",
+      "name": "t:sections.main-product.blocks.quantity_selector.name",
+      "limit": 1
+    },
+    {
+      "type": "variant_picker",
+      "name": "t:sections.main-product.blocks.variant_picker.name",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "select",
+          "id": "picker_type",
+          "options": [
+            {
+              "value": "dropdown",
+              "label": "t:sections.main-product.blocks.variant_picker.settings.picker_type.options__1.label"
+            },
+            {
+              "value": "button",
+              "label": "t:sections.main-product.blocks.variant_picker.settings.picker_type.options__2.label"
+            }
+          ],
+          "default": "button",
+          "label": "t:sections.main-product.blocks.variant_picker.settings.picker_type.label"
+        },
+        {
+          "id": "swatch_shape",
+          "label": "t:sections.main-product.blocks.variant_picker.settings.swatch_shape.label",
+          "type": "select",
+          "info": "t:sections.main-product.blocks.variant_picker.settings.swatch_shape.info",
+          "options": [
+            {
+              "value": "circle",
+              "label": "t:sections.main-product.blocks.variant_picker.settings.swatch_shape.options__1.label"
+            },
+            {
+              "value": "square",
+              "label": "t:sections.main-product.blocks.variant_picker.settings.swatch_shape.options__2.label"
+            },
+            {
+              "value": "none",
+              "label": "t:sections.main-product.blocks.variant_picker.settings.swatch_shape.options__3.label"
+            }
+          ],
+          "default": "circle"
+        }
+      ]
+    },
+    {
+      "type": "buy_buttons",
+      "name": "t:sections.main-product.blocks.buy_buttons.name",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "show_dynamic_checkout",
+          "default": true,
+          "label": "t:sections.main-product.blocks.buy_buttons.settings.show_dynamic_checkout.label",
+          "info": "t:sections.main-product.blocks.buy_buttons.settings.show_dynamic_checkout.info"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_gift_card_recipient",
+          "default": true,
+          "label": "t:sections.main-product.blocks.buy_buttons.settings.show_gift_card_recipient.label",
+          "info": "t:sections.main-product.blocks.buy_buttons.settings.show_gift_card_recipient.info"
+        }
+      ]
+    },
+    {
+      "type": "description",
+      "name": "t:sections.main-product.blocks.description.name",
+      "limit": 1
+    },
+    {
+      "type": "Kapseln",
+      "name": "Kapseln Text",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "inline_richtext",
+          "id": "Kapseln_text",
+          "label": "Kapseln Text",
+          "default": "60 Kapseln"
+        }
+      ]
+    },
+        {
+      "type": "image_block",
+      "name": "Image Block",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image_block",
+          "label": "Image"
+        }
+      ]
+    },
+      {
+      "type": "custom_tags",
+      "name": "Custom Tags",
+      "limit": 1
+    },
+    {
+      "type": "share",
+      "name": "t:sections.main-product.blocks.share.name",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "share_label",
+          "label": "t:sections.main-product.blocks.share.settings.text.label",
+          "default": "t:sections.main-product.blocks.share.settings.text.default"
+        }
+      ]
+    },
+    {
+      "type": "custom_liquid",
+      "name": "t:sections.custom-liquid.name",
+      "settings": [
+        {
+          "type": "liquid",
+          "id": "custom_liquid",
+          "label": "t:sections.custom-liquid.settings.custom_liquid.label",
+          "info": "t:sections.custom-liquid.settings.custom_liquid.info"
+        }
+      ]
+    },
+    {
+      "type": "collapsible_tab",
+      "name": "t:sections.main-product.blocks.collapsible_tab.name",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "default": "t:sections.main-product.blocks.collapsible_tab.settings.heading.default",
+          "label": "t:sections.main-product.blocks.collapsible_tab.settings.heading.label"
+        },
+        {
+          "type": "select",
+          "id": "icon",
+          "options": [
+            {
+              "value": "none",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__1.label"
+            },
+            {
+              "value": "apple",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__2.label"
+            },
+            {
+              "value": "banana",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__3.label"
+            },
+            {
+              "value": "bottle",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__4.label"
+            },
+            {
+              "value": "box",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__5.label"
+            },
+            {
+              "value": "carrot",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__6.label"
+            },
+            {
+              "value": "chat_bubble",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__7.label"
+            },
+            {
+              "value": "check_mark",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__8.label"
+            },
+            {
+              "value": "clipboard",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__9.label"
+            },
+            {
+              "value": "dairy",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__10.label"
+            },
+            {
+              "value": "dairy_free",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__11.label"
+            },
+            {
+              "value": "dryer",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__12.label"
+            },
+            {
+              "value": "eye",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__13.label"
+            },
+            {
+              "value": "fire",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__14.label"
+            },
+            {
+              "value": "gluten_free",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__15.label"
+            },
+            {
+              "value": "heart",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__16.label"
+            },
+            {
+              "value": "iron",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__17.label"
+            },
+            {
+              "value": "leaf",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__18.label"
+            },
+            {
+              "value": "leather",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__19.label"
+            },
+            {
+              "value": "lightning_bolt",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__20.label"
+            },
+            {
+              "value": "lipstick",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__21.label"
+            },
+            {
+              "value": "lock",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__22.label"
+            },
+            {
+              "value": "map_pin",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__23.label"
+            },
+            {
+              "value": "nut_free",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__24.label"
+            },
+            {
+              "value": "pants",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__25.label"
+            },
+            {
+              "value": "paw_print",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__26.label"
+            },
+            {
+              "value": "pepper",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__27.label"
+            },
+            {
+              "value": "perfume",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__28.label"
+            },
+            {
+              "value": "plane",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__29.label"
+            },
+            {
+              "value": "plant",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__30.label"
+            },
+            {
+              "value": "price_tag",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__31.label"
+            },
+            {
+              "value": "question_mark",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__32.label"
+            },
+            {
+              "value": "recycle",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__33.label"
+            },
+            {
+              "value": "return",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__34.label"
+            },
+            {
+              "value": "ruler",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__35.label"
+            },
+            {
+              "value": "serving_dish",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__36.label"
+            },
+            {
+              "value": "shirt",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__37.label"
+            },
+            {
+              "value": "shoe",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__38.label"
+            },
+            {
+              "value": "silhouette",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__39.label"
+            },
+            {
+              "value": "snowflake",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__40.label"
+            },
+            {
+              "value": "star",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__41.label"
+            },
+            {
+              "value": "stopwatch",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__42.label"
+            },
+            {
+              "value": "truck",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__43.label"
+            },
+            {
+              "value": "washing",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__44.label"
+            }
+          ],
+          "default": "check_mark",
+          "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.label"
+        },
+        {
+          "type": "image_picker",
+          "id": "icon_image",
+          "label": "Icon"
+        },
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "t:sections.main-product.blocks.collapsible_tab.settings.content.label"
+        },
+        {
+          "type": "page",
+          "id": "page",
+          "label": "t:sections.main-product.blocks.collapsible_tab.settings.page.label"
+        },
+           {
+          "type": "text",
+          "id": "button_text",
+          "label": "Button",
+          "default": "Button Label"
+        },
+        {
+          "type": "url",
+          "id": "button_url",
+          "label": "Button URL"
+        },
+        {
+          "type": "select",
+          "id": "button_style",
+          "label": "Button style",
+          "options": [
+            {
+              "value": "primary",
+              "label": "Primary"
+            },
+            {
+              "value": "secondary",
+              "label": "Secondary"
+            }
+          ],
+          "default": "primary"
+        }
+      ]
+    },
+    {
+      "type": "popup",
+      "name": "t:sections.main-product.blocks.popup.name",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "default": "t:sections.main-product.blocks.popup.settings.link_label.default",
+          "label": "t:sections.main-product.blocks.popup.settings.link_label.label"
+        },
+        {
+          "id": "page",
+          "type": "page",
+          "label": "t:sections.main-product.blocks.popup.settings.page.label"
+        }
+      ]
+    },
+    {
+      "type": "rating",
+      "name": "t:sections.main-product.blocks.rating.name",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "t:sections.main-product.blocks.rating.settings.paragraph.content"
+        }
+      ]
+    },
+    {
+      "type": "complementary",
+      "name": "t:sections.main-product.blocks.complementary_products.name",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "t:sections.main-product.blocks.complementary_products.settings.paragraph.content"
+        },
+        {
+          "type": "text",
+          "id": "block_heading",
+          "default": "t:sections.main-product.blocks.complementary_products.settings.heading.default",
+          "label": "t:sections.main-product.blocks.complementary_products.settings.heading.label"
+        },
+        {
+          "type": "checkbox",
+          "id": "make_collapsible_row",
+          "default": false,
+          "label": "t:sections.main-product.blocks.complementary_products.settings.make_collapsible_row.label"
+        },
+        {
+          "type": "select",
+          "id": "icon",
+          "options": [
+            {
+              "value": "none",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__1.label"
+            },
+            {
+              "value": "apple",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__2.label"
+            },
+            {
+              "value": "banana",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__3.label"
+            },
+            {
+              "value": "bottle",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__4.label"
+            },
+            {
+              "value": "box",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__5.label"
+            },
+            {
+              "value": "carrot",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__6.label"
+            },
+            {
+              "value": "chat_bubble",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__7.label"
+            },
+            {
+              "value": "check_mark",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__8.label"
+            },
+            {
+              "value": "clipboard",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__9.label"
+            },
+            {
+              "value": "dairy",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__10.label"
+            },
+            {
+              "value": "dairy_free",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__11.label"
+            },
+            {
+              "value": "dryer",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__12.label"
+            },
+            {
+              "value": "eye",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__13.label"
+            },
+            {
+              "value": "fire",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__14.label"
+            },
+            {
+              "value": "gluten_free",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__15.label"
+            },
+            {
+              "value": "heart",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__16.label"
+            },
+            {
+              "value": "iron",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__17.label"
+            },
+            {
+              "value": "leaf",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__18.label"
+            },
+            {
+              "value": "leather",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__19.label"
+            },
+            {
+              "value": "lightning_bolt",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__20.label"
+            },
+            {
+              "value": "lipstick",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__21.label"
+            },
+            {
+              "value": "lock",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__22.label"
+            },
+            {
+              "value": "map_pin",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__23.label"
+            },
+            {
+              "value": "nut_free",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__24.label"
+            },
+            {
+              "value": "pants",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__25.label"
+            },
+            {
+              "value": "paw_print",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__26.label"
+            },
+            {
+              "value": "pepper",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__27.label"
+            },
+            {
+              "value": "perfume",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__28.label"
+            },
+            {
+              "value": "plane",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__29.label"
+            },
+            {
+              "value": "plant",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__30.label"
+            },
+            {
+              "value": "price_tag",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__31.label"
+            },
+            {
+              "value": "question_mark",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__32.label"
+            },
+            {
+              "value": "recycle",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__33.label"
+            },
+            {
+              "value": "return",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__34.label"
+            },
+            {
+              "value": "ruler",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__35.label"
+            },
+            {
+              "value": "serving_dish",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__36.label"
+            },
+            {
+              "value": "shirt",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__37.label"
+            },
+            {
+              "value": "shoe",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__38.label"
+            },
+            {
+              "value": "silhouette",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__39.label"
+            },
+            {
+              "value": "snowflake",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__40.label"
+            },
+            {
+              "value": "star",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__41.label"
+            },
+            {
+              "value": "stopwatch",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__42.label"
+            },
+            {
+              "value": "truck",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__43.label"
+            },
+            {
+              "value": "washing",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__44.label"
+            }
+          ],
+          "default": "price_tag",
+          "info": "t:sections.main-product.blocks.complementary_products.settings.icon.info",
+          "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.label"
+        },
+        {
+          "type": "range",
+          "id": "product_list_limit",
+          "min": 1,
+          "max": 10,
+          "step": 1,
+          "default": 10,
+          "label": "t:sections.main-product.blocks.complementary_products.settings.product_list_limit.label"
+        },
+        {
+          "type": "range",
+          "id": "products_per_page",
+          "min": 1,
+          "max": 4,
+          "step": 1,
+          "default": 3,
+          "label": "t:sections.main-product.blocks.complementary_products.settings.products_per_page.label"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.main-product.blocks.complementary_products.settings.product_card.heading"
+        },
+        {
+          "type": "select",
+          "id": "image_ratio",
+          "options": [
+            {
+              "value": "portrait",
+              "label": "t:sections.main-product.blocks.complementary_products.settings.image_ratio.options.option_1"
+            },
+            {
+              "value": "square",
+              "label": "t:sections.main-product.blocks.complementary_products.settings.image_ratio.options.option_2"
+            }
+          ],
+          "label": "t:sections.main-product.blocks.complementary_products.settings.image_ratio.label",
+          "default": "square"
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_quick_add",
+          "label": "t:sections.main-product.blocks.complementary_products.settings.enable_quick_add.label",
+          "default": false
+        },
+        {
+          "type": "header",
+          "content": "Slider Settings"
+        },
+        {
+          "type": "checkbox",
+          "id": "autoplay_enabled",
+          "label": "Enable Auto Play",
+          "default": false
+        },
+        {
+          "type": "range",
+          "id": "autoplay_timeout",
+          "label": "Chnage Time",
+          "min": 1,
+          "max": 10,
+          "step": 1,
+          "default": 5,
+          "unit": "s"
+        },
+        {
+          "type": "checkbox",
+          "id": "loop_enabled",
+          "label": "Enable Loop",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_scroll",
+          "label": "Enable Scroll",
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_pagination",
+          "label": "Enable Pagination",
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_navigation",
+          "label": "Enable Naviagtion",
+          "default": true
+        },
+        {
+          "type": "color_scheme",
+          "id": "color_scheme_swiper",
+          "label": "Swiper Navigation",
+          "default": "scheme-2"
+        }
+      ]
+    },
+    {
+      "type": "icon-with-text",
+      "name": "t:sections.main-product.blocks.icon_with_text.name",
+      "settings": [
+        {
+          "type": "select",
+          "id": "layout",
+          "options": [
+            {
+              "value": "horizontal",
+              "label": "t:sections.main-product.blocks.icon_with_text.settings.layout.options__1.label"
+            },
+            {
+              "value": "vertical",
+              "label": "t:sections.main-product.blocks.icon_with_text.settings.layout.options__2.label"
+            }
+          ],
+          "default": "horizontal",
+          "label": "t:sections.main-product.blocks.icon_with_text.settings.layout.label"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.main-product.blocks.icon_with_text.settings.pairing_1.label",
+          "info": "t:sections.main-product.blocks.icon_with_text.settings.pairing_1.info"
+        },
+        {
+          "type": "select",
+          "id": "icon_1",
+          "options": [
+            {
+              "value": "none",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__1.label"
+            },
+            {
+              "value": "apple",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__2.label"
+            },
+            {
+              "value": "banana",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__3.label"
+            },
+            {
+              "value": "bottle",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__4.label"
+            },
+            {
+              "value": "box",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__5.label"
+            },
+            {
+              "value": "carrot",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__6.label"
+            },
+            {
+              "value": "chat_bubble",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__7.label"
+            },
+            {
+              "value": "check_mark",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__8.label"
+            },
+            {
+              "value": "clipboard",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__9.label"
+            },
+            {
+              "value": "dairy",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__10.label"
+            },
+            {
+              "value": "dairy_free",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__11.label"
+            },
+            {
+              "value": "dryer",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__12.label"
+            },
+            {
+              "value": "eye",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__13.label"
+            },
+            {
+              "value": "fire",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__14.label"
+            },
+            {
+              "value": "gluten_free",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__15.label"
+            },
+            {
+              "value": "heart",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__16.label"
+            },
+            {
+              "value": "iron",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__17.label"
+            },
+            {
+              "value": "leaf",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__18.label"
+            },
+            {
+              "value": "leather",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__19.label"
+            },
+            {
+              "value": "lightning_bolt",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__20.label"
+            },
+            {
+              "value": "lipstick",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__21.label"
+            },
+            {
+              "value": "lock",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__22.label"
+            },
+            {
+              "value": "map_pin",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__23.label"
+            },
+            {
+              "value": "nut_free",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__24.label"
+            },
+            {
+              "value": "pants",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__25.label"
+            },
+            {
+              "value": "paw_print",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__26.label"
+            },
+            {
+              "value": "pepper",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__27.label"
+            },
+            {
+              "value": "perfume",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__28.label"
+            },
+            {
+              "value": "plane",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__29.label"
+            },
+            {
+              "value": "plant",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__30.label"
+            },
+            {
+              "value": "price_tag",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__31.label"
+            },
+            {
+              "value": "question_mark",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__32.label"
+            },
+            {
+              "value": "recycle",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__33.label"
+            },
+            {
+              "value": "return",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__34.label"
+            },
+            {
+              "value": "ruler",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__35.label"
+            },
+            {
+              "value": "serving_dish",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__36.label"
+            },
+            {
+              "value": "shirt",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__37.label"
+            },
+            {
+              "value": "shoe",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__38.label"
+            },
+            {
+              "value": "silhouette",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__39.label"
+            },
+            {
+              "value": "snowflake",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__40.label"
+            },
+            {
+              "value": "star",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__41.label"
+            },
+            {
+              "value": "stopwatch",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__42.label"
+            },
+            {
+              "value": "truck",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__43.label"
+            },
+            {
+              "value": "washing",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__44.label"
+            }
+          ],
+          "default": "heart",
+          "label": "t:sections.main-product.blocks.icon_with_text.settings.icon_1.label"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_1",
+          "label": "t:sections.main-product.blocks.icon_with_text.settings.image_1.label"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "heading_1",
+          "default": "t:sections.main-product.blocks.icon_with_text.settings.heading_1.default",
+          "label": "t:sections.main-product.blocks.icon_with_text.settings.heading_1.label",
+          "info": "t:sections.main-product.blocks.icon_with_text.settings.heading.info"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.main-product.blocks.icon_with_text.settings.pairing_2.label"
+        },
+        {
+          "type": "select",
+          "id": "icon_2",
+          "options": [
+            {
+              "value": "none",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__1.label"
+            },
+            {
+              "value": "apple",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__2.label"
+            },
+            {
+              "value": "banana",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__3.label"
+            },
+            {
+              "value": "bottle",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__4.label"
+            },
+            {
+              "value": "box",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__5.label"
+            },
+            {
+              "value": "carrot",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__6.label"
+            },
+            {
+              "value": "chat_bubble",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__7.label"
+            },
+            {
+              "value": "check_mark",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__8.label"
+            },
+            {
+              "value": "clipboard",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__9.label"
+            },
+            {
+              "value": "dairy",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__10.label"
+            },
+            {
+              "value": "dairy_free",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__11.label"
+            },
+            {
+              "value": "dryer",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__12.label"
+            },
+            {
+              "value": "eye",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__13.label"
+            },
+            {
+              "value": "fire",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__14.label"
+            },
+            {
+              "value": "gluten_free",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__15.label"
+            },
+            {
+              "value": "heart",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__16.label"
+            },
+            {
+              "value": "iron",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__17.label"
+            },
+            {
+              "value": "leaf",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__18.label"
+            },
+            {
+              "value": "leather",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__19.label"
+            },
+            {
+              "value": "lightning_bolt",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__20.label"
+            },
+            {
+              "value": "lipstick",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__21.label"
+            },
+            {
+              "value": "lock",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__22.label"
+            },
+            {
+              "value": "map_pin",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__23.label"
+            },
+            {
+              "value": "nut_free",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__24.label"
+            },
+            {
+              "value": "pants",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__25.label"
+            },
+            {
+              "value": "paw_print",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__26.label"
+            },
+            {
+              "value": "pepper",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__27.label"
+            },
+            {
+              "value": "perfume",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__28.label"
+            },
+            {
+              "value": "plane",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__29.label"
+            },
+            {
+              "value": "plant",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__30.label"
+            },
+            {
+              "value": "price_tag",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__31.label"
+            },
+            {
+              "value": "question_mark",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__32.label"
+            },
+            {
+              "value": "recycle",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__33.label"
+            },
+            {
+              "value": "return",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__34.label"
+            },
+            {
+              "value": "ruler",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__35.label"
+            },
+            {
+              "value": "serving_dish",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__36.label"
+            },
+            {
+              "value": "shirt",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__37.label"
+            },
+            {
+              "value": "shoe",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__38.label"
+            },
+            {
+              "value": "silhouette",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__39.label"
+            },
+            {
+              "value": "snowflake",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__40.label"
+            },
+            {
+              "value": "star",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__41.label"
+            },
+            {
+              "value": "stopwatch",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__42.label"
+            },
+            {
+              "value": "truck",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__43.label"
+            },
+            {
+              "value": "washing",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__44.label"
+            }
+          ],
+          "default": "return",
+          "label": "t:sections.main-product.blocks.icon_with_text.settings.icon_2.label"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_2",
+          "label": "t:sections.main-product.blocks.icon_with_text.settings.image_2.label"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "heading_2",
+          "default": "t:sections.main-product.blocks.icon_with_text.settings.heading_2.default",
+          "label": "t:sections.main-product.blocks.icon_with_text.settings.heading_2.label",
+          "info": "t:sections.main-product.blocks.icon_with_text.settings.heading.info"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.main-product.blocks.icon_with_text.settings.pairing_3.label"
+        },
+        {
+          "type": "select",
+          "id": "icon_3",
+          "options": [
+            {
+              "value": "none",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__1.label"
+            },
+            {
+              "value": "apple",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__2.label"
+            },
+            {
+              "value": "banana",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__3.label"
+            },
+            {
+              "value": "bottle",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__4.label"
+            },
+            {
+              "value": "box",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__5.label"
+            },
+            {
+              "value": "carrot",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__6.label"
+            },
+            {
+              "value": "chat_bubble",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__7.label"
+            },
+            {
+              "value": "check_mark",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__8.label"
+            },
+            {
+              "value": "clipboard",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__9.label"
+            },
+            {
+              "value": "dairy",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__10.label"
+            },
+            {
+              "value": "dairy_free",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__11.label"
+            },
+            {
+              "value": "dryer",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__12.label"
+            },
+            {
+              "value": "eye",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__13.label"
+            },
+            {
+              "value": "fire",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__14.label"
+            },
+            {
+              "value": "gluten_free",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__15.label"
+            },
+            {
+              "value": "heart",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__16.label"
+            },
+            {
+              "value": "iron",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__17.label"
+            },
+            {
+              "value": "leaf",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__18.label"
+            },
+            {
+              "value": "leather",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__19.label"
+            },
+            {
+              "value": "lightning_bolt",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__20.label"
+            },
+            {
+              "value": "lipstick",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__21.label"
+            },
+            {
+              "value": "lock",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__22.label"
+            },
+            {
+              "value": "map_pin",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__23.label"
+            },
+            {
+              "value": "nut_free",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__24.label"
+            },
+            {
+              "value": "pants",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__25.label"
+            },
+            {
+              "value": "paw_print",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__26.label"
+            },
+            {
+              "value": "pepper",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__27.label"
+            },
+            {
+              "value": "perfume",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__28.label"
+            },
+            {
+              "value": "plane",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__29.label"
+            },
+            {
+              "value": "plant",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__30.label"
+            },
+            {
+              "value": "price_tag",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__31.label"
+            },
+            {
+              "value": "question_mark",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__32.label"
+            },
+            {
+              "value": "recycle",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__33.label"
+            },
+            {
+              "value": "return",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__34.label"
+            },
+            {
+              "value": "ruler",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__35.label"
+            },
+            {
+              "value": "serving_dish",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__36.label"
+            },
+            {
+              "value": "shirt",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__37.label"
+            },
+            {
+              "value": "shoe",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__38.label"
+            },
+            {
+              "value": "silhouette",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__39.label"
+            },
+            {
+              "value": "snowflake",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__40.label"
+            },
+            {
+              "value": "star",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__41.label"
+            },
+            {
+              "value": "stopwatch",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__42.label"
+            },
+            {
+              "value": "truck",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__43.label"
+            },
+            {
+              "value": "washing",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__44.label"
+            }
+          ],
+          "default": "truck",
+          "label": "t:sections.main-product.blocks.icon_with_text.settings.icon_3.label"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_3",
+          "label": "t:sections.main-product.blocks.icon_with_text.settings.image_3.label"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "heading_3",
+          "default": "t:sections.main-product.blocks.icon_with_text.settings.heading_3.default",
+          "label": "t:sections.main-product.blocks.icon_with_text.settings.heading_3.label",
+          "info": "t:sections.main-product.blocks.icon_with_text.settings.heading.info"
+        }
+      ]
+    }
+  ],
+  "settings": [
+        {
+      "type": "checkbox",
+      "id": "allow_transparent_header",
+      "label": "Allow transparent header",
+      "info": "This setting only applies when this section is the first one.",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Layout Wdith"
+    },
+    {
+      "type": "select",
+      "id": "width",
+      "label": "Width",
+      "default": "container",
+      "options": [
+        {
+          "value": "container-fluid",
+          "label": "Full width padded"
+        },
+        {
+          "value": "container",
+          "label": "Page width"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "options": [
+        {
+          "value": "image_first",
+          "label": "Image First"
+        },
+        {
+          "value": "text_first",
+          "label": "Text First"
+        }
+      ],
+      "default": "image_first",
+      "label": "Image First"
+    },
+    {
+      "type": "header",
+      "content": "Gallery"
+    },
+    {
+      "type": "select",
+      "id": "gallery_type",
+      "label": "Gallery type",
+      "options": [
+        {
+          "value": "grid-single",
+          "label": "Big Image"
+        },
+        {
+          "value": "grid",
+          "label": "Grid"
+        },
+        {
+          "value": "grid-collage",
+          "label": "Collage"
+        },
+        {
+          "value": "thumbs-left",
+          "label": "Thumbs Left"
+        },
+        {
+          "value": "thumbs-right",
+          "label": "Thumbs Right"
+        },
+        {
+          "value": "thumbs-bottom",
+          "label": "Thumbs bottom"
+        }
+      ],
+      "default": "grid"
+    },
+    {
+      "type": "select",
+      "id": "gallery_size",
+      "label": "Gallery Size",
+      "info": "Will take priority over Content size",
+      "options": [
+        {
+          "value": "5",
+          "label": "Small"
+        },
+        {
+          "value": "6",
+          "label": "Mediaum"
+        },
+        {
+          "value": "7",
+          "label": "Large"
+        },
+        {
+          "value": "8",
+          "label": "Extra large"
+        }
+      ],
+      "default": "6"
+    },
+    {
+      "type": "select",
+      "id": "gallery_image_size",
+      "label": "Gallery image size",
+      "options": [
+        {
+          "value": "aspect-ratio",
+          "label": "original"
+        },
+        {
+          "value": "2-3",
+          "label": "Landscape"
+        },
+        {
+          "value": "1-1",
+          "label": "Square"
+        },
+        {
+          "value": "3-2",
+          "label": "Portrait(3:2)"
+        },
+        {
+          "value": "portrait",
+          "label": "Portrait(4:3)"
+        },
+        {
+          "value": "5-4",
+          "label": "Portrait(5:4)"
+        }
+      ],
+      "default": "portrait"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_zoom",
+      "label": "Enable image zoom gallery",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "disable_zoom_icon",
+      "label": "Hide zoom icon",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Mobile gallery"
+    },
+    {
+      "type": "select",
+      "id": "slides_per_view",
+      "label": "Images per slide",
+      "options": [
+        {
+          "value": "1",
+          "label": "One"
+        },
+        {
+          "value": "2",
+          "label": "Two"
+        }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "checkbox",
+      "id": "partial_slide",
+      "label": "Next image partial preview",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_navigation",
+      "label": "Enable arrows",
+      "default": true
+    },
+      {
+      "type": "checkbox",
+      "id": "enable_navigation_thumbs",
+      "label": "Enable arrows thumbs",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_mobile_thumbs",
+      "label": "Enable thumbs on mobile",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sticky_info",
+      "default": false,
+      "label": "t:sections.main-product.settings.enable_sticky_info.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sticky_gallery",
+      "default": true,
+      "label": "Enable gallary sticky"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "color_scheme",
+      "id": "card_color_scheme",
+      "label": "Card color",
+      "default": "scheme-3"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "paragraph",
+      "content": "Desktop"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 100
+    },
+    {
+      "type": "paragraph",
+      "content": " Mobile"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 40
+    }
+  ]
+}
+{% endschema %}

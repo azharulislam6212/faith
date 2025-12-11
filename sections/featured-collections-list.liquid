@@ -1,0 +1,424 @@
+{{ 'component-marquee.css' | asset_url | stylesheet_tag: preload: true }}
+{{ 'component-product-card.css' | asset_url | stylesheet_tag: preload: true }}
+{{ 'component-price.css' | asset_url | stylesheet_tag: preload: true }}
+<noscript>{{ 'component-marquee.css' | asset_url | stylesheet_tag }}</noscript>
+<noscript>{{ 'component-product-card.css' | asset_url | stylesheet_tag }}</noscript>
+<noscript>{{ 'component-price.css' | asset_url | stylesheet_tag }}</noscript>
+
+{{- 'section-featured-collections-list.css' | asset_url | stylesheet_tag -}}
+
+<div
+  class="featured-collections-list__wrapper section--padding  tabs-wrapper"
+  data-color-scheme="{{ section.settings.color_scheme }}"
+  role="region"
+  aria-label="Featured collections list"
+  style="{%render "section-spacing"%}"
+>
+  {% if section.settings.width contains 'container-full' %}
+    {% assign container = 'container-full-with-padding' %}
+  {% else %}
+    {% assign container = section.settings.width %}
+  {% endif %}
+
+  <collection-tab-content>
+    <div class="featured-collections-list__header section-header">
+      <div class="{{ container }}">
+        <div class="featured-collections-list__header-wrap">
+          {% content_for 'block', type: '_section-header-no-container', id: 'featured-collections-header' %}
+
+          <ul class="tabs-button-list" role="tablist" aria-label="Featured product collections">
+            {% content_for 'block', type: '_collection-tab-list', id: 'collection_tab_list' %}
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="featured-collections-list__content" aria-live="polite">
+      <div class="{{ section.settings.width }}">
+        {% content_for 'blocks' %}
+      </div>
+    </div>
+  </collection-tab-content>
+</div>
+
+{% schema %}
+{
+  "name": "Featured collection list",
+  "tag": "section",
+  "class": "featured-collections-list",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout Wdith"
+    },
+    {
+      "type": "select",
+      "id": "width",
+      "label": "Width",
+      "default": "container",
+      "options": [
+        {
+          "value": "container-full",
+          "label": "Full width"
+        },
+        {
+          "value": "container-full-with-padding",
+          "label": "Full width padded"
+        },
+        {
+          "value": "container-full-mobile",
+          "label": "Full width mobile only"
+        },
+        {
+          "value": "container",
+          "label": "Page width"
+        }
+      ]
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "paragraph",
+      "content": "Desktop"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 120
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 120
+    },
+    {
+      "type": "paragraph",
+      "content": "Tablet"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_tablet",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_tablet",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 80
+    },
+    {
+      "type": "paragraph",
+      "content": "Mobile"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 60
+    }
+  ],
+  "blocks": [
+    {
+      "type": "_collection-tab-block"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured collection list",
+      "category": "Collections",
+      "settings": {
+        "width": "container",
+        "color_scheme": "",
+        "padding_top": 120,
+        "padding_bottom": 120,
+        "padding_top_tablet": 80,
+        "padding_bottom_tablet": 80,
+        "padding_top_mobile": 60,
+        "padding_bottom_mobile": 60
+      },
+      "blocks": {
+        "featured-collections-header": {
+          "type": "_section-header-no-container",
+          "name": "Section Header",
+          "static": true,
+          "settings": {
+            "heading": "Featured [products]",
+            "heading_size": "h1",
+            "text": "<p>Featured products style, or even provide a review.</p>",
+            "text_style": "body",
+            "text_size": "medium",
+            "text_align": "text-start"
+          }
+        },
+        "collection_tab_list": {
+          "type": "_collection-tab-list",
+          "static": true,
+          "settings": {},
+          "blocks": {
+            "collection_item_GFQhUF": {
+              "type": "_collection-tab-item",
+              "name": "Collection item",
+              "settings": {
+                "collection": "",
+                "title": "Dresses"
+              },
+              "blocks": {}
+            },
+            "collection_item_Pbyz3M": {
+              "type": "_collection-tab-item",
+              "name": "Collection item",
+              "settings": {
+                "collection": "",
+                "title": "Pants"
+              },
+              "blocks": {}
+            },
+            "collection_item_XTNH7T": {
+              "type": "_collection-tab-item",
+              "name": "Collection item",
+              "settings": {
+                "collection": "",
+                "title": "Tops"
+              },
+              "blocks": {}
+            },
+            "collection_item_ppz6Vy": {
+              "type": "_collection-tab-item",
+              "name": "Collection item",
+              "settings": {
+                "collection": "",
+                "title": "Women"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "collection_item_GFQhUF",
+            "collection_item_Pbyz3M",
+            "collection_item_XTNH7T",
+            "collection_item_ppz6Vy"
+          ]
+        },
+        "collection_tab_block_T9HCJm": {
+          "type": "_collection-tab-block",
+          "name": "Collection tab content",
+          "settings": {
+            "title": "Outerwear",
+            "products_to_show": 16,
+            "desktop_grid": "4",
+            "tab_grid": "4",
+            "mobile_grid": "1",
+            "autoplay_enabled": false,
+            "autoplay_timeout": 5,
+            "loop_enabled": false,
+            "enable_pagination": false,
+            "enable_navigation": true,
+            "color_scheme_navigation": "",
+            "color_schema": ""
+          },
+          "blocks": {
+            "product-card": {
+              "type": "_product-card",
+              "name": "Product card",
+              "static": true,
+              "settings": {
+                "image_ratio": "portrait",
+                "enable_quick_add": true,
+                "button_style": "primary",
+                "button_type": "icon-only",
+                "color_schema": "scheme-3"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": []
+        },
+        "collection_tab_block_7BUVf7": {
+          "type": "_collection-tab-block",
+          "name": "Collection tab content",
+          "settings": {
+            "title": "Dresses",
+            "products_to_show": 16,
+            "desktop_grid": "4",
+            "tab_grid": "4",
+            "mobile_grid": "1",
+            "autoplay_enabled": false,
+            "autoplay_timeout": 5,
+            "loop_enabled": false,
+            "enable_pagination": false,
+            "enable_navigation": true,
+            "color_scheme_navigation": "",
+            "color_schema": ""
+          },
+          "blocks": {
+            "product-card": {
+              "type": "_product-card",
+              "static": true,
+              "settings": {
+                "image_ratio": "portrait",
+                "enable_quick_add": true,
+                "button_style": "primary",
+                "button_type": "icon-only",
+                "color_schema": ""
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": []
+        },
+        "collection_tab_block_jxD7K3": {
+          "type": "_collection-tab-block",
+          "name": "Collection tab content",
+          "settings": {
+            "title": "Pants",
+            "products_to_show": 16,
+            "desktop_grid": "4",
+            "tab_grid": "4",
+            "mobile_grid": "1",
+            "autoplay_enabled": false,
+            "autoplay_timeout": 5,
+            "loop_enabled": false,
+            "enable_pagination": false,
+            "enable_navigation": true,
+            "color_scheme_navigation": "",
+            "color_schema": ""
+          },
+          "blocks": {
+            "product-card": {
+              "type": "_product-card",
+              "static": true,
+              "settings": {
+                "image_ratio": "portrait",
+                "enable_quick_add": true,
+                "button_style": "primary",
+                "button_type": "icon-only",
+                "color_schema": ""
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": []
+        },
+        "collection_tab_block_Gk7D93": {
+          "type": "_collection-tab-block",
+          "name": "Collection tab content",
+          "settings": {
+            "title": "Tops",
+            "products_to_show": 16,
+            "desktop_grid": "4",
+            "tab_grid": "4",
+            "mobile_grid": "1",
+            "autoplay_enabled": false,
+            "autoplay_timeout": 5,
+            "loop_enabled": false,
+            "enable_pagination": false,
+            "enable_navigation": true,
+            "color_scheme_navigation": "",
+            "color_schema": ""
+          },
+          "blocks": {
+            "product-card": {
+              "type": "_product-card",
+              "static": true,
+              "settings": {
+                "image_ratio": "portrait",
+                "enable_quick_add": true,
+                "button_style": "primary",
+                "button_type": "icon-only",
+                "color_schema": ""
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": []
+        },
+        "collection_tab_block_3PXA4Q": {
+          "type": "_collection-tab-block",
+          "name": "Collection tab content",
+          "settings": {
+            "title": "Women",
+            "products_to_show": 16,
+            "desktop_grid": "4",
+            "tab_grid": "4",
+            "mobile_grid": "1",
+            "autoplay_enabled": false,
+            "autoplay_timeout": 5,
+            "loop_enabled": false,
+            "enable_pagination": false,
+            "enable_navigation": true,
+            "color_scheme_navigation": "",
+            "color_schema": ""
+          },
+          "blocks": {
+            "product-card": {
+              "type": "_product-card",
+              "static": true,
+              "settings": {
+                "image_ratio": "portrait",
+                "enable_quick_add": true,
+                "button_style": "primary",
+                "button_type": "icon-only",
+                "color_schema": ""
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": []
+        }
+      },
+      "block_order": [
+        "collection_tab_block_T9HCJm",
+        "collection_tab_block_7BUVf7",
+        "collection_tab_block_jxD7K3",
+        "collection_tab_block_Gk7D93",
+        "collection_tab_block_3PXA4Q"
+      ]
+    }
+  ],
+  "enabled_on": {
+    "templates": ["*"],
+    "groups": ["aside"]
+  }
+}
+{% endschema %}

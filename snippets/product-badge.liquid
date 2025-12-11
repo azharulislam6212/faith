@@ -1,0 +1,212 @@
+{%- comment -%}
+  Parameters:
+  - product {Object} - Product object.
+  - variant {Object} - Variant object (for use on Product Pages for example)
+  - show_variant_icon {Boolean} - Only applies when this is being used as a variant label.
+  - is_product_card {Boolean} - Whether the label is on a card or not
+  - limit {Number} - The number of product labels to show
+
+  Usage:
+  {%- render 'product-badge', product: product, variant: variant, is_product_card: false, limit: 99 -%}
+{%- endcomment -%}
+
+{%- capture product_label -%}
+  {%- liquid
+    assign badge_count = 0
+    assign has_only_default_variant = variant.product.has_only_default_variant | default: product.has_only_default_variant
+    assign has_only_one_variant = false
+    assign variant_count = variant.product.variants.size | default: product.variants.size
+    if variant_count == 1
+      assign has_only_one_variant = true
+    endif
+  -%}
+
+  {%- if badge_count < limit and settings.show_custom_badge and product.metafields.theme.badge  != blank -%}
+    {%- assign badge_count = badge_count | plus: 1 -%}
+    <div class="product-badge-wrapper flex{% if settings.product_badge_card_position contains "end" %} flex--justify-end{% endif %}">
+      <span class="product-badge product-badge--custom">
+        {% if settings.custom_badge_icon != "none" %}
+          {% render 'icon', icon: settings.custom_badge_icon, width: 16, height: 16 %}
+        {% endif %}
+        {{ product.metafields.theme.badge  }}
+      </span>
+    </div>
+  {%- endif -%}
+
+  {%- if badge_count < limit and product.template_suffix contains 'preorder' -%}
+    {%- assign badge_count = badge_count | plus: 1 -%}
+    <div class="product-badge-wrapper flex{% if settings.product_badge_card_position contains "end" %} flex--justify-end{% endif %}">
+      <span class="product-badge product-badge--preorder">
+        {% if settings.preorder_badge_icon != "none" %}
+          {% render 'icon', icon: settings.preorder_badge_icon, width: 16, height: 16 %}
+        {% endif %}
+        {{- 'products.product.preorder' | t -}}
+      </span>
+    </div>
+  {%- endif -%}
+
+
+
+  {%- if badge_count < limit and settings.show_sold_out_badge -%}
+
+    {%- if is_product_card and product.available == false -%}
+      {%- assign badge_count = badge_count | plus: 1 -%}
+      <div class="product-badge-wrapper flex{% if settings.product_badge_card_position contains "end" %} flex--justify-end{% endif %}">
+        <span class="product-badge product-badge--sold-out">
+          {% if settings.sold_out_badge_icon != "none" %}
+            {% render 'icon', icon: settings.sold_out_badge_icon, width: 16, height: 16 %}
+          {% endif %}
+          {{ 'products.product.sold_out' | t }}
+        </span>
+      </div>
+    {%- elsif is_product_card == true and variant and variant.available == false -%}
+      {%- assign badge_count = badge_count | plus: 1 -%}
+      <div class="product-badge-wrapper flex{% if settings.product_badge_card_position contains "end" %} flex--justify-end{% endif %}">
+        <span class="product-badge product-badge--sold-out">
+          {% if settings.sold_out_badge_icon != "none" %}
+            {% render 'icon', icon: settings.sold_out_badge_icon, width: 16, height: 16 %}
+          {% endif %}
+          {{ 'products.product.sold_out' | t }}
+        </span>
+      </div>
+    {%- endif -%}
+  {%- endif -%}
+
+  {%- if badge_count < limit and settings.show_sale_badge -%}
+    {%- liquid
+      assign discount = 0
+      if variant
+        if variant.price > 0
+          if settings.sale_badge_type == 'percent'
+            assign discount = 1.0 | times: variant.price | divided_by: variant.compare_at_price
+            assign discount = 1.0 | minus: discount
+            assign discount = discount | times: 100.0 | round
+          else
+            assign discount = variant.compare_at_price | minus: variant.price
+          endif
+        endif
+      else
+        for variant in product.variants
+          if variant.compare_at_price > variant.price and variant.price > 0
+            if settings.sale_badge_type == 'percent'
+              assign this_discount = 1.0 | times: variant.price | divided_by: variant.compare_at_price
+              assign this_discount = 1.0 | minus: this_discount
+              assign this_discount = this_discount | times: 100.0 | round
+              if this_discount > discount
+                assign discount = this_discount
+              endif
+            else
+              assign this_discount = variant.compare_at_price | minus: variant.price
+              if this_discount > discount
+                assign discount = this_discount
+              endif
+            endif
+          endif
+        endfor
+      endif
+    -%}
+    {%- if discount > 0 -%}
+      {%- liquid
+        if settings.sale_badge_type == 'percent'
+          if variant or has_only_default_variant or has_only_one_variant
+            assign sale_label_text = 'products.product.percent_reduction' | t: amount: discount
+          else
+            assign sale_label_text = 'products.product.percent_reduction_up_to' | t: amount: discount
+          endif
+        elsif settings.sale_badge_type == 'amount'
+          assign discount_money = discount | money
+          if variant or has_only_default_variant or has_only_one_variant
+            assign sale_label_text = 'products.product.value_reduction_html' | t: amount: discount_money
+          else
+            assign sale_label_text = 'products.product.value_reduction_up_to_html' | t: amount: discount_money
+          endif
+        else
+          assign sale_label_text = 'products.product.sale' | t
+        endif
+        assign badge_count = badge_count | plus: 1
+      -%}
+      {%- if sale_label_text -%}
+        <div class="product-badge-wrapper flex{% if settings.product_badge_card_position contains "end" %} flex--justify-end{% endif %}">
+          <span class="product-badge product-badge--sale">
+            {% if settings.sale_badge_icon != "none" %}
+              {% render 'icon', icon: settings.sale_badge_icon, width: 14, height: 14 %}
+            {% endif %}
+            {{ sale_label_text }}
+          </span>
+        </div>
+      {%- endif -%}
+    {%- endif -%}
+  {%- endif -%}
+
+  {%- if badge_count < limit and settings.show_new_badge -%}
+
+    {%- liquid
+      assign showing_new_badge = false
+
+      if settings.show_new_badge_collection
+        assign collection_handles = settings.new_badge_collections | map: 'handle'
+        for collection in product.collections
+          if collection_handles contains collection.handle
+            assign new_badge_text = 'products.product.new' | t
+            assign showing_new_badge = true
+            break
+          endif
+        endfor
+      endif
+
+      if settings.show_new_badge_tag and showing_new_badge == false
+        assign product_tags_lowercase = product.tags | join: ',' | downcase | split: ','
+        assign new_tag_lowercase = settings.new_badge_tag | downcase
+        if product_tags_lowercase contains new_tag_lowercase
+          assign new_badge_text = 'products.product.new' | t
+          assign showing_new_badge = true
+        endif
+      endif
+
+      if settings.show_new_badge_days and showing_new_badge == false
+        assign now_s = 'now' | date: '%s' | plus: 0
+        assign pub_s = product.created_at | date: '%s' | plus: 0
+        assign diff_days = now_s | minus: pub_s | divided_by: 86400
+
+        if diff_days < settings.new_badge_date_limit
+          assign new_badge_text = 'products.product.new' | t
+        endif
+      endif
+    -%}
+
+    {%- if new_badge_text -%}
+      {%- assign badge_count = badge_count | plus: 1 -%}
+  
+     <div class="product-badge-wrapper flex{% if settings.product_badge_card_position contains "end" %} flex--justify-end{% endif %}">
+          <span class="product-badge product-badge--new">
+          {% if settings.new_badge_icon != "none" %}
+            {% render 'icon', icon: settings.new_badge_icon, width: 14, height: 14 %}
+          {% endif %}
+          {{ new_badge_text }}
+        </span>
+      </div>
+    {%- endif -%}
+  {%- endif -%}
+
+{% assign variant_badge = variant.metafields.theme.badge.value %}
+
+
+  {%- if is_product_card == true and variant and variant_badge.badge != blank -%}
+
+    <div class="product-badge-wrapper flex">
+        <span class="product-badge product-badge--custom product-badge--custom-variant"
+              style="{% if variant_badge.background_color != blank %}--custom-badge-bg-color: {{ variant_badge.background_color.value.rgb }};{% endif %}{% if variant_badge.text_color != blank %}--custom-badge-text-color: {{ variant_badge.text_color.value.rgb }};{% endif %}">
+          {% if show_variant_icon and settings.custom_badge_icon != "none" %}
+            {% render 'icon', icon: settings.custom_badge_icon, width: 14, height: 14 %}
+          {% endif %}
+          {{ variant_badge.badge }}
+        </span>
+      </div>
+  {%- endif -%}
+{%- endcapture -%}
+
+{%- if product_label != blank -%}
+  <div class="product-badge-container  {% if position %} absolute {{ position }}{% endif %}">
+    {{- product_label -}}
+  </div>
+{%- endif -%}

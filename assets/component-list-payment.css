@@ -1,0 +1,9 @@
+.list-payment {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+}
+
+.list-payment__item:not(:last-child) {
+  margin-right: 0.5rem;
+}

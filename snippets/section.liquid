@@ -1,0 +1,24 @@
+{%- doc -%}
+  Renders a wrapper section
+
+  @param {section} section - The section object
+  @param {string} children - The children of the section
+{%- enddoc -%}
+
+
+{%- style -%}
+  #shopify-section-{{ section.id }} .section--padding {
+        --pad-top-desktop: {{ section.settings.padding_top }}px;
+        --pad-bottom-desktop: {{ section.settings.padding_bottom }}px;
+        --pad-top-tablet: {{ section.settings.padding_top_tablet }}px;
+        --pad-bottom-tablet: {{ section.settings.padding_bottom_tablet }}px;
+        --pad-top-mobile: {{ section.settings.padding_top_mobile }}px;
+        --pad-bottom-mobile: {{ section.settings.padding_bottom_mobile }}px;
+  }
+{%- endstyle -%}
+
+<div class="section section--padding" data-color-scheme="{{ section.settings.color_scheme }}" {% if request.visual_preview_mode %} data-shopify-visual-preview {% endif %}>
+    <div class="{{ section.settings.width }}">
+       {{ children }}
+    </div>
+</div>

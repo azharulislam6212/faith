@@ -1,0 +1,34 @@
+{%- comment -%}
+  Accepts:
+
+  - image: {Image Object} The image object
+  - image_mobile: {Image Object} The image object - Mobile
+  - widths: {String} A comma-seperated string of widths
+
+  Usage:
+  {%- render 'srcset',
+    image: product.featured_media,
+    widths: '750,1200,1440,1920' -%}
+{%- endcomment -%}
+
+{%-
+  liquid
+  assign widths = widths | default: '375,550,750,1100,1500,1780,2000,3000,3840'
+  assign widths_array = widths | split: ','
+  if image != nil
+    for width in widths_array
+      assign width_value = width | plus: 0
+
+      if image.width >= width_value
+        if width_value <= 750 and image_mobile
+          echo image_mobile | image_url: width: width_value | append: ' ' | append: width | append: 'w'
+        else
+          echo image | image_url: width: width_value | append: ' ' | append: width | append: 'w'
+        endif
+        unless forloop.last
+          echo ','
+        endunless
+      endif
+    endfor
+  endif
+-%}

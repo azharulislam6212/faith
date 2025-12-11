@@ -1,0 +1,444 @@
+{%- assign body_font = settings.font_body_family -%}
+{%- assign heading_font = settings.font_heading_family -%}
+{%- assign accent_font = settings.font_accent_family -%}
+
+{%- assign body_font_bold = body_font | font_modify: 'weight', 'bolder' -%}
+{%- assign heading_font_bold = heading_font | font_modify: 'weight', 'bolder' -%}
+{%- assign accent_font_bold = accent_font | font_modify: 'weight', 'bolder' -%}
+
+{%- comment -%}
+  Helper to find next heavier weight (if exists)
+{%- endcomment -%}
+
+{%- assign body_font_100 = body_font | font_modify: 'weight', '+100' -%}
+{%- assign body_font_200 = body_font | font_modify: 'weight', '+200' -%}
+{%- assign body_font_300 = body_font | font_modify: 'weight', '+300' -%}
+{%- assign body_font_400 = body_font | font_modify: 'weight', '+400' -%}
+{%- if body_font_100 and body_font_100.weight > body_font.weight -%}
+  {%- assign body_font_bold = body_font_100 -%}
+{%- elsif body_font_200 and body_font_200.weight > body_font.weight -%}
+  {%- assign body_font_bold = body_font_200 -%}
+{%- elsif body_font_300 and body_font_300.weight > body_font.weight -%}
+  {%- assign body_font_bold = body_font_300 -%}
+{%- elsif body_font_400 and body_font_400.weight > body_font.weight -%}
+  {%- assign body_font_bold = body_font_400 -%}
+{%- endif -%}
+
+{%- assign heading_font_100 = heading_font | font_modify: 'weight', '+100' -%}
+{%- assign heading_font_200 = heading_font | font_modify: 'weight', '+200' -%}
+{%- assign heading_font_300 = heading_font | font_modify: 'weight', '+300' -%}
+{%- assign heading_font_400 = heading_font | font_modify: 'weight', '+400' -%}
+{%- if heading_font_100 and heading_font_100.weight > heading_font.weight -%}
+  {%- assign heading_font_bold = heading_font_100 -%}
+{%- elsif heading_font_200 and heading_font_200.weight > heading_font.weight -%}
+  {%- assign heading_font_bold = heading_font_200 -%}
+{%- elsif heading_font_300 and heading_font_300.weight > heading_font.weight -%}
+  {%- assign heading_font_bold = heading_font_300 -%}
+{%- elsif heading_font_400 and heading_font_400.weight > heading_font.weight -%}
+  {%- assign heading_font_bold = heading_font_400 -%}
+{%- endif -%}
+
+{%- assign accent_font_100 = accent_font | font_modify: 'weight', '+100' -%}
+{%- assign accent_font_200 = accent_font | font_modify: 'weight', '+200' -%}
+{%- assign accent_font_300 = accent_font | font_modify: 'weight', '+300' -%}
+{%- assign accent_font_400 = accent_font | font_modify: 'weight', '+400' -%}
+{%- if accent_font_100 and accent_font_100.weight > accent_font.weight -%}
+  {%- assign accent_font_bold = accent_font_100 -%}
+{%- elsif accent_font_200 and accent_font_200.weight > accent_font.weight -%}
+  {%- assign accent_font_bold = accent_font_200 -%}
+{%- elsif accent_font_300 and accent_font_300.weight > accent_font.weight -%}
+  {%- assign accent_font_bold = accent_font_300 -%}
+{%- elsif accent_font_400 and accent_font_400.weight > accent_font.weight -%}
+  {%- assign accent_font_bold = accent_font_400 -%}
+{%- endif -%}
+
+{%- comment -%} NAV FONT {%- endcomment -%}
+{%- assign nav_font_string = settings.font_nav_style | split: '_' | first -%}
+{%- assign nav_font_embolden = settings.font_nav_style | split: '_' | last -%}
+{%- assign nav_font_drop = blank -%}
+{%- if nav_font_string == 'heading' -%}
+  {% if nav_font_embolden == 'bold' %}
+    {% assign nav_font_drop = heading_font_bold %}
+  {% else %}
+    {% assign nav_font_drop = heading_font %}
+  {% endif %}
+
+{%- elsif nav_font_string == 'accent' -%}
+  {% if nav_font_embolden == 'bold' %}
+    {% assign nav_font_drop = accent_font_bold %}
+  {% else %}
+    {% assign nav_font_drop = accent_font %}
+  {% endif %}
+{%- else -%}
+  {% if nav_font_embolden == 'bold' %}
+    {% assign nav_font_drop = body_font_bold %}
+  {% else %}
+    {% assign nav_font_drop = body_font %}
+  {% endif %}
+{%- endif -%}
+
+{%- comment -%} BUTTON FONT {%- endcomment -%}
+{%- assign button_font_string = settings.type_button_font | split: '_' | first -%}
+{%- assign button_font_embolden = settings.type_button_font | split: '_' | last -%}
+{%- assign button_font_drop = blank -%}
+{%- if button_font_string == 'heading' -%}
+  {% if button_font_embolden == 'bold' %}
+    {% assign button_font_drop = heading_font_bold %}
+  {% else %}
+    {% assign button_font_drop = heading_font %}
+  {% endif %}
+{%- elsif button_font_string == 'accent' -%}
+  {% if button_font_embolden == 'bold' %}
+    {% assign button_font_drop = accent_font_bold %}
+  {% else %}
+    {% assign button_font_drop = accent_font %}
+  {% endif %}
+{%- else -%}
+  {% if button_font_embolden == 'bold' %}
+    {% assign button_font_drop = body_font_bold %}
+  {% else %}
+    {% assign button_font_drop = body_font %}
+  {% endif %}
+{%- endif -%}
+{%- comment -%} SUBHEADING FONT {%- endcomment -%}
+{%- assign subheading_font_string = settings.type_subheading_font | split: '_' | first -%}
+{%- assign subheading_font_embolden = settings.type_subheading_font | split: '_' | last -%}
+{%- assign subheading_font_drop = blank -%}
+{%- if subheading_font_string == 'heading' -%}
+  {% if subheading_font_embolden == 'bold' %}
+    {% assign subheading_font_drop = heading_font_bold %}
+  {% else %}
+    {% assign subheading_font_drop = heading_font %}
+  {% endif %}
+{%- elsif subheading_font_string == 'accent' -%}
+  {% if subheading_font_embolden == 'bold' %}
+    {% assign subheading_font_drop = accent_font_bold %}
+  {% else %}
+    {% assign subheading_font_drop = accent_font %}
+  {% endif %}
+
+{%- else -%}
+  {% if subheading_font_embolden == 'bold' %}
+    {% assign subheading_font_drop = body_font_bold %}
+  {% else %}
+    {% assign subheading_font_drop = body_font %}
+  {% endif %}
+{%- endif -%}
+
+{% style %}
+          {{ body_font | font_face: font_display: 'swap' }}
+          {{ body_font_bold | font_face: font_display: 'swap' }}
+          {{ body_font_italic | font_face: font_display: 'swap' }}
+          {{ body_font_bold_italic | font_face: font_display: 'swap' }}
+
+          {{ heading_font | font_face: font_display: 'swap' }}
+          {{ heading_font_bold | font_face: font_display: 'swap' }}
+          {{ heading_font_italic | font_face: font_display: 'swap' }}
+          {{ heading_font_bold_italic | font_face: font_display: 'swap' }}
+
+          {{ accent_font | font_face: font_display: 'swap' }}
+          {{ accent_font_bold | font_face: font_display: 'swap' }}
+          {{ accent_font_italic | font_face: font_display: 'swap' }}
+          {{ accent_font_bold_italic | font_face: font_display: 'swap' }}
+
+          {{ nav_font_drop | font_face: font_display: 'swap' }}
+          {{ button_font_drop | font_face: font_display: 'swap' }}
+          {{ subheading_font_drop | font_face: font_display: 'swap' }}
+
+      {% for scheme in settings.color_schemes -%}
+      {% assign scheme_classes = scheme_classes | append: ', [data-color-scheme="' | append: scheme.id | append: '"]' %}
+      {% if forloop.index == 1 -%}
+        :root,
+      {%- endif %}
+      [data-color-scheme="{{ scheme.id }}"] {
+          --color-background: {{ scheme.settings.background.red }},{{ scheme.settings.background.green }},{{ scheme.settings.background.blue }};
+          {% if scheme.settings.background_gradient != empty %}
+          --color-gradient-background: {{ scheme.settings.background_gradient }};
+          {% else %}
+          --color-gradient-background: {{ scheme.settings.background }};
+          {% endif %}
+
+            --color-accent: {{ scheme.settings.accent.red }},{{ scheme.settings.accent.green }},{{ scheme.settings.accent.blue }};
+            --color-text: {{ scheme.settings.text.red }},{{ scheme.settings.text.green }},{{ scheme.settings.text.blue }};
+            --color-heading: {{ scheme.settings.heading.red }},{{ scheme.settings.heading.green }},{{ scheme.settings.heading.blue }};
+            --color-primary-button: {{ scheme.settings.primary_button.red }},{{ scheme.settings.primary_button.green }},{{ scheme.settings.primary_button.blue }};
+            --color-primary-button-text: {{ scheme.settings.primary_button_label.red }},{{ scheme.settings.primary_button_label.green }},{{ scheme.settings.primary_button_label.blue }};
+            --color-primary-button-hover: {{ scheme.settings.primary_button_hover.red }},{{ scheme.settings.primary_button_hover.green }},{{ scheme.settings.primary_button_hover.blue }};
+            --color-primary-button-hover-text: {{ scheme.settings.primary_button_label_hover.red }},{{ scheme.settings.primary_button_label_hover.green }},{{ scheme.settings.primary_button_label_hover.blue }};
+            --color-primary-button-outline: {{ scheme.settings.primary_button_outline.red }},{{ scheme.settings.primary_button_outline.green }},{{ scheme.settings.primary_button_outline.blue }};
+            --color-primary-button-outline-hover: {{ scheme.settings.primary_button_outline_hover.red }},{{ scheme.settings.primary_button_outline_hover.green }},{{ scheme.settings.primary_button_outline_hover.blue }};
+
+            --color-secondary-button: {{ scheme.settings.secondary_button.red }},{{ scheme.settings.secondary_button.green }},{{ scheme.settings.secondary_button.blue }};
+            --color-secondary-button-text: {{ scheme.settings.secondary_button_label.red }},{{ scheme.settings.secondary_button_label.green }},{{ scheme.settings.secondary_button_label.blue }};
+            --color-secondary-button-hover: {{ scheme.settings.secondary_button_hover.red }},{{ scheme.settings.secondary_button_hover.green }},{{ scheme.settings.secondary_button_hover.blue }};
+            --color-secondary-button-hover-text: {{ scheme.settings.secondary_button_label_hover.red }},{{ scheme.settings.secondary_button_label_hover.green }},{{ scheme.settings.secondary_button_label_hover.blue }};
+            --color-secondary-button-outline: {{ scheme.settings.secondary_button_outline.red }},{{ scheme.settings.secondary_button_outline.green }},{{ scheme.settings.secondary_button_outline.blue }};
+            --color-secondary-button-outline-hover: {{ scheme.settings.secondary_button_outline_hover.red }},{{ scheme.settings.secondary_button_outline_hover.green }},{{ scheme.settings.secondary_button_outline_hover.blue }};
+
+            --color-input: {{ scheme.settings.input_color.red }},{{ scheme.settings.input_color.green }},{{ scheme.settings.input_color.blue }};
+            --color-input-bg: {{ scheme.settings.input_bg_color.red }},{{ scheme.settings.input_bg_color.green }},{{ scheme.settings.input_bg_color.blue }};
+            --color-input-outline: {{ scheme.settings.input_outline.red }},{{ scheme.settings.input_outline.green }},{{ scheme.settings.input_outline.blue }};
+
+            --color-border: {{ scheme.settings.border_color.red }},{{ scheme.settings.border_color.green }},{{ scheme.settings.border_color.blue }};
+            --color-shadow: {{ scheme.settings.shadow.red }},{{ scheme.settings.shadow.green }},{{ scheme.settings.shadow.blue }};
+            --color-placeholder: {{ scheme.settings.placeholder.red }},{{ scheme.settings.placeholder.green }},{{ scheme.settings.placeholder.blue }};
+
+        --custom-badge-bg-color: {{ settings.custom_badge_bg_color.rgb }};
+        --custom-badge-text-color: {{ settings.custom_badge_text_color.rgb }};
+
+        {%- if settings.show_sale_badge -%}
+        --sale-badge-bg-color: {{ settings.sale_badge_bg_color.rgb }};
+        --sale-badge-text-color: {{ settings.sale_badge_text_color.rgb }};
+        {%- endif -%}
+        {%- if settings.show_sold_out_badge-%}
+        --sold-out-badge-bg-color: {{ settings.sold_out_badge_bg_color.rgb }};
+        --sold-out-badge-text-color: {{ settings.sold_out_badge_text_color.rgb }};
+        {%- endif -%}
+        {%- if settings.show_new_badge -%}
+        --new-badge-bg-color: {{ settings.new_badge_bg_color.rgb }};
+        --new-badge-text-color: {{ settings.new_badge_text_color.rgb }};
+        {%- endif -%}
+
+        --preorder-badge-bg-color: {{ settings.preorder_badge_bg_color.rgb }};
+        --preorder-badge-text-color: {{ settings.preorder_badge_text_color.rgb }};
+
+
+      }
+    {% endfor %}
+
+
+          {{ scheme_classes | prepend: 'body' }} {
+            color: rgba(var(--color-text), 1);
+            background-color: rgb(var(--color-background));
+          }
+
+          .gradient {
+          background: rgb(var(--color-background));
+          background: var(--color-gradient-background);
+          background-attachment: fixed;
+          }
+
+          :root {
+
+           /* ===============================
+              BODY FONT SIZES
+              =============================== */
+                    /* Small body font */
+              --font-body-small: clamp(
+                {{ 0.875 | times: settings.font_body_scale | divided_by: 100.0 | times: 1.6 | round: 4 }}rem,
+                {{ 0.85 | times: settings.font_body_scale | divided_by: 100.0 | times: 1.6 | round: 4 }}rem + 0.2vw,
+                {{ 0.875 | times: settings.font_body_scale | divided_by: 100.0 | times: 1.6 | round: 4 }}rem
+              );
+
+              /* Medium body font */
+              --font-body-medium: clamp(
+                {{ 1 | times: settings.font_body_scale | divided_by: 100.0 | times: 1.6 | round: 4 }}rem,
+                {{ 0.95 | times: settings.font_body_scale | divided_by: 100.0 | times: 1.6 | round: 4 }}rem + 0.3vw,
+                {{ 1 | times: settings.font_body_scale | divided_by: 100.0 | times: 1.6 | round: 4 }}rem
+              );
+
+              /* Large body font */
+              --font-body-large: clamp(
+                {{ 1.125 | times: settings.font_body_scale | divided_by: 100.0 | times: 1.6 | round: 4 }}rem,
+                {{ 1.05 | times: settings.font_body_scale | divided_by: 100.0 | times: 1.6 | round: 4 }}rem + 0.35vw,
+                {{ 1.125 | times: settings.font_body_scale | divided_by: 100.0 | times: 1.6 | round: 4 }}rem
+              );
+
+              /* Extra large body font */
+              --font-body-xlarge: clamp(
+                {{ 1.25 | times: settings.font_body_scale | divided_by: 100.0 | times: 1.6 | round: 4 }}rem,
+                {{ 1.15 | times: settings.font_body_scale | divided_by: 100.0 | times: 1.6 | round: 4 }}rem + 0.4vw,
+                {{ 1.25 | times: settings.font_body_scale | divided_by: 100.0 | times: 1.6 | round: 4 }}rem
+              );
+
+              /* ===============================
+                HEADING FONT SIZES (H1 – H6)
+                =============================== */
+                --font-heading-h1: clamp(
+                  {{ 2.25 | times: settings.font_heading_scale | divided_by: 100.0 | round: 4 }}rem,
+                  calc(
+                    {{ 2.25 | times: settings.font_heading_scale | divided_by: 100.0 | round: 4 }}rem
+                    + ((100vw - 320px) * 0.0848)
+                  ),
+                  5.2rem
+                );
+
+                --font-heading-h2: clamp(
+                  {{ 2 | times: settings.font_heading_scale | divided_by: 100.0 | round: 4 }}rem,
+                  calc(
+                    {{ 2 | times: settings.font_heading_scale | divided_by: 100.0 | round: 4 }}rem
+                    + ((100vw - 320px) * 0.0848)
+                  ),
+                  4.8rem
+                );
+
+                --font-heading-h3: clamp(
+                  {{ 1.75 | times: settings.font_heading_scale | divided_by: 100.0 | round: 4 }}rem,
+                  calc(
+                    {{ 1.75 | times: settings.font_heading_scale | divided_by: 100.0 | round: 4 }}rem
+                    + ((100vw - 320px) * 0.0848)
+                  ),
+                  4rem
+                );
+
+                        --font-heading-h4: clamp(
+                  {{ 1.5 | times: settings.font_heading_scale | divided_by: 100.0 | round: 4 }}rem,
+                  calc(
+                    {{ 1.5 | times: settings.font_heading_scale | divided_by: 100.0 | round: 4 }}rem
+                    + ((100vw - 320px) * 0.0848)
+                  ),
+                  2.8rem
+                );
+
+                --font-heading-h5: clamp(
+                  {{ 1.375 | times: settings.font_heading_scale | divided_by: 100.0 | round: 4 }}rem,
+                  calc(
+                    {{ 1.375 | times: settings.font_heading_scale | divided_by: 100.0 | round: 4 }}rem
+                    + ((100vw - 320px) * 0.0848)
+                  ),
+                  2rem
+                );
+
+                --font-heading-h6: clamp(
+                  {{ 1.25 | times: settings.font_heading_scale | divided_by: 100.0 | round: 4 }}rem,
+                  calc(
+                    {{ 1.25 | times: settings.font_heading_scale | divided_by: 100.0 | round: 4 }}rem
+                    + ((100vw - 320px) * 0.0848)
+                  ),
+                  1.8rem
+                );
+
+              /* ===============================
+                HEADING UTILITY SIZES (small, medium, large, xlarge)
+                =============================== */
+
+              --font-heading-small: clamp(
+              {{ 1.25 | times: settings.font_heading_scale | divided_by: 100.0 | times: 1.6 | round: 4 }}rem,
+              calc(
+                {{ 1.25 | times: settings.font_heading_scale | divided_by: 100.0 | times: 1.6 | round: 4 }}rem
+                + ((100vw - 320px) * 0.0848)
+              ),
+              5.6rem
+            );
+
+
+                --font-heading-medium: clamp(
+              {{ 1.5 | times: settings.font_heading_scale | divided_by: 100.0 | times: 1.6 | round: 4 }}rem,
+              calc(
+                {{ 1.5 | times: settings.font_heading_scale | divided_by: 100.0 | times: 1.6 | round: 4 }}rem
+                + ((100vw - 320px) * 0.0848)
+              ),
+              6.4rem
+            );
+
+
+              --font-heading-large: clamp(
+              {{ 2 | times: settings.font_heading_scale | divided_by: 100.0 | times: 1.6 | round: 4 }}rem,
+              calc(
+                {{ 2 | times: settings.font_heading_scale | divided_by: 100.0 | times: 1.6 | round: 4 }}rem
+                + ((100vw - 320px) * 0.0848)
+              ),
+              8rem
+            );
+
+
+         --font-heading-xlarge: clamp(
+              {{ 2.5 | times: settings.font_heading_scale | divided_by: 100.0 | times: 1.6 | round: 4 }}rem,
+              calc(
+                {{ 2.5 | times: settings.font_heading_scale | divided_by: 100.0 | times: 1.6 | round: 4 }}rem
+                + ((100vw - 320px) * 0.0848)
+              ),
+              12rem
+            );
+
+
+              /* ===============================
+                ACCENT HEADING (Dynamic)
+                =============================== */
+              --font-accent-heading-small: clamp(
+                {{ 1.25 | times: settings.font_accent_scale | divided_by: 100.0 | times: 1.6 | round: 4 }}rem,
+                {{ 1.15 | times: settings.font_accent_scale | divided_by: 100.0 | times: 1.6 | round: 4 }}rem + 0.3vw,
+                {{ 1.5 | times: settings.font_accent_scale | divided_by: 100.0 | times: 1.6 | round: 4 }}rem
+              );
+
+              --font-accent-heading-medium: clamp(
+                {{ 1.75 | times: settings.font_accent_scale | divided_by: 100.0 | times: 1.6 | round: 4 }}rem,
+                {{ 1.6 | times: settings.font_accent_scale | divided_by: 100.0 | times: 1.6 | round: 4 }}rem + 0.6vw,
+                {{ 2.25 | times: settings.font_accent_scale | divided_by: 100.0 | times: 1.6 | round: 4 }}rem
+              );
+
+              --font-accent-heading-large: clamp(
+                {{ 2.25 | times: settings.font_accent_scale | divided_by: 100.0 | times: 1.6 | round: 4 }}rem,
+                {{ 2 | times: settings.font_accent_scale | divided_by: 100.0 | times: 1.6 | round: 4 }}rem + 0.8vw,
+                {{ 3 | times: settings.font_accent_scale | divided_by: 100.0 | times: 1.6 | round: 4 }}rem
+              );
+
+
+
+
+            /* Body Font */
+            --font-stack-body: {{ body_font.family }}, {{ body_font.fallback_families }};
+            --font-style-body: {{ body_font.style | default: 'normal' }};
+            --font-weight-body: {{ body_font.weight | default: 400 }};
+            --line-height-body: {{ settings.body_line_height | divided_by: 100.0 | default: 1.5 }};
+            --letter-spacing-body: {{ settings.font_body_letter_spacing | default: 0 }}px;
+            --text-transform-body: {{ settings.body_text_transform | default: 'none' }};
+            --font-scale-body: {{ settings.body_font_scale | default: 1 }};
+
+              /* Heading Font */
+            --font-stack-heading: {{ heading_font.family }}, {{ heading_font.fallback_families }};
+            --font-style-heading: {{ heading_font.style | default: 'normal'}};
+            --font-weight-heading: {{ heading_font.weight | default: 400 }};
+            --font-weight-heading-bold: {{ heading_font_bold.weight | default: 700 }};
+            --line-height-heading: {{ settings.heading_line_height | divided_by: 100.0 | default: 1.3 }};
+            --letter-spacing-heading: {{ settings.font_heading_letter_spacing | default: 0 }}px;
+            --text-transform-heading: {{ settings.heading_text_transform | default: 'none' }};
+            --font-scale-heading: {{ settings.heading_font_scale | default: 1 }};
+
+               /* Accent Font */
+            --font-stack-accent: {{ accent_font.family }}, {{ accent_font.fallback_families }};
+            --font-style-accent: {{ accent_font.style | default: 'normal' }};
+            --font-weight-accent: {{ accent_font.weight | default: 400 }};
+            --font-weight-accent-bold: {{ accent_font_bold.weight | default: 700 }};
+            --line-height-accent: {{ settings.accent_line_height | divided_by: 100.0 | default: 1.3 }};
+            --letter-spacing-accent: {{ settings.font_accent_letter_spacing | default: 0 }}px;
+            --text-transform-accent: {{ settings.accent_text_transform | default: 'none' }};
+            --font-scale-accent: {{ settings.accent_font_scale | default: 1 }};
+
+            /* Navigation Font */
+            --font-stack-nav: {{ nav_font_drop.family }}, {{ nav_font_drop.fallback_families }};
+            --font-weight-nav: {{ nav_font_drop.weight | default: 500 }};
+
+            /* Button Font */
+            --font-stack-button: {{ button_font_drop.family }}, {{ button_font_drop.fallback_families }};
+            --font-weight-button: {{ button_font_drop.weight | default: 500 }};
+            --font-button-case: {{ settings.button_case | default: 'none' }};
+            --letter-spacing-button: {{ settings.button_latter_space | default: 0 }}px;
+              {% if settings.button_font_size %}
+              --font-button-size:
+              {% case settings.button_font_size %}
+                {% when 'small' %} var(--font-body-small)
+                {% when 'medium' %} var(--font-body-medium)
+                {% when 'large' %} var(--font-body-large)
+                {% when 'xlarge' %} var(--font-body-xlarge)
+              {% endcase %};
+              {% endif %}
+            --line-height-button: {{ settings.body_line_height | divided_by: 100.0 | default: 1.5 }};
+            --buttons-radius: {{ settings.buttons_radius  | times: 1.0 | default: 0 }}px;
+
+
+            /* Subheading Font */
+            --font-stack-subheading: {{ subheading_font_drop.family }}, {{ subheading_font_drop.fallback_families }};
+            --font-weight-subheading: {{ subheading_font_drop.weight | default: 500 }};
+
+            /* Layout */
+            --site-layout-witdth: {{ settings.layout_site_width  | append: 'px'}};
+            --site-layout-outer: {{ settings.outer_spacing  | append: 'px'}};
+            --site-layout-gutter: {{ settings.layout_gutter  | append: 'px'}};
+            --site-layout-gutter-offset: -{{ settings.layout_gutter  | append: 'px'}};
+            --site-section-spacing: {{ settings.spacing_sections  | append: 'px'}};
+
+            --ICO-SELECT: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' fill='currentColor' viewBox='0 0 256 256'><path d='M216.49,104.49l-80,80a12,12,0,0,1-17,0l-80-80a12,12,0,0,1,17-17L128,159l71.51-71.52a12,12,0,0,1,17,17Z'></path></svg>");
+
+    }
+{% endstyle %}

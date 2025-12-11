@@ -1,0 +1,108 @@
+<div
+  class="testimonial-card swiper-slide flex-grid__item"
+  role="group"
+  aria-label="Customer Testimonial"
+  data-color-scheme="{{ block.settings.color_schema }}"  style="{%  render 'custom-style' , target: "testimonial-card"%} %}"
+>
+  <div class="testimonial-card-content">
+    <div class="testimonial-card-rating-star rating-star" role="img" aria-label="star rating">
+      {% content_for 'block', type: '_rating', id: 'rating' %}
+    </div>
+
+    <div class="testimonial-card-review">
+      {% content_for 'block', type: 'inline-richtext', id: 'testimonial-text' %}
+    </div>
+
+
+    <div class="testimonial-card-client-info">
+      <div class="testimonial-card-client-image">
+        {% assign image_width = '100,200,300' %}
+        {% content_for 'block', type: '_image', id: 'author-image', image_width: image_width %}
+      </div>
+      <div class="testimonial-card-client-name">
+        {% content_for 'block', type: 'text', id: 'author-name' %}
+        <span class="testimonial-card-client-designation">
+          {% content_for 'block', type: 'text', id: 'author-designation' %}
+        </span>
+      </div>
+
+    </div>
+  </div>
+  <div class="testimonial-shape" aria-hidden="true">
+    {% render 'icon' with 'quote', width: '240', height: '174' %}
+  </div>
+</div>
+
+
+{% schema %}
+{
+  "name": "Testimonial",
+  "tag": null,
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_schema",
+      "label": "Color schema",
+      "default": "scheme-3"
+    },
+    {
+      "type": "color",
+      "id": "star_color",
+      "label": "Star color",
+      "default": "#D52F5A"
+    },
+       {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#000000"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Testimonial",
+      "blocks": {
+        "rating": {
+          "type": "_rating",
+          "name": "Rating",
+          "static": true,
+          "settings": {
+            "star_rating": 5
+          }
+        },
+        "testimonial-text": {
+          "type": "inline-richtext",
+          "name": "Inline richtext",
+          "static": true,
+          "settings": {
+            "text": "I had a wonderful experience shopping here last week. The store layout is clean, and everything is easy to find. I was looking for casual wear and found some great options that are both stylish and comfortable. I’m really happy with my purchases.",
+            "text_style": "body",
+            "text_size": "medium",
+          }
+        },
+        "author-image": {
+          "type": "_image",
+          "name": "Autghor Image",
+          "static": true
+        },
+        "author-name": {
+          "type": "text",
+          "name": "Author name",
+          "static": true,
+          "settings": {
+            "text": "Isabella Rose"
+          }
+        },
+        "author-designation": {
+          "type": "text",
+          "name": "Author designation",
+          "static": true,
+          "settings": {
+            "text": "Product Designer"
+          }
+        }
+      }
+    }
+  ]
+}
+{% endschema %}

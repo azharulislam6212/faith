@@ -1,0 +1,559 @@
+{{- 'section-deals.css' | asset_url | stylesheet_tag -}}
+
+ 
+
+{%- liquid
+ 
+  assign desktop_grid = section.settings.desktop_grid
+  assign tab_grid = section.settings.tab_grid
+  assign mobile_grid = section.settings.mobile_grid
+
+  assign enable_pagination = section.settings.enable_pagination
+  assign enable_navigation = section.settings.enable_navigation
+  assign pagination_type = section.settings.pagination_type
+
+  assign loop = section.settings.loop_enabled
+  assign autoplay = section.settings.autoplay_enabled
+  assign delay = section.settings.autoplay_timeout | times: 1000
+    assign layout_gutter = settings.layout_gutter
+-%}
+
+{% capture data_config %}
+  data-option='{
+    "desktopSlider": true,
+    "spaceBetween": 16,
+    "centeredSlides": false,
+    "loop": {{ loop }},
+    "speed": 700,
+    "freeMode": false,
+    "autoplay": {
+      "enabled": {{ autoplay }},
+      "delay": {{ delay }},
+      "disableOnInteraction": false
+    },
+    "breakpoints": {
+      "300": { "slidesPerView": {{ mobile_grid }},"spaceBetween":{{layout_gutter}} },
+      "750": { "slidesPerView": {{ tab_grid }},"spaceBetween":{{layout_gutter}} },
+      "1200": { "slidesPerView": {{ desktop_grid }},"spaceBetween":{{layout_gutter}} }
+    }
+
+    {% if enable_pagination and pagination_type == 'dots' %}
+      ,"pagination": {
+        "el": ".swiper-pagination",
+        "clickable": true,
+        "type": "bullets"
+      }
+    {% endif %}
+
+    {% if enable_pagination and pagination_type == 'number' %}
+      ,"pagination": {
+        "el": ".swiper-pagination-number",
+        "type": "fraction"
+      }
+    {% endif %}
+
+    {% if enable_navigation %}
+      ,"navigation": {
+        "nextEl": ".swiper-button-next",
+        "prevEl": ".swiper-button-prev"
+      }
+    {% endif %}
+  }'
+{% endcapture %}
+
+
+
+<div class="deals-section section--padding" role="region" aria-labelledby="deals-heading-{{ section.id }}"   data-color-scheme="{{ section.settings.color_scheme }}" style="{%render "section-spacing"%}">
+  {% content_for 'block', type: '_section-header', id: 'deals-section-header' %}
+
+  <div class="{{ section.settings.width }}">
+    <slideshow-swiper>
+      <div class="swiper slideshow__swiper" {{ data_config }}>
+        <div
+          class="deals-card-wrap swiper-wrapper flex-grid flex-grid--2-col flex-grid--{{ mobile_grid }}-col-mobile flex-grid--{{ tab_grid }}-col-tablet flex-grid--{{ desktop_grid }}-col-desktop"
+          role="list"
+          aria-live="polite"
+          aria-atomic="true"
+        >
+
+          {% content_for 'block', id: 'deals-promo', type: '_deals-promo' %}
+          {% content_for 'blocks' %}
+        </div>
+         {% if enable_navigation %}
+          
+          <div class="deals-arrows-wrap">
+            <div class="swiper-navigation">
+                        <button class="swiper-button-prev arrow-prev-button swiper-button-disabled" tabindex="-1" aria-label="Previous slide" aria-controls="swiper-wrapper-b331031a610ee7c097" aria-disabled="true" disabled="">
+                            {% render 'icon' with 'arrow-left', width: '16', height: '16' %}
+                        </button>
+                        <button class="swiper-button-next arrow-next-button" tabindex="0" aria-label="Next slide" aria-controls="swiper-wrapper-b331031a610ee7c097" aria-disabled="false">
+                           {% render 'icon' with 'arrow-right', width: '16', height: '16' %}
+                        </button>
+                    </div>
+          </div>
+         {% endif %}
+
+          {% if enable_pagination %}
+            {% if pagination_type == 'dots' %}
+              <div class="swiper-pagination deals_pagination"  aria-label="Testimonial Slider Pagination"></div>
+            {% elsif pagination_type == 'number' %}
+              <div class="swiper-pagination-number deals_pagination"  aria-label="Testimonial Slider Pagination"></div>
+            {% endif %}
+          {% endif %}
+
+      </div>
+    </slideshow-swiper>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Image Card Overlay",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout Wdith"
+    },
+
+    {
+      "type": "select",
+      "id": "width",
+      "label": "Width",
+      "default": "container-full",
+      "options": [
+        {
+          "value": "container-full",
+          "label": "Full width"
+        },
+        {
+          "value": "container-full-with-padding",
+          "label": "Full width padded"
+        },
+        {
+          "value": "container-full-mobile",
+          "label": "Full width mobile only"
+        },
+        {
+          "value": "container",
+          "label": "Page width"
+        },
+        {
+          "value": "container-narrow",
+          "label": "Page width narrow"
+        },
+        {
+          "value": "container-xs-narrow",
+          "label": "Page width extra narrow"
+        }
+      ]
+    },
+
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "t:settings_schema.global.settings.slider.heading.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay_enabled",
+      "label": "t:settings_schema.global.settings.slider.autoplay.label",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "autoplay_timeout",
+      "label": "t:settings_schema.global.settings.slider.autoplay_time.label",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "default": 5,
+      "unit": "s"
+    },
+     {
+      "type": "checkbox",
+      "id": "enable_pagination",
+      "label": "t:settings_schema.global.settings.slider.pagination.label",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_navigation",
+      "label": "t:settings_schema.global.settings.slider.arrows.label",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "loop_enabled",
+      "label": "t:settings_schema.global.settings.slider.loop.label",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "pagination_type",
+      "label": "Pagination type",
+      "options": [
+        {
+          "label": "Number",
+          "value": "number"
+        },
+        {
+          "label": "Dots",
+          "value": "dots"
+        }
+      ],
+      "default":"dots"
+    },
+
+    {
+      "type": "header",
+      "content": "Card item"
+    },
+    {
+      "type": "select",
+      "id": "desktop_grid",
+      "label": "Desktop",
+      "options": [
+        {
+          "label": "2",
+          "value": "2"
+        },
+        {
+          "label": "3",
+          "value": "3"
+        },
+        {
+          "label": "4",
+          "value": "4"
+        },
+        {
+          "label": "5",
+          "value": "5"
+        }
+      ],
+      "default": "4"
+    },
+
+    {
+      "type": "select",
+      "id": "tab_grid",
+      "label": "Tablet",
+      "options": [
+        {
+          "label": "1",
+          "value": "1"
+        },
+        {
+          "label": "2",
+          "value": "2"
+        },
+        {
+          "label": "3",
+          "value": "3"
+        }
+      ],
+      "default": "2"
+    },
+
+    {
+      "type": "select",
+      "id": "mobile_grid",
+      "label": "Mobile",
+      "options": [
+        {
+          "label": "1",
+          "value": "1"
+        },
+        {
+          "label": "1.2",
+          "value": "1.2"
+        },
+        {
+          "label": "2",
+          "value": "2"
+        }
+      ],
+      "default": "1"
+    },
+     {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "paragraph",
+      "content": "Desktop"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 120
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 120
+    },
+    {
+      "type": "paragraph",
+      "content": "Tablet"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_tablet",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_tablet",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 80
+    },
+    {
+      "type": "paragraph",
+      "content": "Mobile"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 60
+    }
+  ],
+  "blocks": [ 
+    {
+      "type": "_deals-card"
+    }
+  ],
+  "presets": [
+  {
+    "name": "Image Card Overlay",
+     "category": "Card",
+    "settings": {
+      "padding_top":56,
+      "padding_bottom":56,
+      "padding_top_tablet":48,
+      "padding_bottom_tablet":48,
+      "padding_top_mobile":40,
+      "padding_bottom_mobile":40
+    }, 
+        "blocks": {
+      "deals-section-header": {
+        "type": "_section-header",
+        "name": "Deals header",
+        "static": true,
+        "settings": {
+          "heading": "Deals [Heading]",
+          "text": "<p>Hot deals refer to limited-time promotions, discounts, or offers on products or services that provide significant savings</p>"
+        }
+      },
+
+      "deals-promo": {
+        "name": "Promo",
+        "static": true,
+        "type": "_deals-promo",
+        "settings": {},
+        "blocks": {
+          "promo-title": {
+            "name": "Title",
+            "static": true,
+            "type": "heading",
+            "settings": {
+              "heading": "Today Hot <em>deals</em>",
+              "heading_size": "h2"
+            }
+          },
+          "promo-text": {
+            "type": "inline-richtext",
+            "name": "Inline richtext",
+            "static": true,
+            "settings": {
+              "text": "Hot deals refer to limited-time promotions, discounts, or offers on products or services that provide significant savings"
+            }
+          },
+          "promo-button": {
+            "type": "button",
+            "name": "Button",
+            "static": true,
+            "settings": {
+              "button_label": "Shop Now",
+              "button_style": "primary",
+              "button_type": "with-icon"
+            }
+          }
+        }
+      },
+
+      "deals-card-1": {
+        "name": "Card",
+        "type": "_deals-card",
+        
+        "blocks": {
+          "deals-card-title": {
+            "name": "Title",
+            "static": true,
+            "type": "heading",
+            "settings": {
+              "heading": "Off-shoulder midi dress"
+            }
+          },
+          "deals-card-text": {
+            "type": "inline-richtext",
+            "name": "Inline richtext",
+            "static": true,
+            "settings": {
+              "text": "Crafted from high-quality materials such as fine metals, genuine leather, & stone"
+            }
+          },
+          "card-button": {
+            "type": "button",
+            "name": "Button",
+            "static": true,
+            "settings": {
+              "button_label": "Shop Now",
+              "button_style": "primary",
+              "button_type": "with-icon"
+            }
+          },
+            "card-count":{
+               "name": "Count number",
+                "static": true,
+                "type": "_count",
+                "settings": {
+                "count":"01"
+                  }
+              },
+           }
+      },
+      "deals-card-2": {
+        "name": "Card",
+        "type": "_deals-card",
+        "settings": {
+        },
+        "blocks": {
+          "deals-card-title": {
+            "name": "Title",
+            "static": true,
+            "type": "heading",
+            "settings": {
+              "heading": "Ruffled floral mini skirt"
+            }
+          },
+          "deals-card-text": {
+            "type": "inline-richtext",
+            "name": "Inline richtext",
+            "static": true,
+            "settings": {
+              "text": "Crafted from high-quality materials such as fine metals, genuine leather, & stone"
+            }
+          },
+          "card-button": {
+            "type": "button",
+            "name": "Button",
+            "static": true,
+            "settings": {
+              "button_label": "Shop Now",
+              "button_style": "primary",
+              "button_type": "with-icon"
+            }
+          },
+           "card-count":{
+               "name": "Count number",
+                "static": true,
+                "type": "_count",
+                "settings": {
+                "count":"02"
+                  }
+              }
+        }
+      },
+      "deals-card-3": {
+        "name": "Card",
+        "type": "_deals-card",
+        
+        "blocks": {
+          "deals-card-title": {
+            "name": "Title",
+            "static": true,
+            "type": "heading",
+            "settings": {
+              "heading": "Ruffled Boho Skirt"
+            }
+          },
+          "deals-card-text": {
+            "type": "inline-richtext",
+            "name": "Inline richtext",
+            "static": true,
+            "settings": {
+              "text": "Crafted from high-quality materials such as fine metals, genuine leather, & stone"
+            }
+          },
+          "card-button": {
+            "type": "button",
+            "name": "Button",
+            "static": true,
+            "settings": {
+              "button_label": "Shop Now",
+              "button_style": "primary",
+              "button_type": "with-icon"
+            }
+          },
+           "card-count":{
+               "name": "Count number",
+                "static": true,
+                "type": "_count",
+                "settings": {
+                "count":"03"
+                  }
+              }
+           
+        }
+      }
+    },
+    "block_order": ["deals-card-1","deals-card-2","deals-card-3"]
+  }
+],
+  "enabled_on": {
+    "templates": ["*"],
+    "groups": ["aside"]
+  }
+
+}
+{% endschema %}

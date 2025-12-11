@@ -1,0 +1,50 @@
+
+{% unless  settings.swatch_style contains 'images' %}
+  {% assign lines = settings.swatch_color_list | newline_to_br | split: '<br />' %}
+  {% assign swatch_color = '' %}
+  {% assign swatch_image = '' %}
+  {% assign color_value_downcase = value | downcase %}
+  {% assign color_white_label = "white" %}
+
+  {% for line in lines %}
+    {% assign style_parts = line | split: ':' %}
+    {% assign color_swatch_name = style_parts.first | downcase | strip %}
+    {% assign swatch_style = style_parts[1] | strip %}
+
+    {% if color_value_downcase == color_swatch_name %}
+      {% if swatch_style contains '#' %}
+        {% assign swatch_color = swatch_style %}
+      {% else %}
+        {% assign swatch_image = images[swatch_style] %}
+      {% endif %}
+      {% break %}
+    {% endif %}
+
+    {% if color_value_downcase == color_white_label %}
+     {% assign white_color = "swatch--white" %}
+    {% endif %}
+
+  {% endfor %}
+{% endunless %}
+
+{% if settings.swatch_style contains 'images' or swatch_image != '' %}
+  <span class="swatch-box swatch-box__image swatch-size--{{ settings.swatch_size }} swatch-shape--{{ settings.swatch_box_style }}  {% if settings.card_colors_style == 'variant-images' or swatch_image %} swatch--image{% endif %}" >
+    {% render 'image',
+      image: swatch_image,
+      widths: '50, 80, 100, 150',
+      mobile_widths: '30, 50, 80',
+      src_width: 100,
+      sizes: '(max-width: 600px) 30px, 40px',
+      lazy_load: true,
+      fetchpriority: 'high',
+      class: 'img-fit',
+      alt_text: swatch_image.title
+    %}
+    <span class="visually-hidden">{{ value }}</span>
+  </span>
+{% else %}
+  <span class="swatch-box swatch-size--{{ settings.swatch_size }} swatch-shape--{{ settings.swatch_box_style }} {{white_color}}"
+    style="background-color: {{ swatch_color | default: value | default: '#ffffff' }};">
+    <span class="visually-hidden">{{ value }}</span>
+  </span>
+{% endif %}

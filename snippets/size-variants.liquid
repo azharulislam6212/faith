@@ -1,0 +1,64 @@
+{% assign uniqueId = 'now' | date: '%N' | modulo: 1000 %}
+
+{% assign single_option_name = settings.single_option_name  | downcase %}
+   {% assign  single_varition = false %}
+  {%- if product.options_by_name[single_option_name].values.size > 0 -%}
+             {% assign  single_varition = true %}
+        {%- endif -%}
+
+{% if settings.enable_single_varition != false and single_varition %}
+  <div class="product-card__size-variants-holder">
+       {%- for option in product.options_with_values -%}
+      {%- liquid
+        assign size_options = option.values | where: 'size'
+   
+        assign option_name =  option.name | downcase
+      -%}
+
+      {%- if size_options != blank and single_option_name contains option_name -%}
+
+        <div class="size-header flex">
+            <h5 class="selected-size"> {{ option.name }} : <span>{{ option.selected_value }}</span></h5>
+          {%- if settings.show_vendor -%}
+               <p class="product-vendor">{{ 'products.product.vendor' | t }}: <span>{{ product.vendor }}</span></p>
+            {% endif %}
+         </div>
+ 
+          <div class="card-sizes flex">
+            {%- capture option_id %}{{ option.name }}-{{ product.id }}-{{ uniqueId }}{% endcapture -%}
+            {%- assign variant_key = 'option' | append: option.position -%}
+
+            {%- for value in option.values -%}
+              {%- liquid
+                assign variant_value = product.variants | where: variant_key, value | first
+              -%}
+
+              <size-variant class="size-item">
+                <input
+                  type="radio"
+                  class="size-input__radio visually-hidden js-option {% unless variant_value.available %}sold-out{% endunless %}"
+                  name="{{ option_id }}-size-option"
+                  id="{{ option_id }}-size-option-{{ forloop.index0 }}"
+                  value="{{ value | escape }}"
+                  data-product-handle="{{ product.handle }}"
+                  data-collection-handle="{{ collection.handle | escape }}"
+                  {% if option.selected_value == value %}
+                    checked
+                  {% endif %}>
+                  <label
+                    class="option-label option-label--size relative"
+                    title="{{ value | replace: '"', '`' }}"
+                    for="{{ option_id }}-size-option-{{ forloop.index0 }}" >
+                    {{value}}
+                    <span class="tooltip">{{ value }}</span>
+                  </label>
+               
+              </size-variant>
+            {%- endfor -%}
+
+          </div>
+
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+{% endif %}
