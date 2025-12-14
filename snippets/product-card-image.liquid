@@ -90,7 +90,7 @@
                     src: image_src,
                     srcset: image_srcset,
                     sizes: "(max-width: 640px) 100vw, 50vw"
-                    alt: image_alt,
+                    alt: media.alt,
                      class: ' img-fit',
                     width: media.preview_image.width,
                     height: media.preview_image.height
@@ -121,12 +121,14 @@
         endcapture
       %}
 
+   
+
       {% render 'image',
         src: image_src,
         srcset: image_srcset,
          sizes: "(max-width: 640px) 100vw, 50vw"
-        alt: image_alt,
-         class: ' img-fit',
+        alt: product.featured_media.alt,
+        class: ' img-fit',
         width: product.featured_media.width,
         height: product.featured_media.height,
         attr: "data-primary-image"
@@ -158,9 +160,9 @@
             {% render 'image',
               src: image_src,
               srcset: image_srcset,
-                sizes: "(max-width: 640px) 100vw, 50vw"
-              alt: image_alt,
-               class: 'img-fit',
+              sizes: "(max-width: 640px) 100vw, 50vw"
+              alt: hover_media.alt,
+               class: ' img-fit',
               width: hover_media.preview_image.width,
               height: hover_media.preview_image.height
             %}

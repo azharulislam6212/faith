@@ -1,5 +1,6 @@
 
-{{- 'component-video.css' | asset_url | stylesheet_tag -}}
+{{ 'component-video.css' | asset_url | stylesheet_tag }}
+<noscript>{{ 'component-video.css' | asset_url | stylesheet_tag }}</noscript>
 {{- 'section-collage-grid.css' | asset_url | stylesheet_tag -}}
 
   <div class="collage-grid-section section--padding" data-color-scheme="{{ section.settings.color_scheme }}" style="{%render "section-spacing"%}">

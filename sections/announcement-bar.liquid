@@ -1,4 +1,4 @@
-{{ 'component-video.css' | asset_url | stylesheet_tag: preload: true }}
+{{ 'component-video.css' | asset_url | stylesheet_tag  }}
 <noscript>{{ 'component-video.css' | asset_url | stylesheet_tag }}</noscript>
 {{- 'section-announcement-bar.css' | asset_url | stylesheet_tag -}}
 
@@ -97,17 +97,26 @@
     <div class="announcement-bar__inner gradient" data-color-scheme="{{ section.settings.color_scheme_drawer }}">
       {% if section.settings.bg_image != blank %}
         <div class="announcement-drawer__bg">
-          {% render 'image',
-            image: section.settings.bg_image,
-            widths: '480, 550, 750, 1100, 1500, 1780, 2000',
-            mobile_widths: '320, 480, 550, 720',
-            src_width: 1280,
-            sizes: '(max-width: 600px) 100vw, 50vw',
-            lazy_load: true,
-            fetchpriority: 'high',
-            class: 'img-fit',
-            alt_text: section.settings.bg_image.title
-          %}
+       
+
+            {% liquid
+                                  assign image_src = section.settings.bg_image | image_url: width: 500
+                                  capture image_srcset
+                                  render 'srcset', image: section.settings.bg_image
+                                  endcapture
+                                %}
+
+                                {% render 'image',
+                                  src: image_src,
+                                  srcset: image_srcset,
+                                  sizes: "(max-width: 640px) 100vw, 50vw"
+                                  alt:  block.settings.heading | default: section.settings.bg_image.alt,
+                                  width:  section.settings.bg_image.width,
+                                  height:  section.settings.bg_image.height
+                                %}
+
+
+
         </div>
       {% endif %}
       <div class="container">
@@ -269,7 +278,7 @@
                                   src: image_src,
                                   srcset: image_srcset,
                                   sizes: "(max-width: 640px) 100vw, 50vw"
-                                  alt: alt_text | default:video_thumbnail.alt,
+                                  alt:  block.settings.heading | default:video_thumbnail.alt,
                                   width: video_thumbnail.width,
                                   height: video_thumbnail.height
                                 %}
@@ -290,8 +299,8 @@
                                 {% render 'image',
                                   src: image_src,
                                   srcset: image_srcset,
-                                  sizes: "(max-width: 640px) 100vw, 50vw"
-                                  alt: alt_text | default:video_hosted.preview_image.alt,
+                                  sizes: "auto"
+                                  alt:  block.settings.heading | default:video_hosted.preview_image.alt,
                                   width: video_hosted.preview_image.width,
                                   height: video_hosted.preview_image.height
                                 %}
@@ -362,8 +371,8 @@
                                 {% render 'image',
                                   src: image_src,
                                   srcset: image_srcset,
-                                  sizes: "(max-width: 640px) 100vw, 50vw"
-                                  alt: alt_text | default:image.alt,
+                                  sizes: "auto"
+                                  alt:  block.settings.heading | default:image.alt,
                                   width: image.width,
                                   height: image.height
                                 %}

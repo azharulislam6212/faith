@@ -1810,17 +1810,19 @@ class ColorSwatch extends HTMLElement {
   updateMedia() {
     if (this.productCard) {
       this.variantsImages = JSON.parse(this.productCard.querySelector('[type="application/json"][data-variants-images]').textContent);
-      const picture = this.productCard.querySelector(".product-media [data-primary-image]");
-      if (picture != null) {
-        const source = picture.querySelector("source");
-        const img = picture.querySelector("img");
+      const img = this.productCard.querySelector(".product-media [data-primary-image]");
+
+ 
         const variantImage = this.variantsImages.find(v => v.id == this.variantId);
+ 
         if (img && variantImage) {
           img.src = variantImage.image.src;
           img.srcset = variantImage.image.srcset;
-          source.srcset = variantImage.image.srcset;
+          img.dataset.src = variantImage.image.src;
+          img.dataset.srcset = variantImage.image.srcset;
+   
         }
-      }
+      
     }
 
   }

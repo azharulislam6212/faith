@@ -6,10 +6,9 @@
   if image_ratio == 'aspect-ratio' and image == false
     assign image_ratio = false
   endif
-  assign label = block.settings.label 
- assign label_size = section.settings.label_size
- assign label_position = section.settings.label_position
- 
+  assign label = block.settings.label
+  assign label_size = section.settings.label_size
+  assign label_position = section.settings.label_position
 %}
 
 <div class="media-wrapper" data-color-scheme="{{ block.settings.color_scheme }}">
@@ -18,27 +17,33 @@
     {% if image_ratio == 'aspect-ratio' %}
       style="padding-bottom: {% render 'aspect-ratio' with image.aspect_ratio as aspect_ratio %}%;"
     {% endif %}
-  > 
+  >
     {% if image != blank %}
+      {% liquid
+        assign image_src = image | image_url: width: 500
+        capture image_srcset
+          render 'srcset', image: image
+        endcapture
+      %}
+
      {%
-      render 'image',
-      image: image,
-      height: image.height,
-      alt: alt_text | default:image.alt,
-      lazy_load: true,
-      fetchpriority: "high",
-      attributes: 'decoding="async"',
-      sizes: "(max-width: 640px) 100vw, 50vw"
-    %}
+        render 'image',
+        src: image_src,
+        srcset: image_srcset,
+        sizes: "auto"
+        alt:  alt_text| default: image.alt,
+        width: image.width,
+        height: image.height,
+      %}
+
     {% else %}
       {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
     {% endif %}
-        {% if label != blank %}
-         <div class="before__text {{label_position}}">
-           <h4 class="{{ label_size }}">{{ label }}</h4>
-               
-         </div>
-     {% endif %}
+    {% if label != blank %}
+      <div class="before__text {{label_position}}">
+        <h4 class="{{ label_size }}">{{ label }}</h4>
+      </div>
+    {% endif %}
   </div>
 </div>
 
@@ -84,7 +89,7 @@
       "default": "portrait",
       "label": "Image Ratio"
     },
-   {
+    {
       "type": "select",
       "id": "image_height",
       "label": "Image Height",
@@ -101,12 +106,11 @@
       "id": "alt_text",
       "label": "Image alt text"
     },
-     {
-        "type": "text",
-        "id": "label",
-        "label": "Label",
-        "default":"Before"
-        
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "default": "Before"
     },
     {
       "type": "color_scheme",

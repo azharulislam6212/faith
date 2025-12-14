@@ -18,7 +18,7 @@
       {%- if size_options != blank and single_option_name contains option_name -%}
 
         <div class="size-header flex">
-            <h5 class="selected-size"> {{ option.name }} : <span>{{ option.selected_value }}</span></h5>
+            <p class="selected-size"> {{ option.name }} : <span>{{ option.selected_value }}</span></>
           {%- if settings.show_vendor -%}
                <p class="product-vendor">{{ 'products.product.vendor' | t }}: <span>{{ product.vendor }}</span></p>
             {% endif %}

@@ -342,54 +342,48 @@ fadeArray.forEach((item, i) => {
 // });
 
 
-  const fadeUp = document.querySelectorAll("section, footer");
-  fadeUp &&
-    fadeUp.forEach((item) => {
-      const fadeUpElements = item.querySelectorAll(".fade-up");
+const fadeUpElements = document.querySelectorAll("section .fade-up, footer .fade-up");
 
-      // Ensure fade-up elements exist and are a NodeList
-      if (fadeUpElements.length > 0) {
-        fadeUpElements.forEach((fadeUpElement, index) => {
-          gsap.fromTo(
-            fadeUpElement,
-            {
-              opacity: 0,
-              y: 100,
-              scale: 0.8, // Add a slight scaling effect
-            },
-            {
-              // Ending values
-              opacity: 1,
-              y: 0,
-              scale: 1, // Return to normal scale
-              duration: 1.5, // Shorter duration for quicker animations
-              ease: "power2.out",
-              scrollTrigger: {
-                trigger: item,
-                start: "top center",
-                toggleActions: "play none none none", // Ensures the animation runs on scroll
-              },
-            }
-          );
+if(fadeUpElements.length) {
+  gsap.from(fadeUpElements, {
+    opacity: 0,
+    y: 100,
+    scale: 0.8,
+    duration: 1.5,
+    ease: "power2.out",
+    stagger: 0.1,
+    scrollTrigger: {
+      trigger: fadeUpElements[0].closest('section, footer'),
+      start: "top center",
+      toggleActions: "play none none none"
+    }
+  });
+}
 
-          // Optional: Staggering effect for each element
-          gsap.to(fadeUpElement, {
-            delay: index * 0.1, // Delay each element's animation
-          });
-        });
-      }
-    });
-
-    gsap.from(".collection-promo-fad-up", {
-      scrollTrigger: {
-        trigger: ".collection-promo-animate",
-        start: "top 90%",
-      },
-      opacity: 0,
-      y: 50,
-      duration: 2,
-      ease: "power2.out",
-      stagger: 0.2,
-    });
+ 
+   
 
 
+
+const promoTrigger = document.querySelector('.collection-promo-animate');
+const promoItems   = document.querySelectorAll('.collection-promo-fad-up');
+
+if (promoTrigger && promoItems.length) {
+  gsap.from(promoItems, {
+    scrollTrigger: {
+      trigger: promoTrigger,
+      start: 'top 90%',
+    },
+    opacity: 0,
+    y: 50,
+    duration: 2,
+    ease: 'power2.out',
+    stagger: 0.2,
+  });
+}
+
+
+
+window.addEventListener('resize', () => {
+  ScrollTrigger.refresh();
+});

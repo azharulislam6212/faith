@@ -1,0 +1,238 @@
+{% liquid
+ 
+  assign desktop_column = block.settings.column_desktop
+  assign desktop_row = block.settings.row_desktop
+
+  assign column_tablet = block.settings.column_tablet
+  assign row_tablet = block.settings.row_tablet
+
+  assign mobile_column = block.settings.column_mobile
+  assign mobile_row = block.settings.row_mobile
+
+  assign article = block.settings.article
+%}
+
+
+<div class="blog-card-list blog-card-column-{{ desktop_column }}" role="listitem" aria-label="Blog card " data-color-scheme="{{ block.settings.color_schema }}"  style="--column-desktop: {{ desktop_column }}; --row-desktop: {{ desktop_row }}; --column-tablet: {{ column_tablet }}; --row-tablet: {{ row_tablet }};  --mobile-column: {{ mobile_column }};--mobile-row: {{ mobile_row }}; {%  render 'custom-style' , target: "blog-date-bg"%}">
+        {% if article != blank %}
+        
+        <a href="{{article.url}}">
+       {% endif %}
+        <div class="blog-card-image-wrapper image-animation">
+          {% content_for 'block', type: "_image" , id:"featured-blog-image"  %}
+        </div>
+
+        <div class="blog-card-body">
+            {% if article != blank %}
+                <div class="blog-card-meta">
+
+                    {% if article.tags.size > 0 %}
+                    <span class="blog-card-meta-tag" aria-label="Blog tags">
+                        {% for tag in article.tags %}
+                        {{ tag }}{% unless forloop.last %},{% endunless %}
+                        {% endfor %}
+                    </span>
+                    {% endif %}
+
+                    <span class="blog-card-meta-date">
+                    <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">
+                        {{ article.published_at | date: "%b %d, %Y" }}
+                    </time>
+                    </span>
+
+                </div>
+            {% endif %}
+
+                    <div href="{{article.url}}" class="blog-article-title" role="link">
+                       {% content_for 'block', type: "heading" , id:"blog-title"  %}
+                    </div>
+
+                    {% content_for 'block', type: "inline-richtext" , id:"blog-details"  %} 
+
+        </div>
+        {% if article != blank %}
+          </a>
+        {% endif %} 
+
+</div>
+
+{% schema %}
+  {
+    "name": "Blog",
+    "tag":null,
+    "settings": [
+      {
+        "type": "article",
+        "id": "article",
+        "label": "Select article"
+      },
+      {
+            "type": "header",
+            "content": "Desktop"
+        },
+        {
+            "type": "select",
+            "id": "column_desktop",
+            "label": "Column",
+            "options": [
+                {
+                    "value": "1",
+                    "label": "1"
+                },
+                {
+                    "label": "2",
+                    "value": "2"
+                },
+                {
+                    "label": "3",
+                    "value": "3"
+                }
+            ],
+            "default":"1"
+        },
+        {
+            "type": "select",
+            "id": "row_desktop",
+            "label": "Row",
+            "options": [
+                {
+                    "value": "1",
+                    "label": "1"
+                },
+                {
+                    "label": "2",
+                    "value": "2"
+                },
+                {
+                    "label": "3",
+                    "value": "3"
+                }
+            ],
+            "default":"1"
+        },
+        {
+            "type": "header",
+            "content": "Tablet"
+        },
+        {
+            "type": "select",
+            "id": "column_tablet",
+            "label": "Column",
+            "options": [
+                {
+                    "value": "1",
+                    "label": "1"
+                },
+                {
+                    "label": "2",
+                    "value": "2"
+                }
+            ],
+            "default":"1"
+        },
+        {
+            "type": "select",
+            "id": "row_tablet",
+            "label": "Row",
+            "options": [
+                {
+                    "value": "1",
+                    "label": "1"
+                },
+                {
+                    "label": "2",
+                    "value": "2"
+                }
+            ],
+            "default":"1"
+        },
+        
+        {
+            "type": "header",
+            "content": "Mobile"
+        },
+        {
+            "type": "select",
+            "id": "column_mobile",
+            "label": "Column",
+            "options": [
+                {
+                    "value": "1",
+                    "label": "1"
+                },
+                {
+                    "label": "2",
+                    "value": "2"
+                }
+            ],
+            "default":"1"
+        },
+        {
+            "type": "select",
+            "id": "row_mobile",
+            "label": "Row",
+            "options": [
+                {
+                    "value": "1",
+                    "label": "1"
+                },
+                {
+                    "label": "2",
+                    "value": "2"
+                }
+            ],
+            "default":"1"
+        },
+         {
+          "type": "color_scheme",
+          "id": "color_schema",
+          "label": "Color schema",
+          "default":"scheme-3"
+        },
+        {
+          "type": "header",
+          "content": "Override color"
+        },
+        {
+          "type": "color",
+          "label": "Date background",
+          "default":"#f1f4f9",
+          "id": "date_bg" 
+        },
+        {
+          "type": "color",
+          "label": "Dot color",
+          "default":"#000",
+          "id": "dot_color" 
+        }
+    ], 
+    "presets": [
+      {
+        "name": "Blog",
+        "blocks": {
+          "featured-blog-image":{
+               "type": "_image",
+                "name": "Image",
+               "static": true
+          },
+          "blog-title":{
+            "name": "Title",
+            "type": "heading",
+            "static": true,
+            "settings": {
+              "heading":"Latest Fashion Trends Must-Have Styles for Every Season"
+            }
+          },
+          "blog-details":{
+            "type": "inline-richtext",
+            "name": "Text",
+            "static": true,
+            "settings": {
+              "text":"Stay ahead in the fashion game by exploring the latest seasonal styles that will keep your wardrobe fresh and trendy."
+            }
+          }
+        }
+      }
+    ]
+  }
+{% endschema %}

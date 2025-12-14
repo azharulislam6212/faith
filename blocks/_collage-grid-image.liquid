@@ -31,6 +31,7 @@
         capture image_srcset
          render 'srcset', image: block.settings.image
         endcapture
+
       %}
 
       {% render 'image',
@@ -42,7 +43,7 @@
         height: block.settings.image.height,
         attr: 'data-image-primary'
       %}
-
+      
 
       {% else %}
     {{ "image" | placeholder_svg_tag:"placeholder-svg" }}

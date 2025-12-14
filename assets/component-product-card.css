@@ -527,6 +527,7 @@ font-style: normal;
 font-weight: var(--font-weight-heading-bold);
 font-size: 14px;
 line-height: 150%;
+margin: 0;
 }
 
 .product-card .selected-size span{

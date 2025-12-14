@@ -42,7 +42,7 @@
         src: image_src,
         srcset: image_srcset,
         sizes: 'auto',
-        alt: swatch_image.title,
+        alt: swatch_image.alt | defautl: value,
         width: swatch_image.width,
         height: swatch_image.height
       %}

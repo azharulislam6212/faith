@@ -21,16 +21,25 @@
     {% endif %}
   >
     {% if image != blank %}
-     {%
-      render 'image',
-      image: image,
-      height: image.height,
-      alt: alt_text | default:image.alt,
-      lazy_load: true,
-      fetchpriority: "high",
-      attributes: 'decoding="async"',
-      sizes: "(max-width: 640px) 100vw, 50vw"
-    %}
+  
+       {% liquid
+        assign image_src = image | image_url: width: 500
+        capture image_srcset
+          render 'srcset', image: image
+        endcapture
+      %}
+
+      {%
+        render 'image',
+        src: image_src,
+        srcset: image_srcset,
+        sizes: "auto"
+        alt:  alt_text| default: image.alt,
+        width: image.width,
+        height: image.height,
+      %}
+
+
     {% else %}
       {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
     {% endif %}

@@ -651,17 +651,21 @@
   <div class="side-cart__media">
     {% if line_item.image %}
       <a href="{{ line_item.url }}" class="side-cart__link" tabindex="-1" aria-hidden="true">
-        {% render 'image',
-          image: line_item.image,
-          widths: '100, 150, 320, 480',
-          mobile_widths: '100, 150, 320',
-          src_width: 300,
-          sizes: '(max-width: 600px) 100vw, 50vw',
-          lazy_load: true,
-          fetchpriority: 'high',
-          class: 'img-fit',
-          alt_text: line_item.image.alt
-        %}
+        {% liquid
+              assign image_src = line_item.image | image_url: width: 120
+              capture image_srcset
+                render 'srcset', image: line_item.image
+              endcapture
+            %}
+            {% render 'image',
+              src: image_src,
+              srcset: image_srcset,
+              sizes: "(max-width: 640px) 100vw, 50vw"
+              alt: line_item.image.alt | default: line_item.title,
+               class: ' img-fit',
+              width: line_item.image.width,
+              height: line_item.image.height
+            %}
       </a>
     {% endif %}
   </div>

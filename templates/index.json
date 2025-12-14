@@ -23,7 +23,7 @@
               "settings": {
                 "image": "shopify://shop_images/5464bd4912abd89c22c8c1dac73b4727.svg",
                 "image_width": 45,
-                "alt_text": ""
+                "alt_text": "Women’s Collections up to 30% Off"
               },
               "blocks": {}
             },
@@ -43,7 +43,7 @@
               "settings": {
                 "image": "shopify://shop_images/5464bd4912abd89c22c8c1dac73b4727.svg",
                 "image_width": 45,
-                "alt_text": ""
+                "alt_text": "Women’s Collections up to 30% Off"
               },
               "blocks": {}
             },
@@ -63,7 +63,7 @@
               "settings": {
                 "image": "shopify://shop_images/5464bd4912abd89c22c8c1dac73b4727.svg",
                 "image_width": 45,
-                "alt_text": ""
+                "alt_text": "Women’s Collections up to 30% Off"
               },
               "blocks": {}
             },
@@ -83,7 +83,7 @@
               "settings": {
                 "image": "shopify://shop_images/5464bd4912abd89c22c8c1dac73b4727.svg",
                 "image_width": 45,
-                "alt_text": ""
+                "alt_text": "Women’s Collections up to 30% Off"
               },
               "blocks": {}
             },
@@ -103,7 +103,7 @@
               "settings": {
                 "image": "shopify://shop_images/5464bd4912abd89c22c8c1dac73b4727.svg",
                 "image_width": 45,
-                "alt_text": ""
+                "alt_text": "Women’s Collections up to 30% Off"
               },
               "blocks": {}
             },
@@ -142,7 +142,7 @@
               "settings": {
                 "image": "shopify://shop_images/5464bd4912abd89c22c8c1dac73b4727.svg",
                 "image_width": 45,
-                "alt_text": ""
+                "alt_text": "Women’s Collections up to 30% Off"
               },
               "blocks": {}
             },
@@ -162,7 +162,7 @@
               "settings": {
                 "image": "shopify://shop_images/5464bd4912abd89c22c8c1dac73b4727.svg",
                 "image_width": 45,
-                "alt_text": ""
+                "alt_text": "Women’s Collections up to 30% Off"
               },
               "blocks": {}
             },
@@ -182,7 +182,7 @@
               "settings": {
                 "image": "shopify://shop_images/5464bd4912abd89c22c8c1dac73b4727.svg",
                 "image_width": 45,
-                "alt_text": ""
+                "alt_text": "Women’s Collections up to 30% Off"
               },
               "blocks": {}
             },
@@ -202,7 +202,7 @@
               "settings": {
                 "image": "shopify://shop_images/5464bd4912abd89c22c8c1dac73b4727.svg",
                 "image_width": 45,
-                "alt_text": ""
+                "alt_text": "Women’s Collections up to 30% Off"
               },
               "blocks": {}
             },
@@ -222,7 +222,7 @@
               "settings": {
                 "image": "shopify://shop_images/5464bd4912abd89c22c8c1dac73b4727.svg",
                 "image_width": 45,
-                "alt_text": ""
+                "alt_text": "Women’s Collections up to 30% Off"
               },
               "blocks": {}
             },
@@ -261,7 +261,7 @@
               "settings": {
                 "image": "shopify://shop_images/5464bd4912abd89c22c8c1dac73b4727.svg",
                 "image_width": 45,
-                "alt_text": ""
+                "alt_text": "Women’s Collections up to 30% Off"
               },
               "blocks": {}
             },
@@ -281,7 +281,7 @@
               "settings": {
                 "image": "shopify://shop_images/5464bd4912abd89c22c8c1dac73b4727.svg",
                 "image_width": 45,
-                "alt_text": ""
+                "alt_text": "Women’s Collections up to 30% Off"
               },
               "blocks": {}
             },
@@ -301,7 +301,7 @@
               "settings": {
                 "image": "shopify://shop_images/5464bd4912abd89c22c8c1dac73b4727.svg",
                 "image_width": 45,
-                "alt_text": ""
+                "alt_text": "Women’s Collections up to 30% Off"
               },
               "blocks": {}
             },
@@ -321,7 +321,7 @@
               "settings": {
                 "image": "shopify://shop_images/5464bd4912abd89c22c8c1dac73b4727.svg",
                 "image_width": 45,
-                "alt_text": ""
+                "alt_text": "Women’s Collections up to 30% Off"
               },
               "blocks": {}
             },
@@ -341,7 +341,7 @@
               "settings": {
                 "image": "shopify://shop_images/5464bd4912abd89c22c8c1dac73b4727.svg",
                 "image_width": 45,
-                "alt_text": ""
+                "alt_text": "Women’s Collections up to 30% Off"
               },
               "blocks": {}
             },
@@ -1706,6 +1706,195 @@
         "padding_top_mobile": 0,
         "padding_bottom_mobile": 0
       }
+    },
+    "featured_blog_VgLMKb": {
+      "type": "featured-blog",
+      "blocks": {
+        "featured_blog_xHfHA8": {
+          "type": "_featured-blog",
+          "name": "Blog card",
+          "settings": {
+            "article": "",
+            "column_desktop": "2",
+            "row_desktop": "1",
+            "column_tablet": "1",
+            "row_tablet": "1",
+            "column_mobile": "1",
+            "row_mobile": "1",
+            "color_schema": "",
+            "date_bg": "#f1f4f9",
+            "dot_color": "#000000"
+          },
+          "blocks": {
+            "featured-blog-image": {
+              "type": "_image",
+              "name": "Image",
+              "static": true,
+              "settings": {
+                "image": "{{ closest.article.image }}",
+                "image_ratio": "3-4",
+                "image_width": 1400,
+                "alt_text": ""
+              },
+              "blocks": {}
+            },
+            "blog-title": {
+              "type": "heading",
+              "name": "Title",
+              "static": true,
+              "settings": {
+                "heading": "Latest Fashion Trends Must-Have Styles for Every Season d",
+                "heading_size": "h4"
+              },
+              "blocks": {}
+            },
+            "blog-details": {
+              "type": "inline-richtext",
+              "name": "Text",
+              "static": true,
+              "settings": {
+                "text": "Stay ahead in the fashion game by exploring the latest seasonal styles that will keep your wardrobe fresh and trendy.",
+                "text_style": "body",
+                "text_size": "medium"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": []
+        },
+        "featured_blog_mG3CHc": {
+          "type": "_featured-blog",
+          "name": "Blog card",
+          "settings": {
+            "article": "",
+            "column_desktop": "1",
+            "row_desktop": "2",
+            "column_tablet": "1",
+            "row_tablet": "1",
+            "column_mobile": "1",
+            "row_mobile": "1",
+            "color_schema": "",
+            "date_bg": "#f1f4f9",
+            "dot_color": "#000000"
+          },
+          "blocks": {
+            "featured-blog-image": {
+              "type": "_image",
+              "name": "Image",
+              "static": true,
+              "settings": {
+                "image_ratio": "3-4",
+                "image_width": 1400,
+                "alt_text": ""
+              },
+              "blocks": {}
+            },
+            "blog-title": {
+              "type": "heading",
+              "name": "Title",
+              "static": true,
+              "settings": {
+                "heading": "Latest Fashion Trends Must-Have Styles for Every Season",
+                "heading_size": "h4"
+              },
+              "blocks": {}
+            },
+            "blog-details": {
+              "type": "inline-richtext",
+              "name": "Text",
+              "static": true,
+              "settings": {
+                "text": "Stay ahead in the fashion game by exploring the latest seasonal styles that will keep your wardrobe fresh and trendy.",
+                "text_style": "body",
+                "text_size": "medium"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": []
+        },
+        "featured_blog_fFTKcF": {
+          "type": "_featured-blog",
+          "name": "Blog card",
+          "settings": {
+            "article": "",
+            "column_desktop": "2",
+            "row_desktop": "1",
+            "column_tablet": "1",
+            "row_tablet": "1",
+            "column_mobile": "1",
+            "row_mobile": "1",
+            "color_schema": "",
+            "date_bg": "#f1f4f9",
+            "dot_color": "#000000"
+          },
+          "blocks": {
+            "featured-blog-image": {
+              "type": "_image",
+              "name": "Image",
+              "static": true,
+              "settings": {
+                "image_ratio": "3-4",
+                "image_width": 1400,
+                "alt_text": ""
+              },
+              "blocks": {}
+            },
+            "blog-title": {
+              "type": "heading",
+              "name": "Title",
+              "static": true,
+              "settings": {
+                "heading": "Latest Fashion Trends Must-Have Styles for Every Season",
+                "heading_size": "h4"
+              },
+              "blocks": {}
+            },
+            "blog-details": {
+              "type": "inline-richtext",
+              "name": "Text",
+              "static": true,
+              "settings": {
+                "text": "Stay ahead in the fashion game by exploring the latest seasonal styles that will keep your wardrobe fresh and trendy.",
+                "text_style": "body",
+                "text_size": "medium"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": []
+        },
+        "featured-blog-header": {
+          "type": "_section-header",
+          "name": "Section header",
+          "static": true,
+          "settings": {
+            "heading": "Featured blog [Heading]",
+            "heading_size": "h1",
+            "text": "<p>Stay updated with trends, news, and stories designed to help you make informed decisions.</p>",
+            "text_style": "body",
+            "text_size": "medium",
+            "text_align": "text-center"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "featured_blog_xHfHA8",
+        "featured_blog_mG3CHc",
+        "featured_blog_fFTKcF"
+      ],
+      "name": "Featured blog",
+      "settings": {
+        "width": "container",
+        "color_scheme": "",
+        "padding_top": 120,
+        "padding_bottom": 120,
+        "padding_top_tablet": 80,
+        "padding_bottom_tablet": 80,
+        "padding_top_mobile": 60,
+        "padding_bottom_mobile": 60
+      }
     }
   },
   "order": [
@@ -1716,6 +1905,7 @@
     "collage_grid_hnnyyA",
     "deals_ntHJPC",
     "testimonials_qJMwXT",
-    "before_after_Wdez8E"
+    "before_after_Wdez8E",
+    "featured_blog_VgLMKb"
   ]
 }

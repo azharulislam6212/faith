@@ -1,7 +1,6 @@
 {{ 'component-product-card.css' | asset_url | stylesheet_tag: preload: true }}
 {{ 'component-price.css' | asset_url | stylesheet_tag: preload: true }}
 
-
 {% case block.type %}
   {% when 'product_list' %}
     {% liquid
@@ -9,12 +8,10 @@
       assign products_to_show = block.settings.products_to_show
       assign image_ratio = false
       assign image_ratio = block.settings.image_ratio | default: 'portrait'
-  
 
-    capture  button_class
-    echo  'button button--' | append: block.settings.button_style | append:' button-' | append: block.settings.button_type 
-     endcapture
-
+      capture button_class
+        echo 'button button--' | append: block.settings.button_style | append: ' button-' | append: block.settings.button_type
+      endcapture
     %}
 
     <div role="list" class="megamenu-collection-product-list">
@@ -22,8 +19,8 @@
         {% render 'product-card-list-small',
           product: product,
           image_ratio: image_ratio,
-          show_quick_add: block.settings.enable_quick_add
-          button_class: button_class
+          show_quick_add: block.settings.enable_quick_add,
+          button_class: button_class,
           button_type: block.settings.button_type
         %}
 
@@ -88,27 +85,41 @@
               style="padding-bottom: {% render 'aspect-ratio' with image.aspect_ratio as aspect_ratio %}%;"
             {% endif %}
           >
-            {% render 'image',
-              image: image,
-              class: 'normal-image',
-              widths: '480, 550, 960',
-              mobile_widths: '320, 480, 550',
-              src_width: 1280,
-              sizes: '(max-width: 600px) 100vw, 50vw',
-              lazy_load: true,
-              alt_text: image.title
+            {% liquid
+              assign image_src = image | image_url: width: 500
+              capture image_srcset
+                render 'srcset', image: image
+              endcapture
+            %}
+
+            {%
+              render 'image',
+              src: image_src,
+              srcset: image_srcset,
+              sizes: "auto"
+              alt:  heading | default: image.alt,
+              width: image.width,
+              height: image.height,
+              class: " normal-image"
             %}
 
             {% if hover_image != blank %}
-              {% render 'image',
-                image: hover_image,
-                class: 'hover-image',
-                widths: '480, 550, 960',
-                mobile_widths: '320, 480, 550',
-                src_width: 1280,
-                sizes: '(max-width: 600px) 100vw, 50vw',
-                lazy_load: true,
-                alt_text: hover_image.title
+              {% liquid
+                assign image_src = hover_image | image_url: width: 500
+                capture image_srcset
+                  render 'srcset', image: hover_image
+                endcapture
+              %}
+
+              {%
+                render 'image',
+                src: image_src,
+                srcset: image_srcset,
+                sizes: "auto"
+                alt:  heading | default: hover_image.alt,
+                width: hover_image.width,
+                height: hover_image.height,
+                class: " hover-image"
               %}
             {% endif %}
           </div>

@@ -1,13 +1,13 @@
 {%- liquid
   assign title = title | default: false
   assign resources = resources | default: false
-    assign image_ratio = settings.cart_empty_upsell_product_image_ratio | default: 'portrait'
-  assign  button_type = settings.cart_empty_upsell_button_type
+  assign image_ratio = settings.cart_empty_upsell_product_image_ratio | default: 'portrait'
+  assign button_type = settings.cart_empty_upsell_button_type
   capture button_class
     echo 'button button--' | append: settings.cart_empty_upsell_button_style | append: ' button-' | append: button_type
   endcapture
 
-  assign show_quick_add  =  settings.cart_empty_upsell_enable_quick_add
+  assign show_quick_add = settings.cart_empty_upsell_enable_quick_add
 -%}
 
 {%- if resources != blank -%}
@@ -25,42 +25,43 @@
                 style="padding-bottom: {% render 'aspect-ratio' with product.featured_media.aspect_ratio as aspect_ratio %}%;"
               {% endif %}
             >
-              {% render 'image',
-                image: product.featured_media,
-                widths: '480, 550, 750, 1100, 1500, 1780, 2000',
-                mobile_widths: '320, 480, 550, 720',
-                src_width: 1280,
-                sizes: '(max-width: 600px) 100vw, 50vw',
-                lazy_load: true,
-                fetchpriority: 'high',
-                class: 'img-fit',
-                alt_text: product.featured_media.title
+              {% liquid
+                assign image_src = product.featured_media | image_url: width: 500
+                capture image_srcset
+                  render 'srcset', image: product.featured_media
+                endcapture
+              %}
+
+              {%
+                render 'image',
+                src: image_src,
+                srcset: image_srcset,
+                sizes: "(max-width: 640px) 100vw, 50vw"
+                alt:  product.featured_media.alt,
+                width: product.featured_media.width,
+                height: product.featured_media.height,
               %}
             </div>
           </a>
         </div>
         <div class="upsell-item__content">
+          <div class="upsell-item__content-inner">
+            <h3 class="upsell-item__title h5">
+              <a role="link" aria-disabled="true" class="product-link link-animation" href="{{ product_url }}">
+                {{ product.title | strip_html | escape }}
+              </a>
+            </h3>
 
-        <div class="upsell-item__content-inner">
-           <h3 class="upsell-item__title h5">
-            <a role="link" aria-disabled="true" class="product-link link-animation" href="{{ product_url }}">
-              {{ product.title | strip_html | escape }}
-            </a>
-          </h3>
-
-          <div class="upsell-item__price">
-            {% render 'price', product: product, current_variant: current_variant %}
+            <div class="upsell-item__price">
+              {% render 'price', product: product, current_variant: current_variant %}
+            </div>
           </div>
-
+          {%- if show_quick_add -%}
+            <div class="upsell-item__action">
+              {% render 'quick-add', product: product, button_class: button_class, button_type: button_type %}
+            </div>
+          {%- endif -%}
         </div>
-       {%- if show_quick_add -%}
-        <div class="upsell-item__action">
-            {% render 'quick-add', product: product, button_class: button_class, button_type: button_type %}
-        </div>
-           {%- endif -%}
-
-        </div>
-   
       </div>
     {%- endfor -%}
   </div>

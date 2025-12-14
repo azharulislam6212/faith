@@ -1,9 +1,8 @@
 
  <div class="flex-grid__item multi-card-item swiper-slide" role="group" aria-roledescription="slide">
      <div class="card-item_img ">
-         
-       {% assign image_width = "320, 480, 550" %}
-        {% content_for 'block', type: "_image" , id:"multi-card", image_width:image_width   %}
+        
+        {% content_for 'block', type: "_image" , id:"multi-card" %}
         
       </div>
       <div class="multi-card-content" data-color-scheme="{{ block.settings.color_schema }}">

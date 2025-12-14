@@ -1,4 +1,3 @@
-
 {% liquid
   assign desktop_image = block.settings.desktop_image | default: section.settings.desktop_image
   assign mobile_image = block.settings.mobile_image | default: section.settings.mobile_image
@@ -11,34 +10,43 @@
 
   assign image_class = ''
   if mobile_image != blank
-    assign image_class = 'hidden md:block'
+    assign image_class = ' hidden md:block'
   endif
+
+  assign image_src = desktop_image | image_url: width: 500
+  capture image_srcset
+    render 'srcset', image: desktop_image
+  endcapture
+
+  assign mobil_image_src = mobile_image | image_url: width: 374
+  capture mobile_image_srcset
+    render 'srcset', image_mobile: mobile_image
+  endcapture
 %}
 
 {% if desktop_image != blank %}
   <div class="media-wrapper absolute-element">
     {%
       render 'image',
-      image: desktop_image,
-      height: desktop_image.height | default: 1080,
-      alt: alt_text | default:desktop_image.alt,
-      class: image_class
-      lazy_load: true,
-      fetchpriority: "high",
-      attributes: 'decoding="async"',
+      src: image_src,
+      srcset: image_srcset,
       sizes: "(max-width: 640px) 100vw, 50vw"
+      alt:  desktop_image.name | default: desktop_image.alt,
+      width: desktop_image.width,
+      height: desktop_image.height,
+      class: image_class
     %}
+
     {% if mobile_image %}
       {%
         render 'image',
-        image: mobile_image,
-        height: mobile_image.height | default: 1080,
-        alt: alt_text | default:mobile_image.alt,
-        class: "md:hidden"
-        lazy_load: true,
-        fetchpriority: "high",
-        attributes: 'decoding="async"',
+        src: mobil_image_src,
+        srcset: mobile_image_srcset,
         sizes: "(max-width: 640px) 100vw, 50vw"
+        alt:  mobile_image.name | default: mobile_image.alt,
+        width: mobile_image.width,
+        height: mobile_image.height,
+        class: " md:hidden"
       %}
     {% endif %}
   </div>

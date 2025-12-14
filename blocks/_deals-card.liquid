@@ -1,7 +1,6 @@
 <div class="deals-card flex-grid__item swiper-slide" role="listitem" tabindex="0" {{ block.shopify_attributes }}>
   <div class="deals-card-img-wrap">
-    {% assign image_width = '320, 480, 550,650,750,850' %}
-    {% content_for 'block', type: '_image', id: 'deals_card_image', image_width: image_width %}
+    {% content_for 'block', type: '_image', id: 'deals_card_image' %}
   </div>
   <div class="deals-card-count">01</div>
   <div class="deals-card-content">

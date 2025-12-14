@@ -1,140 +1,17 @@
 
-{{- 'blog-section.css' | asset_url | stylesheet_tag: preload: true -}}
 
-{%- style -%}
-  #shopify-section-{{ section.id }} {
-        --pad-top-desktop: {{ section.settings.padding_top }}px;
-        --pad-bottom-desktop: {{ section.settings.padding_bottom }}px;
-        --pad-top-tablet: {{ section.settings.padding_top_tablet }}px;
-        --pad-bottom-tablet: {{ section.settings.padding_bottom_tablet }}px;
-        --pad-top-mobile: {{ section.settings.padding_top_mobile }}px;
-        --pad-bottom-mobile: {{ section.settings.padding_bottom_mobile }}px;
-  }
-{%- endstyle -%}
- 
+{{- 'section-featured-blog.css' | asset_url | stylesheet_tag: preload: true -}}
 
 
+        <div class="blog-section section--padding" data-color-scheme="{{ section.settings.color_scheme }}" style="{%  render 'section-spacing' %}">
+          <div class="{{ section.settings.width }}">
 
-{% liquid
-
- assign page_width = section.settings.width
-
- assign heading = section.settings.heading 
- assign heading_size = section.settings.heading_size 
- assign heading_align  = section.settings.heading_align 
-
- assign sub_text = section.settings.sub_text 
- assign text_size = section.settings.text_size 
- 
-%}
-
-
-
-
-
-        <div class="blog-section section--padding" data-color-scheme="{{ section.settings.color_scheme }}">
-          <div class="{{ page_width }}">
-
-            {% if heading != blank or sub_text != blank %}
-              <div class="section-header blog-section-header" aria-label="Blog Section Header">
-
-                {% if heading != blank %}
-                  <h2 class="section-heading hxl fade-up {{ heading_align }} {{ heading_size }}">
-                    {{ heading }}
-                  </h2>
-                {% endif %}
-
-                {% if sub_text != blank %}
-                  <p class="section-desc fade-up body--{{ text_size }}">
-                    {{ sub_text }}
-                  </p>
-                {% endif %}
-
-              </div>
-            {% endif %}
+            {% content_for 'block', type: '_section-header', id: 'featured-blog-header' %}
 
             <div class="blog-card-wrapper">
 
               <div class="blog-card-list-wrapper" role="list">
-
-                {% for block in section.blocks %}
-                  {% liquid
-                    assign block_size = block.settings.block_size
-                    assign image = block.settings.image
-                    assign title = block.settings.title
-                    assign title_size = block.settings.title_size
-                    assign article = block.settings.article
-                    assign short_details = block.settings.short_details
-                    assign text_style = block.settings.text_style
-                    assign text_size = block.settings.text_size
-                  %}
-
-                  <div 
-                    class="blog-card-list blog-card-{{ block_size }} blog-card-{{ block_size }}-{{ forloop.index }}"
-                    role="listitem"
-                    aria-label="Blog card {{ title | escape }}"
-                  >
-
-                    {% if image != blank %}
-                      <div class="blog-card-image-wrapper image-animation">
-                        {% render 'image',
-                          image: image,
-                          widths: '480, 550, 960, 1100',
-                          mobile_widths: '320, 480, 550',
-                          src_width: 1280,
-                          sizes: '(max-width: 600px) 100vw, 50vw',
-                          lazy_load: true,
-                          decoding: 'async',
-                          fetchpriority: 'low',
-                          alt_text: title | default: 'Blog article image'
-                        %}
-                      </div>
-                      {% else %} 
-                      {{ "image" |  placeholder_svg_tag:"placeholder_svg_tag" }}
-                    {% endif %}
-
-                    <div class="blog-card-body">
-                     {% if article != blank %}
-                        <div class="blog-card-meta">
-
-                          {% if article.tags.size > 0 %}
-                            <span class="blog-card-meta-tag" aria-label="Blog tags">
-                              {% for tag in article.tags %}
-                                {{ tag }}{% unless forloop.last %},{% endunless %}
-                              {% endfor %}
-                            </span>
-                          {% endif %}
-
-                          <span class="blog-card-meta-date">
-                            <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">
-                              {{ article.published_at | date: "%b %d, %Y" }}
-                            </time>
-                          </span>
-
-                        </div>
-                     {% endif %}
-
-                      {% if title != blank %}
-                        <div class="blog-title">
-                          <a href="{{ article.url }}" class="blog-link-animation {{ title_size }}" role="link">
-                            {{ title }}
-                          </a>
-                        </div>
-                      {% endif %}
-
-                      {% if short_details != blank %}
-                        <div class="blog-desc">
-                          <a href="{{ article.url }}" class="{{ text_style }} body--{{ text_size }}" role="link">
-                            {{ short_details }}
-                          </a>
-                        </div>
-                      {% endif %}
-
-                    </div>
-
-                  </div>
-                {% endfor %}
-
+                {% content_for 'blocks' %}
               </div>
 
             </div>
@@ -142,138 +19,10 @@
         </div>
 
 
-
-
-
-
-
 {% schema %}
 {
   "name": "Featured blog",
   "tag": "section",
-  "blocks": [
-    {
-      "type": "Block",
-      "name": "Block",
-      "limit": 3,
-      "settings": [
-        {
-          "type": "image_picker",
-          "id": "image",
-          "label": "Select image"
-        },
-         {
-          "type": "richtext",
-          "id": "title",
-          "label": "Title",
-          "default":"<h4>Title here</h4>"
-        },
-        {
-          "type": "select",
-          "id": "title_size",
-          "options": [
-            {
-              "label": "H1",
-              "value": "h1"
-            },
-            {
-              "label": "H2",
-              "value": "h2"
-            },
-            {
-              "label": "H3",
-              "value": "h3"
-            },
-            {
-              "label": "H4",
-              "value": "h4"
-            },
-            {
-              "label": "H5",
-              "value": "h5"
-            },
-            {
-              "label": "H6",
-              "value": "h6"
-            }
-          ],
-          "default":"h3",
-          "label": "Title size"
-        },
-        {
-          "type": "richtext",
-          "id": "short_details",
-          "label": "Details here",
-          "default":"<p> Stay ahead in the fashion game by exploring the latest seasonal styles that will keep your wardrobe fresh and trendy. </p>"
-        },
-        {
-          "type": "select",
-          "id": "text_style",
-          "options": [
-            {
-              "value": "body",
-              "label": "Body"
-            },
-            {
-              "value": "subtitle",
-              "label": "Subtitle"
-            }
-          ],
-          "default": "body",
-          "label": "Body"
-        },
-        {
-          "type": "select",
-          "id": "text_size",
-          "options": [
-            {
-              "value": "small",
-              "label": "Small"
-            },
-            {
-              "value": "medium",
-              "label": "Medium"
-            },
-            {
-              "value": "large",
-              "label": "Large"
-            }
-          ],
-          "default": "medium",
-          "label": "text Size"
-        },
-        {
-          "type": "color_scheme",
-          "id": "color_schema",
-          "label": "Color schema",
-          "default":"scheme-3"
-        },
-        {
-            "type": "select",
-            "id": "block_size",
-            "options": [
-                {
-                    "label": "Horizontal",
-                    "value": "horizontal"
-                },
-                {
-                    "label": "Vertical",
-                    "value": "vertical"
-                }
-            ],
-            "default":"horizontal",
-            "label": "Block Size"
-        },
-        {
-            "type": "article",
-            "id": "article",
-            "label": "Select article"
-        }
-      ]
-    }
-    
-  ],
-
   "settings": [
     {
       "type": "header",
@@ -284,7 +33,7 @@
       "type": "select",
       "id": "width",
       "label": "Width",
-      "default": "container-full-with-padding",
+      "default": "container",
       "options": [
         {
           "value": "container-full",
@@ -312,91 +61,7 @@
         }
       ]
     },
-    {
-      "type": "inline_richtext",
-      "id": "heading",
-      "label": "Section Title",
-      "default": "Section heading"
-    },
-    
-    {
-      "type": "select",
-      "id": "heading_size",
-      "options": [
-        {
-          "value": "h2",
-          "label": "H2"
-        },
-        {
-          "value": "h1",
-          "label": "H1"
-        },
-        {
-          "value": "heading-small",
-          "label": "t:sections.all.heading_size.options__1.label"
-        },
-        {
-          "value": "heading-medium",
-          "label": "t:sections.all.heading_size.options__2.label"
-        },
-        {
-          "value": "heading-large",
-          "label": "t:sections.all.heading_size.options__3.label"
-        },
-        {
-          "value": "heading-xlarge",
-          "label": "t:sections.all.heading_size.options__4.label"
-        }
-      ],
-      "default": "h1",
-      "label": "t:sections.all.heading_size.label"
-    },
-    {
-      "type": "select",
-      "id": "heading_align",
-      "label": "Align",
-      "options": [
-        {
-          "value": "left",
-          "label": "Left"
-        },
-        {
-          "value": "center",
-          "label": "Center"
-        },
-        {
-          "value": "right",
-          "label": "Right"
-        }
-      ],
-      "default": "center"
-    },
-    {
-      "type": "inline_richtext",
-      "id": "sub_text",
-      "label": "Text here",
-      "default": "Stay ahead in the fashion game by exploring the latest seasonal styles that will keep your wardrobe fresh and trendy."
-    },
-       {
-          "type": "select",
-          "id": "text_size",
-          "options": [
-            {
-              "value": "small",
-              "label": "Small"
-            },
-            {
-              "value": "medium",
-              "label": "Medium"
-            },
-            {
-              "value": "large",
-              "label": "Large"
-            }
-          ],
-          "default": "medium",
-          "label": "Text Size"
-        },
+   
     {
       "type": "color_scheme",
       "id": "color_scheme",
@@ -405,8 +70,7 @@
 
     },
    
-     
-    {
+      {
       "type": "header",
       "content": "Section padding"
     },
@@ -418,21 +82,21 @@
       "type": "range",
       "id": "padding_top",
       "min": 0,
-      "max": 100,
-      "step": 1,
+      "max": 200,
+      "step": 2,
       "unit": "px",
       "label": "Padding top",
-      "default": 40
+      "default": 120
     },
     {
       "type": "range",
       "id": "padding_bottom",
       "min": 0,
-      "max": 100,
-      "step": 1,
+      "max": 200,
+      "step": 2,
       "unit": "px",
       "label": "Padding bottom",
-      "default": 40
+      "default": 120
     },
     {
       "type": "paragraph",
@@ -442,21 +106,21 @@
       "type": "range",
       "id": "padding_top_tablet",
       "min": 0,
-      "max": 80,
-      "step": 1,
+      "max": 200,
+      "step": 2,
       "unit": "px",
       "label": "Padding top",
-      "default": 30
+      "default": 80
     },
     {
       "type": "range",
       "id": "padding_bottom_tablet",
       "min": 0,
-      "max": 80,
-      "step": 1,
+      "max": 200,
+      "step": 2,
       "unit": "px",
       "label": "Padding bottom",
-      "default": 30
+      "default": 80
     },
     {
       "type": "paragraph",
@@ -466,45 +130,141 @@
       "type": "range",
       "id": "padding_top_mobile",
       "min": 0,
-      "max": 50,
+      "max": 100,
       "step": 1,
       "unit": "px",
       "label": "Padding top",
-      "default": 20
+      "default": 60
     },
     {
       "type": "range",
       "id": "padding_bottom_mobile",
       "min": 0,
-      "max": 50,
+      "max": 100,
       "step": 1,
       "unit": "px",
       "label": "Padding bottom",
-      "default": 20
+      "default": 60
     }
   ],
-
+  "blocks": [
+  {
+    "type": "_featured-blog"
+  }
+   ],
   "presets": [
     {
       "name": "Featured blog",
-      "blocks": [
-       {
-         "type": "Block" 
-        },
-       { 
-        "type": "Block",
+      "category": "Blog",
+     "blocks": {
+      "featured-blog-header": {
+        "type": "_section-header",
+        "name": "Section header",
+        "static": true,
         "settings": {
-        "block_size":"vertical"
-       }
+          "heading": "Featured blog [Heading]",
+          "text": "<p>Stay updated with trends, news, and stories designed to help you make informed decisions.</p>"
+        }
+      },
+    "featured_blog_DX1":{
+       "name":"Blog card",
+       "type":"_featured-blog",
+       "settings": {
+        "column_desktop":"2",
+        "row_desktop":"1", 
        },
-       {
-       "type": "Block"
-      }
-      ]
-      
-      
+       "blocks": {
+          "featured-blog-image":{
+               "type": "_image",
+                "name": "Image",
+               "static": true
+          },
+          "blog-title":{
+            "name": "Title",
+            "type": "heading",
+            "static": true,
+            "settings": {
+              "heading":"Latest Fashion Trends Must-Have Styles for Every Season"
+            }
+          },
+          "blog-details":{
+            "type": "inline-richtext",
+            "name": "Text",
+            "static": true,
+            "settings": {
+              "text":"Stay ahead in the fashion game by exploring the latest seasonal styles that will keep your wardrobe fresh and trendy."
+            }
+          }
+       }
+    },
+    "featured_blog_DX2":{
+       "name":"Blog card",
+       "type":"_featured-blog",
+       "settings": {
+        "column_desktop":"1",
+        "row_desktop":"2"
+       },
+       "blocks": {
+        "featured-blog-image":{
+               "type": "_image",
+                "name": "Image",
+               "static": true
+          },
+          "blog-title":{
+            "name": "Title",
+            "type": "heading",
+            "static": true,
+            "settings": {
+              "heading":"Latest Fashion Trends Must-Have Styles for Every Season"
+            }
+          },
+          "blog-details":{
+            "type": "inline-richtext",
+            "name": "Text",
+            "static": true,
+            "settings": {
+              "text":"Stay ahead in the fashion game by exploring the latest seasonal styles that will keep your wardrobe fresh and trendy."
+            }
+          }
+       }
+    },
+    "featured_blog_DX3":{
+       "name":"Blog card",
+       "type":"_featured-blog",
+       "settings": {
+        "column_desktop":"2",
+        "row_desktop":"1"
+       },
+       "blocks": {
+        "featured-blog-image":{
+               "type": "_image",
+                "name": "Image",
+               "static": true
+          },
+          "blog-title":{
+            "name": "Title",
+            "type": "heading",
+            "static": true,
+            "settings": {
+              "heading":"Latest Fashion Trends Must-Have Styles for Every Season"
+            }
+          },
+          "blog-details":{
+            "type": "inline-richtext",
+            "name": "Text",
+            "static": true,
+            "settings": {
+              "text":"Stay ahead in the fashion game by exploring the latest seasonal styles that will keep your wardrobe fresh and trendy."
+            }
+          }
+       }
     }
+  },
+  "block_order": ["featured_blog_DX1","featured_blog_DX2","featured_blog_DX3"]
+}
   ]
 }
+
+
 
 {% endschema %}

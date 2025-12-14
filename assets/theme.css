@@ -1173,31 +1173,31 @@ a.media--no-hover {
     }
 }
 
-.media>picture img,
-.media>noscript picture img,
+.media>img,
+.media>noscript img,
 .media .media__overlay {
     object-fit: cover;
     object-position: center center;
     transition: transform var(--ft-duration-long) var(--ft-transition-ease), opacity var(--ft-duration-long) var(--ft-transition-ease), visibility var(--ft-duration-long) var(--ft-transition-ease);
 }
 
-.media--no-crop>picture img,
-.media--no-crop>noscript picture img {
+.media--no-crop>img,
+.media--no-crop>noscript img {
     object-fit: none;
 }
 
-.media--crop-top>picture img,
-.media--crop-top>noscript picture img {
+.media--crop-top>img,
+.media--crop-top>noscript img {
     object-position: center top;
 }
 
-.media--crop-bottom>picture img,
-.media--crop-bottom>noscript picture img {
+.media--crop-bottom>img,
+.media--crop-bottom>noscript img {
     object-position: center bottom;
 }
 
-.media--fit-contain>picture img,
-.media--fit-contain>noscript picture img {
+.media--fit-contain>img,
+.media--fit-contain>noscript img {
     object-fit: contain;
 }
 
@@ -1264,6 +1264,42 @@ a.media--no-hover {
     object-fit: cover;
 }
 
+@keyframes pulsating-color {
+  0% {
+    background-color: var(--color-foreground-transparent-15);
+  }
+  50% {
+    background-color: transparent;
+  }
+
+  100% {
+    background-color: var(--color-foreground-transparent-15);
+  }
+}
+
+.media .media-loader {
+  background-color: var(--color-foreground-transparent-15);
+  animation: pulsating-color 1s infinite var(--transition-cubic-bezier);
+}
+
+.media .lazyload,
+.media .lazyloading,
+.media .media-overlay {
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(1.2);
+}
+
+.media .lazyloaded,
+.media img.lazyloaded ~ .media-overlay {
+  opacity: 1;
+  visibility: visible;
+  transform: scale(1);
+}
+
+.media img.lazyloaded ~ .media-loader {
+  display: none;
+}
 
 svg.placeholder-svg {
     background-color: rgba(var(--color-placeholder), 1);

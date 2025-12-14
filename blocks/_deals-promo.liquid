@@ -6,17 +6,21 @@
 >
   {% if block.settings.image != blank %}
     <div class="deals-card-banner-bg">
+      {% liquid
+        assign image_src = block.settings.image | image_url: width: 500
+        capture image_srcset
+          render 'srcset', image: block.settings.image
+        endcapture
+      %}
       {%
         render 'image',
-        image: block.settings.image,
-        widths: "320, 480, 550,650,750,850",
-        mobile_widths: "320, 480, 550,650,750,850",
-        src_width: 1200,
-        sizes: '(max-width: 600px) 100vw, 50vw',
-        lazy_load: true,
-        fetchpriority: 'high',
+        src: image_src,
+        srcset: image_srcset,
+        sizes: "auto"
         class: 'img-fit',
-        alt_text: block.settings.alt | defualt:block.settings.image.alt
+        alt: block.settings.alt_text | default:block.settings.image.alt,
+        width: block.settings.image.width,
+        height: block.settings.image.height
       %}
     </div>
   {% endif %}
