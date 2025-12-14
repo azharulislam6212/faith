@@ -1148,7 +1148,7 @@ img {
 }
 
 .media>*,
-.media>picture img {
+.media>img {
     display: block;
     max-width: 100%;
     position: absolute;
@@ -1264,23 +1264,67 @@ a.media--no-hover {
     object-fit: cover;
 }
 
-@keyframes pulsating-color {
+/* @keyframes pulsating-color {
   0% {
-    background-color: var(--color-foreground-transparent-15);
+    background-color: rgb(var(--color-text), 0.2);
   }
   50% {
     background-color: transparent;
   }
 
   100% {
-    background-color: var(--color-foreground-transparent-15);
+    background-color: rgb(var(--color-text), 0.2);
   }
 }
 
 .media .media-loader {
-  background-color: var(--color-foreground-transparent-15);
-  animation: pulsating-color 1s infinite var(--transition-cubic-bezier);
+  background-color: rgb(var(--color-text), 0.2);
+  animation: pulsating-color 1s infinite var(--ft-transition-ease);
 }
+ */
+
+.media .media-loader {
+     display: block;
+    max-width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+  overflow: hidden;
+  background-color: rgba(var(--color-text), 0.08); /* softer base */
+  border-radius: 8px; /* smoother edges */
+}
+
+.media .media-loader::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(var(--color-text), 0) 0%,
+    rgba(var(--color-text), 0.15) 50%,
+    rgba(var(--color-text), 0) 100%
+  );
+  transform: translateX(-100%);
+  animation: shimmer 1.6s infinite linear;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+
+
+
 
 .media .lazyload,
 .media .lazyloading,
@@ -1296,6 +1340,7 @@ a.media--no-hover {
   visibility: visible;
   transform: scale(1);
 }
+
 
 .media img.lazyloaded ~ .media-loader {
   display: none;
