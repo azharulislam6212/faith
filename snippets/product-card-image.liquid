@@ -79,14 +79,21 @@
                       {%- endif -%}
                   {%- endcase -%}
                 {%- else -%}
+                  {% liquid
+                    assign image_src = media.preview_image | image_url: width: 500
+                    capture image_srcset
+                      render 'srcset', image: media.preview_image
+                    endcapture
+                  %}
+
                   {% render 'image',
-                    image: media.preview_image,
-                    height: media.preview_image.height,
-                    alt: media.title,
-                    lazy_load: true,
-                    fetchpriority: 'high',
-                    attributes: 'decoding="async"',
-                    sizes: '(max-width: 640px) 100vw, 50vw'
+                    src: image_src,
+                    srcset: image_srcset,
+                    sizes: "(max-width: 640px) 100vw, 50vw"
+                    alt: image_alt,
+                     class: ' img-fit',
+                    width: media.preview_image.width,
+                    height: media.preview_image.height
                   %}
                 {%- endif -%}
               </div>
@@ -107,15 +114,22 @@
       </hover-images>
 
     {% else %}
-      {%
-        render 'image',
-        image: product.featured_media,
+      {% liquid
+        assign image_src = product.featured_media | image_url: width: 500
+        capture image_srcset
+          render 'srcset', image: product.featured_media
+        endcapture
+      %}
+
+      {% render 'image',
+        src: image_src,
+        srcset: image_srcset,
+         sizes: "(max-width: 640px) 100vw, 50vw"
+        alt: image_alt,
+         class: ' img-fit',
+        width: product.featured_media.width,
         height: product.featured_media.height,
-        alt: product.featured_media.title,
-        lazy_load: true,
-        fetchpriority: "high",
-        attributes: 'decoding="async"',
-        sizes: "(max-width: 640px) 100vw, 50vw"
+        attr: "data-primary-image"
       %}
 
       {% if show_hover_image and settings.show_secondary_image %}
@@ -134,15 +148,21 @@
               endcase
             -%}
           {%- else -%}
+            {% liquid
+              assign image_src = hover_media.preview_image | image_url: width: 500
+              capture image_srcset
+                render 'srcset', image: hover_media.preview_image
+              endcapture
+            %}
+
             {% render 'image',
-              image: hover_media.preview_image,
-              height: hover_media.preview_image.height,
-              class: 'product-hero-img',
-              alt: hover_media.title,
-              lazy_load: true,
-              fetchpriority: 'high',
-              attributes: 'decoding="async"',
-              sizes: '(max-width: 640px) 100vw, 50vw'
+              src: image_src,
+              srcset: image_srcset,
+                sizes: "(max-width: 640px) 100vw, 50vw"
+              alt: image_alt,
+               class: 'img-fit',
+              width: hover_media.preview_image.width,
+              height: hover_media.preview_image.height
             %}
           {%- endif -%}
         </div>

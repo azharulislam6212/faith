@@ -1,74 +1,110 @@
-{%- doc -%}
-  Renders a responsive <picture> tag with mobile + desktop srcset.
+{%- comment -%}
+  Info:
+  Should be always wrapped in .media container.
+  Example:
 
-  Params:
-  - image
-  - height
-  - class
-  - alt
-  - style
-  - unset_image_tag
-  - lazy_load
-  - fetchpriority
-  - sizes
-  - attributes (any custom HTML attribute)
-{%- enddoc -%}
+  <div class="media media--3-4">
+    {%- render 'image' -%}
+  </div>
 
-{% if image != blank %}
+  Or:
 
-  {%- assign image_height = height | default: image.height -%}
-  {%- assign image_height_2x = image_height | times: 2 -%}
-  {%- assign image_height_3x = image_height | times: 3 -%}
+  <div class="media" style="padding-top:{%- render 'aspect-ratio', aspect_ratio: image.aspect_ratio -%}%;">
+    {%- render 'image' -%}
+  </div>
 
-  {%- capture desktop_srcset -%}
-    {{ image | image_url: height: image_height }} 1x,
-    {{ image | image_url: height: image_height_2x }} 2x,
-    {{ image | image_url: height: image_height_3x }} 3x
-  {%- endcapture -%}
+  Accepts:
+  - src {String} An image initial src (should be around 500px)
+  - srcset {String} An image srcset (use srcset snippet)
+  - sizes {String} Sizes
+  - alt {String} Image alt text (should be always escaped)
+  - width {String} Image width (defaults to 'auto')
+  - height {String} Image height (defaults to 'auto')
+  - attr {String} Additional image attributes
+  - class {String} Additional classes
+  - focal_point {String} object-position value from image liquid object
+  - lazy {Boolean} Enable lazy loading
 
-  {%- capture mobile_srcset -%}
-    {{ image | image_url: height: image_height }} 1x,
-    {{ image | image_url: height: image_height_2x }} 2x
-  {%- endcapture -%}
+  Usage:
 
-  {% assign style_value = style | default: '' %}
-  {% if unset_image_tag %}
-    {% assign style_value = style_value | append: 'object-position: inherit;' %}
+  {%-
+    liquid
+    assign image_src = product.featured_media | image_url: width: 500
+    capture image_srcset
+      render 'srcset', image: product.featured_media
+    endcapture
+    assign image_alt = product.featured_media.alt | escape
+
+    render 'image', src: image_src, srcset: image_srcset, sizes: 'auto', alt: image_alt, width: product.featured_media.width, height: product.featured_media.height
+  -%}
+
+{%- endcomment -%}
+
+{%-
+  liquid
+  assign src = src | default: false
+  assign srcset = srcset | default: false
+  assign alt = alt | default: false
+  assign width = width | default: 'auto'
+  assign height = height | default: 'auto'
+  assign sizes = sizes | default: 'auto'
+  assign attr = attr | default: false
+  assign class = class | default: false
+  assign image_position = ''
+  assign focal_point = focal_point | default: false
+  assign lazy = lazy | default: true, allow_false: true
+
+  if lazy
+    assign class = 'lazyload no-js-hidden motion-reduce' | append: class
+  endif
+
+  if focal_point
+    capture image_position
+      echo 'style="object-position: ' | append: focal_point | append: ';"'
+    endcapture
+  endif
+-%}
+
+
+<noscript>
+  <img
+  {% if srcset %}srcset="{{ srcset }}"{% endif %}
+    {% if sizes %}sizes="{{ sizes }}"{% endif %}
+    src="{{ src }}"
+    width="{{- width -}}"
+    height="{{- height -}}"
+    {% if alt %}alt="{{ alt | escape }}"{% endif %}
+    {% if class %}class="{{ class }}"{% endif %}
+    {{ image_position }}
+  >
+</noscript>
+
+<img
+  {% if srcset and lazy %}
+    data-srcset="{{ srcset }}"
+  {% elsif srcset %}
+    srcset="{{ srcset }}"
   {% endif %}
-
-  {% assign loading_attr = 'lazy' %}
-  {% if lazy_load == false %}
-    {% assign loading_attr = 'eager' %}
+  {% if sizes %}
+    data-sizes="{{ sizes }}"
+  {% elsif sizes %}
+    sizes="{{ sizes }}"
   {% endif %}
+  {% if lazy %}
+    data-src="{{ src }}"
+  {% else %}
+    src="{{ src }}"
+  {% endif %}
+  {% if class %}
+    class="{{ class }}"
+  {% endif %}
+  width="{{- width -}}"
+  height="{{- height -}}"
+  {% if alt %}alt="{{ alt | escape }}"{% endif %}
+  {% if attr %}{{ attr }}{% endif %}
+  {{ image_position }}
+>
 
-  {% assign fetchpriority_attr = fetchpriority | default: 'auto' %}
-  {% assign sizes_attr = sizes | default: '100vw' %}
-  {% assign extra_attrs = attributes | default: '' %}
-  {% assign alt_text = alt | default: image.alt | default: '' %}
-
-  <picture>
-    <!-- Mobile image -->
-    <source
-      srcset="{{ mobile_srcset }}"
-      media="(max-width: 640px)"
-      sizes="{{ sizes_attr }}"
-    >
-
-    <!-- Desktop image -->
-    <img
-      src="{{ image | image_url: height: image_height }}"
-      srcset="{{ desktop_srcset }}"
-      sizes="{{ sizes_attr }}"
-      alt="{{ alt_text }}"
-      class="{{ class }}"
-      loading="{{ loading_attr }}"
-      fetchpriority="{{ fetchpriority_attr }}"
-      style="{{ style_value }}"
-      {{ extra_attrs }}
-    >
-  </picture>
-
-{% elsif text_fallback %}
-  {{ text_fallback }}
-{% endif %}
-
+{%- if lazy -%}
+  <span class="media-loader no-js-hidden motion-reduce"></span>
+{%- endif -%}

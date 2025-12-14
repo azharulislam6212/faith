@@ -1810,7 +1810,7 @@ class ColorSwatch extends HTMLElement {
   updateMedia() {
     if (this.productCard) {
       this.variantsImages = JSON.parse(this.productCard.querySelector('[type="application/json"][data-variants-images]').textContent);
-      const picture = this.productCard.querySelector(".product-media>picture:first-child");
+      const picture = this.productCard.querySelector(".product-media [data-primary-image]");
       if (picture != null) {
         const source = picture.querySelector("source");
         const img = picture.querySelector("img");

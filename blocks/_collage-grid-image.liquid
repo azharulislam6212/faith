@@ -25,18 +25,25 @@
 
     >
       {% if block.settings.image != blank %}
+       
+   {% liquid
+        assign image_src = block.settings.image | image_url: width: 500
+        capture image_srcset
+         render 'srcset', image: block.settings.image
+        endcapture
+      %}
+
       {% render 'image',
-        image: block.settings.image,
-        widths: '480, 550, 960',
-        mobile_widths: '320, 480, 550',
-        src_width: 1280,
-        sizes: '(max-width: 600px) 100vw, 50vw',
-        lazy_load: true,
-        decoding: 'async',
-        fetchpriority: 'low',
-        alt_text: block.settings.image.name | default:block.settings.image.alt
-        
-      %}  
+        src: image_src,
+        srcset: image_srcset,
+        sizes: "(max-width: 640px) 100vw, 50vw"
+        alt: block.settings.image.name | default:block.settings.image.alt,
+        width: block.settings.image.width,
+        height: block.settings.image.height,
+        attr: 'data-image-primary'
+      %}
+
+
       {% else %}
     {{ "image" | placeholder_svg_tag:"placeholder-svg" }}
   {% endif %}

@@ -44,7 +44,7 @@ img {
     transform: translateY(0);
 }
 
-.product-media:has(picture + .hover-media):hover>picture:first-child img {
+.product-media:has(.media-loader + .hover-media):hover>img {
     inset: 0;
     opacity: 0;
     visibility: hidden;

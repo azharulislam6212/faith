@@ -51,31 +51,46 @@
       </button>
 
       {% if video_thumbnail != blank %}
-        {% render 'image',
-          image: video_thumbnail,
-          widths: '480, 550, 960, 1100',
-          mobile_widths: '320, 480, 550',
-          src_width: 1280,
-          sizes: '(max-width: 600px) 100vw, 50vw',
-          lazy_load: true,
-          decoding: 'async',
-          fetchpriority: 'high',
-          alt_text: 'collage-grid',
-          class: "js-load-media-trigger"
-        %}
+  {% liquid
+        assign image_src = video_thumbnail | image_url: width: 500
+        capture image_srcset
+         render 'srcset', image: video_thumbnail
+        endcapture
+      %}
+
+      {% render 'image',
+        src: image_src,
+        srcset: image_srcset,
+        sizes: "(max-width: 640px) 100vw, 50vw"
+        alt: video_thumbnail.image.name | default: video_thumbnail.image.alt,
+        width: video_thumbnail.width,
+        height: video_thumbnail.height,
+        class: "js-load-media-trigger"
+ 
+      %}
+
+
+
+ 
       {% elsif video_hosted %}
-        {% render 'image',
-          image: video_hosted,
-          widths: '480, 550, 960, 1100',
-          mobile_widths: '320, 480, 550',
-          src_width: 1280,
-          sizes: '(max-width: 600px) 100vw, 50vw',
-          lazy_load: true,
-          decoding: 'async',
-          fetchpriority: 'high',
-          alt_text: 'collage-grid',
-          class: "js-load-media-trigger"
-        %}
+  {% liquid
+        assign image_src = video_hosted.preview_image | image_url: width: 500
+        capture image_srcset
+         render 'srcset', image: video_hosted.preview_image
+        endcapture
+      %}
+          {% render 'image',
+        src: image_src,
+        srcset: image_srcset,
+        sizes: "(max-width: 640px) 100vw, 50vw"
+        alt: video_hosted.preview_image.name | default: video_hosted.preview_image.alt,
+        width: video_hosted.preview_image.width,
+        height: video_hosted.preview_image.height,
+        class: "js-load-media-trigger"
+  
+      %}
+
+ 
       {% else %}
         {{ "image" | placeholder_svg_tag:"placeholder-svg" }}
       {% endif %}

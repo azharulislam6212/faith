@@ -29,17 +29,25 @@
 
 {% if settings.swatch_style contains 'images' or swatch_image != '' %}
   <span class="swatch-box swatch-box__image swatch-size--{{ settings.swatch_size }} swatch-shape--{{ settings.swatch_box_style }}  {% if settings.card_colors_style == 'variant-images' or swatch_image %} swatch--image{% endif %}" >
-    {% render 'image',
-      image: swatch_image,
-      widths: '50, 80, 100, 150',
-      mobile_widths: '30, 50, 80',
-      src_width: 100,
-      sizes: '(max-width: 600px) 30px, 40px',
-      lazy_load: true,
-      fetchpriority: 'high',
-      class: 'img-fit',
-      alt_text: swatch_image.title
-    %}
+ 
+
+    {% liquid
+        assign image_src = swatch_image| image_url: width: 150
+        capture image_srcset
+          render 'srcset', image: swatch_image
+        endcapture
+      %}
+
+      {% render 'image',
+        src: image_src,
+        srcset: image_srcset,
+        sizes: 'auto',
+        alt: swatch_image.title,
+        width: swatch_image.width,
+        height: swatch_image.height
+      %}
+
+
     <span class="visually-hidden">{{ value }}</span>
   </span>
 {% else %}
