@@ -9,45 +9,49 @@
  */
 {
   "sections": {
-    "featured_collections_list_6bRPGN": {
+    "featured_collections_list_LQPyPk": {
       "type": "featured-collections-list",
       "blocks": {
-        "collection_block_zpEtN7": {
+        "collection_block_iCVMzd": {
           "type": "_collection-block",
           "name": "Collection block",
           "settings": {
             "collection": "dresses",
-            "title": "",
+            "image": "shopify://shop_images/Image_3.png",
+            "title": "Accessories",
             "block_size": "small"
           },
           "blocks": {}
         },
-        "collection_block_Vy7rtn": {
+        "collection_block_NDT9DV": {
           "type": "_collection-block",
           "name": "Collection block",
           "settings": {
-            "collection": "frontpage",
-            "title": "",
+            "collection": "tops",
+            "image": "shopify://shop_images/Image_4.png",
+            "title": "New Arrivals",
             "block_size": "small"
           },
           "blocks": {}
         },
-        "collection_block_hPFxmi": {
+        "collection_block_f7PbBw": {
           "type": "_collection-block",
           "name": "Collection block",
           "settings": {
-            "collection": "women",
-            "title": "",
+            "collection": "",
+            "image": "shopify://shop_images/Image_1.png",
+            "title": "Women Collection",
             "block_size": "big-image"
           },
           "blocks": {}
         },
-        "collection_block_t7gjXz": {
+        "collection_block_6cRf6D": {
           "type": "_collection-block",
           "name": "Collection block",
           "settings": {
-            "collection": "pants",
-            "title": "",
+            "collection": "",
+            "image": "shopify://shop_images/Image_7.png",
+            "title": "Street Were",
             "block_size": "small"
           },
           "blocks": {}
@@ -56,7 +60,7 @@
           "type": "_collection-promo-block",
           "static": true,
           "settings": {
-            "image": "shopify://shop_images/Ruffled_Boho_Skirt.jpg",
+            "image": "shopify://shop_images/promo-left.png",
             "url": ""
           },
           "blocks": {}
@@ -65,12 +69,11 @@
           "type": "_collection-promo-block-video",
           "static": true,
           "settings": {
-            "image": "shopify://shop_images/Off-shoulder_midi_dress.jpg",
+            "image": "shopify://shop_images/promo-video-banner.jpg",
             "url": "",
             "enable_video": true,
             "video_source": "video_external",
             "video": "https://www.youtube.com/watch?v=_9VUPq3SxOc",
-            "video_hosted": "shopify://files/videos/4919748-uhd_2732_1440_25fps.mp4",
             "enable_autoplay": true,
             "enable_video_loop": true,
             "enable_video_mute": true,
@@ -87,7 +90,7 @@
               "type": "inline-richtext",
               "static": true,
               "settings": {
-                "text": "We create durable, efficient products that address practical needs with a focus on simplicity and quality materials.",
+                "text": "Weekly Hot Deals. Get Up to 25% Discount",
                 "text_style": "body",
                 "text_size": "medium"
               },
@@ -97,10 +100,10 @@
               "type": "button",
               "static": true,
               "settings": {
-                "button_label": "Button label",
+                "button_label": "Shop Now",
                 "button_link": "",
                 "button_style": "primary",
-                "button_type": "with-none"
+                "button_type": "with-icon"
               },
               "blocks": {}
             }
@@ -109,17 +112,17 @@
         }
       },
       "block_order": [
-        "collection_block_zpEtN7",
-        "collection_block_Vy7rtn",
-        "collection_block_hPFxmi",
-        "collection_block_t7gjXz"
+        "collection_block_iCVMzd",
+        "collection_block_NDT9DV",
+        "collection_block_f7PbBw",
+        "collection_block_6cRf6D"
       ],
       "name": "Featured collections list",
       "settings": {
         "desktop_image": "shopify://shop_images/promo-bg_74e7748a-faee-4705-a3a4-c294e79b7a2e.png",
         "width": "container-full",
         "color_scheme": "",
-        "padding_top": 102,
+        "padding_top": 120,
         "padding_bottom": 120,
         "padding_top_tablet": 80,
         "padding_bottom_tablet": 80,
@@ -1998,10 +2001,282 @@
         "padding_top_mobile": 60,
         "padding_bottom_mobile": 60
       }
+    },
+    "gallery_mVn8KT": {
+      "type": "gallery",
+      "blocks": {
+        "instagram_card_aPMxjh": {
+          "type": "_instagram-card",
+          "name": "Card",
+          "settings": {
+            "image": "shopify://shop_images/Need_help_picking_the_right_attire_This_guide_covers_how_to_select_outfits_for_everything_from_casual_hangouts_to_formal_events.jpg",
+            "image_width": 1400,
+            "enable_video": false,
+            "video_source": "video_hosted",
+            "video": "https://www.youtube.com/watch?v=_9VUPq3SxOc",
+            "enable_autoplay": true,
+            "enable_video_loop": true,
+            "enable_video_mute": false,
+            "ratio": "portrait",
+            "label_url": "#",
+            "icon_bg": "linear-gradient(0deg, rgba(175, 97, 245, 1), rgba(234, 18, 134, 1) 46%, rgba(244, 81, 0, 1) 100%)",
+            "icon": "#fff"
+          },
+          "blocks": {
+            "instagram-product": {
+              "type": "_instagram-product",
+              "static": true,
+              "settings": {
+                "product": ""
+              },
+              "blocks": {}
+            },
+            "instagram-heading": {
+              "type": "heading",
+              "static": true,
+              "settings": {
+                "heading": "Title",
+                "heading_size": "h4"
+              },
+              "blocks": {}
+            },
+            "text": {
+              "type": "text",
+              "static": true,
+              "settings": {
+                "text": "Fashion is your way of showing your style."
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": []
+        },
+        "instagram_card_PxNdCp": {
+          "type": "_instagram-card",
+          "name": "Card",
+          "settings": {
+            "image_width": 1400,
+            "enable_video": false,
+            "video_source": "video_external",
+            "video": "https://www.youtube.com/watch?v=_9VUPq3SxOc",
+            "enable_autoplay": true,
+            "enable_video_loop": true,
+            "enable_video_mute": false,
+            "ratio": "portrait",
+            "label_url": "#",
+            "icon_bg": "linear-gradient(0deg, rgba(175, 97, 245, 1), rgba(234, 18, 134, 1) 46%, rgba(244, 81, 0, 1) 100%)",
+            "icon": "#fff"
+          },
+          "blocks": {
+            "instagram-product": {
+              "type": "_instagram-product",
+              "static": true,
+              "settings": {
+                "product": ""
+              },
+              "blocks": {}
+            },
+            "instagram-heading": {
+              "type": "heading",
+              "static": true,
+              "settings": {
+                "heading": "Title",
+                "heading_size": "h4"
+              },
+              "blocks": {}
+            },
+            "text": {
+              "type": "text",
+              "static": true,
+              "settings": {
+                "text": "Fashion is your way of showing your style."
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": []
+        },
+        "instagram_card_jfDphT": {
+          "type": "_instagram-card",
+          "name": "Card",
+          "settings": {
+            "image_width": 1400,
+            "enable_video": false,
+            "video_source": "video_external",
+            "video": "https://www.youtube.com/watch?v=_9VUPq3SxOc",
+            "enable_autoplay": true,
+            "enable_video_loop": true,
+            "enable_video_mute": false,
+            "ratio": "portrait",
+            "label_url": "#",
+            "icon_bg": "linear-gradient(0deg, rgba(175, 97, 245, 1), rgba(234, 18, 134, 1) 46%, rgba(244, 81, 0, 1) 100%)",
+            "icon": "#fff"
+          },
+          "blocks": {
+            "instagram-product": {
+              "type": "_instagram-product",
+              "static": true,
+              "settings": {
+                "product": ""
+              },
+              "blocks": {}
+            },
+            "instagram-heading": {
+              "type": "heading",
+              "static": true,
+              "settings": {
+                "heading": "Title",
+                "heading_size": "h4"
+              },
+              "blocks": {}
+            },
+            "text": {
+              "type": "text",
+              "static": true,
+              "settings": {
+                "text": "Fashion is your way of showing your style."
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": []
+        },
+        "instagram_card_bi6yk3": {
+          "type": "_instagram-card",
+          "name": "Card",
+          "settings": {
+            "image_width": 1400,
+            "enable_video": false,
+            "video_source": "video_external",
+            "video": "https://www.youtube.com/watch?v=_9VUPq3SxOc",
+            "enable_autoplay": true,
+            "enable_video_loop": true,
+            "enable_video_mute": false,
+            "ratio": "portrait",
+            "label_url": "#",
+            "icon_bg": "linear-gradient(0deg,rgba(175, 97, 245, 1) 0%,rgba(234, 18, 134, 1) 46%,rgba(244, 81, 0, 1) 100%)",
+            "icon": "#fff"
+          },
+          "blocks": {
+            "instagram-product": {
+              "type": "_instagram-product",
+              "static": true,
+              "settings": {
+                "product": ""
+              },
+              "blocks": {}
+            },
+            "instagram-heading": {
+              "type": "heading",
+              "static": true,
+              "settings": {
+                "heading": "Title",
+                "heading_size": "h4"
+              },
+              "blocks": {}
+            },
+            "text": {
+              "type": "text",
+              "static": true,
+              "settings": {
+                "text": "Fashion is your way of showing your style."
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": []
+        },
+        "instagram_card_e8mAcp": {
+          "type": "_instagram-card",
+          "name": "Card",
+          "settings": {
+            "image_width": 1400,
+            "enable_video": false,
+            "video_source": "video_external",
+            "video": "https://www.youtube.com/watch?v=_9VUPq3SxOc",
+            "enable_autoplay": true,
+            "enable_video_loop": true,
+            "enable_video_mute": false,
+            "ratio": "portrait",
+            "label_url": "#",
+            "icon_bg": "linear-gradient(0deg,rgba(175, 97, 245, 1) 0%,rgba(234, 18, 134, 1) 46%,rgba(244, 81, 0, 1) 100%)",
+            "icon": "#fff"
+          },
+          "blocks": {
+            "instagram-product": {
+              "type": "_instagram-product",
+              "static": true,
+              "settings": {
+                "product": ""
+              },
+              "blocks": {}
+            },
+            "instagram-heading": {
+              "type": "heading",
+              "static": true,
+              "settings": {
+                "heading": "Title",
+                "heading_size": "h4"
+              },
+              "blocks": {}
+            },
+            "text": {
+              "type": "text",
+              "static": true,
+              "settings": {
+                "text": "Fashion is your way of showing your style."
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": []
+        },
+        "instagram-section-header": {
+          "type": "_section-header",
+          "name": "Instagram header",
+          "static": true,
+          "settings": {
+            "heading": "Instagram [Heading]",
+            "heading_size": "h1",
+            "text": "<p>Join our Instagram community and get inspired by our newest collections and daily updates</p>",
+            "text_style": "body",
+            "text_size": "medium",
+            "text_align": "text-center"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "instagram_card_aPMxjh",
+        "instagram_card_PxNdCp",
+        "instagram_card_jfDphT",
+        "instagram_card_bi6yk3",
+        "instagram_card_e8mAcp"
+      ],
+      "name": "Instagram",
+      "settings": {
+        "width": "container-full",
+        "autoplay_enabled": false,
+        "autoplay_timeout": 5,
+        "enable_pagination": false,
+        "enable_navigation": false,
+        "loop_enabled": false,
+        "pagination_type": "dots",
+        "desktop_grid": "5",
+        "tab_grid": "4",
+        "mobile_grid": "1",
+        "color_scheme": "",
+        "padding_top": 120,
+        "padding_bottom": 120,
+        "padding_top_tablet": 80,
+        "padding_bottom_tablet": 80,
+        "padding_top_mobile": 60,
+        "padding_bottom_mobile": 60
+      }
     }
   },
   "order": [
-    "featured_collections_list_6bRPGN",
+    "featured_collections_list_LQPyPk",
     "marquee_scroller_tynpnX",
     "featured_collections_pillis_Pxtm3n",
     "mutli_card_7DNwEP",
@@ -2009,6 +2284,7 @@
     "deals_ntHJPC",
     "testimonials_qJMwXT",
     "before_after_Wdez8E",
-    "featured_blog_VgLMKb"
+    "featured_blog_VgLMKb",
+    "gallery_mVn8KT"
   ]
 }

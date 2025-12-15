@@ -1,0 +1,341 @@
+
+
+            {% liquid
+          
+              assign alt_text = block.settings.alt_text
+
+              assign ratio = block.settings.ratio
+              assign image_width = block.settings.image_width
+              assign placeholder = placeholder | default: "image"
+              assign image = block.settings.image | default: false
+              assign image_ratio = ratio | default: 'portrait'
+              if image_ratio == 'aspect-ratio' and image == false
+                assign image_ratio = false
+              endif
+
+
+                assign enable_video = block.settings.enable_video
+                assign video_source = block.settings.video_source
+                assign video = block.settings.video
+                assign video_hosted = block.settings.video_hosted | default: false
+                assign video_thumbnail = block.settings.video_thumbnail | default: false
+                assign video_ratio = ratio | default: 'portrait'
+    
+                  if video_ratio == 'aspect-ratio' and video_hosted == false or video_thumbnail == false
+                      assign video_ratio = false
+                  endif
+
+                assign autoplay = block.settings.enable_autoplay
+                assign loop = block.settings.enable_video_loop
+                assign muted = block.settings.enable_video_mute
+                assign video_type = video.type
+                if video_source == 'video_hosted'
+                    assign video_type = 'local_video'
+                endif
+                    
+              assign label_url = block.settings.label_url
+            %}
+
+
+            <div class="flex-grid__item instagram-card swiper-slide" role="group" aria-label='instagram item' style="{%  render 'custom-style' , target: "instagram-video-icon"%}">
+                <div class="media-wrapper"  {% if image_width > 0 %} style="--max-wdith: {{ image_width | append: 'px'}}" {% endif %} >
+                {% if enable_video %}
+                  <fth-load-media
+                    class="video-media {% if video_ratio != false %}media media--{{ video_ratio }}{% endif %}"
+                    data-hosted="{{ video_hosted | file_url }}"
+                    role="region"
+                    aria-label="Video content for {{ heading | default: 'instagram' }}"
+                    {% if video_ratio == 'aspect-ratio' %}style="padding-bottom: {% render 'aspect-ratio' with video.aspect_ratio as aspect_ratio %}%;"{% endif %}
+                  >
+                    {% if video_hosted or video_type == 'local_video' %}
+                      <button class="video-play-pause-button"
+                              aria-label="Play video for instagram"
+                              aria-pressed="false"
+                      >
+                        {% render 'icon' with 'play', width: '16', height: '16', class: 'video-play-icon' %}
+                        {% render 'icon' with 'pause', width: '16', height: '16', class: 'video-pause-icon' %}
+                      </button>
+                      {% if video_thumbnail != blank %}
+                        {% liquid
+                          assign image_src = video_thumbnail | image_url: width: 500
+                          capture image_srcset
+                          render 'srcset', image: video_thumbnail
+                          endcapture
+                         %}
+                          {% render 'image',
+                            src: image_src,
+                            srcset: image_srcset,
+                            sizes: "auto"
+                            alt: alt_text | default:video_thumbnail.alt,
+                            width: video_thumbnail.width,
+                            height: video_thumbnail.height,
+                             class:"js-load-media-trigger"
+                          %}
+                        
+                      {% elsif video_hosted %}
+                        {% liquid
+                          assign image_src = video_hosted | image_url: width: 500
+                          capture image_srcset
+                          render 'srcset', image: video_hosted
+                          endcapture
+                         %}
+                          {% render 'image',
+                            src: image_src,
+                            srcset: image_srcset,
+                            sizes: "auto"
+                            alt: alt_text | default:video_hosted.alt,
+                            width: video_hosted.width,
+                            height: video_hosted.height,
+                             class:"js-load-media-trigger"
+                          %}
+                      {% else %}
+                        {{ "image" | placeholder_svg_tag:"placeholder-svg" }}
+                      {% endif %}
+
+                      <template>
+                        {{
+                          video_hosted
+                          | video_tag:
+                            autoplay: autoplay,
+                            loop: loop,
+                            muted: muted,
+                            controls: true,
+                            preload: 'none',
+                            class: 'js-media-item-video'
+                        }}
+                      </template>
+
+                    {% else %}
+                      {% if video.type == 'youtube' or video.type == 'vimeo' %}
+                        <iframe
+                          tabindex="0"
+                          title="Video - {{ heading | default: 'instagram' }}"
+                          class="video-ifram js-local-video w-100 h-100"
+                          allow="autoplay; encrypted-media"
+                          loading="lazy"
+                          src="https://www.youtube.com/embed/{{ video.id }}?autoplay=0&mute=1&controls=0&rel=0"
+                        ></iframe>
+                      {% endif %}
+                    {% endif %}
+                  </fth-load-media>
+
+                  
+                {% else %}
+                  <div class="instagram-card-image {% if image_ratio != false %} media media--{{ image_ratio }} {% endif %}"
+                      {% if image_ratio == 'aspect-ratio' %}
+                        style="padding-bottom: {% render 'aspect-ratio' with image.aspect_ratio as aspect_ratio %}%;"
+                      {% endif %}
+                  >
+                    {% if image != blank %}
+                    {% liquid
+                          assign image_src = image | image_url: width: 500
+                          capture image_srcset
+                          render 'srcset', image: image
+                          endcapture
+                         %}
+                          {% render 'image',
+                            src: image_src,
+                            srcset: image_srcset,
+                            sizes: "auto"
+                            alt: alt_text | default:image.alt,
+                            width: image.width,
+                            height: image.height,
+                             class:"js-load-media-trigger"
+                          %}
+
+                    {% else %}
+                      {{ placeholder | placeholder_svg_tag: 'placeholder-svg' }}
+                    {% endif %}
+                  </div>
+
+                  
+                    <div class="instagram-card-body" aria-label="instagram-card-body">
+                    {% content_for 'block', type: '_instagram-product', id: 'instagram-product' %}
+                           
+                     
+                        {% content_for 'block', type: 'heading', id: 'instagram-heading' %}
+                       {% content_for 'block', type: 'text', id: 'text' %}
+
+                     {% if label_url != blank %}
+                        <div role="button" class="link-button card-button" aria-label="view details">
+                          view details
+                          {% render 'icon' with 'double-arrow', width: '16', height: '16' %}
+                        </div>
+                      {% endif %} 
+                      </div>
+                {% endif %}
+                </div>
+            </div> 
+{% schema %} 
+  {
+    "name": "Card",
+    "tag": null, 
+    "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "range",
+          "id": "image_width",
+          "label": "Maximum width",
+          "min": 0,
+          "max": 2000,
+          "step": 50,
+          "default": 1400,
+          "unit": "px"
+        },
+        {
+          "type": "header",
+          "content": "Video"
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_video",
+          "label": "Enable video",
+          "default": false
+        },
+        {
+          "type": "select",
+          "id": "video_source",
+          "label": "Video source",
+          "default": "video_external",
+          "visible_if": "{{ block.settings.enable_video }}",
+          "options": [
+            {
+              "value": "video_external",
+              "label": "External"
+            },
+            {
+              "value": "video_hosted",
+              "label": "Video hosted"
+            }
+          ]
+        },
+        {
+          "type": "video_url",
+          "id": "video",
+          "label": "URL",
+          "accept": ["youtube", "vimeo"],
+          "default": "https://www.youtube.com/watch?v=_9VUPq3SxOc",
+          "visible_if": "{{ block.settings.video_source == 'video_external' and block.settings.enable_video }}"
+        },
+        {
+          "type": "video",
+          "id": "video_hosted",
+          "label": "Hosted video",
+          "visible_if": "{{ block.settings.video_source == 'video_hosted' and block.settings.enable_video }}"
+        },
+        {
+          "type": "image_picker",
+          "id": "video_thumbnail",
+          "label": "Video thumbnail",
+          "visible_if": "{{ block.settings.enable_video }}"
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_autoplay",
+          "label": "Enable autoplay",
+          "default": true,
+          "visible_if": "{{ block.settings.enable_video }}"
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_video_loop",
+          "label": "Enable video loop",
+          "default": true,
+          "visible_if": "{{ block.settings.enable_video }}"
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_video_mute",
+          "label": "Enable video mute",
+          "default": false,
+          "visible_if": "{{ block.settings.enable_video }}"
+        },
+        {
+          "type": "select",
+          "id": "ratio",
+          "label": "Ratio",
+          "default": "portrait",
+          "options": [
+            {
+              "label": "Portrait",
+              "value": "portrait"
+            },
+            {
+              "label": "Square",
+              "value": "1-1"
+            },
+            {
+              "label": "Large",
+              "value": "5-4"
+            },
+            {
+              "label": "Medium",
+              "value": "3-4"
+            },
+            {
+              "label": "Small",
+              "value": "2-3"
+            },
+            {
+              "label": "Original",
+              "value": "aspect-ratio"
+            }
+          ]
+        },
+        {
+          "type": "url",
+          "id": "label_url",
+          "label": "Url"
+        },
+        {
+          "type": "header",
+          "content": "Override color"
+        },
+        {
+          "type": "color_background",
+          "id": "icon_bg",
+          "label": "Play icon background color",
+          "default":"linear-gradient(0deg,rgba(175, 97, 245, 1) 0%,rgba(234, 18, 134, 1) 46%,rgba(244, 81, 0, 1) 100%)"
+        },
+        {
+          "type": "color",
+          "id": "icon",
+          "label": "Play icon color",
+          "default":"#fff"
+        }
+
+    ],
+    "presets": [
+      {
+        "name": "Card",
+        "settings": {
+          "label_url":"#"
+        },
+        "blocks": {
+          "instagram-heading":{
+            "name": "Title",
+            "static": true,
+            "type": "heading",
+            "settings": {
+              "heading":"Title"
+            }
+            
+          },
+          "text":{
+            "name": "Text",
+            "static": true,
+            "type": "text",
+            "settings": {
+              "text":"Join our Instagram community and get"
+            }
+            
+          }
+        }
+      }
+    ]
+  }
+{% endschema %}

@@ -33,6 +33,7 @@
   "name": "Featured collections list",
   "tag": "section",
   "class": "featured-collections-list",
+  "max_blocks": 4,
   "settings": [
     {
       "type": "image_picker",
@@ -168,7 +169,103 @@
         "padding_bottom_tablet": 80,
         "padding_top_mobile": 60,
         "padding_bottom_mobile": 60
-      }
+      },
+      "blocks": {
+        "collection_block_zpEtN7": {
+          "type": "_collection-block",
+          "name": "Collection block",
+          "settings": {
+            "title": "Accessories",
+            "block_size": "small"
+          },
+          "blocks": {}
+        },
+        "collection_block_Vy7rtn": {
+          "type": "_collection-block",
+          "name": "Collection block",
+          "settings": {
+            "title": "New Arrivals",
+            "block_size": "small"
+          },
+          "blocks": {}
+        },
+        "collection_block_hPFxmi": {
+          "type": "_collection-block",
+          "name": "Collection block",
+          "settings": {
+            "title": "Women Collection",
+            "block_size": "big-image"
+          },
+          "blocks": {}
+        },
+        "collection_block_t7gjXz": {
+          "type": "_collection-block",
+          "name": "Collection block",
+          "settings": {
+            "title": "Street Were",
+            "block_size": "small"
+          },
+          "blocks": {}
+        },
+        "promo-block": {
+          "type": "_collection-promo-block",
+          "static": true,
+          "settings": {
+            "url": ""
+          },
+          "blocks": {}
+        },
+        "promo-block-video": {
+          "type": "_collection-promo-block-video",
+          "static": true,
+          "settings": {
+            "url": "",
+            "enable_video": true,
+            "video_source": "video_external",
+            "video": "https://www.youtube.com/watch?v=_9VUPq3SxOc",
+            "enable_autoplay": true,
+            "enable_video_loop": true,
+            "enable_video_mute": true,
+            "hide_play_button": false
+          },
+          "blocks": {}
+        },
+        "caption-block": {
+          "type": "_collection-caption-block",
+          "static": true,
+          "settings": {},
+          "blocks": {
+            "caption-text": {
+              "type": "inline-richtext",
+              "static": true,
+              "settings": {
+                "text": "Weekly Hot Deals. Get Up to 25% Discount",
+                "text_style": "body",
+                "text_size": "medium"
+              },
+              "blocks": {}
+            },
+            "caption-button": {
+              "type": "button",
+              "static": true,
+              "settings": {
+                "button_label": "Shop Now",
+                "button_link": "",
+                "button_style": "primary",
+                "button_type": "with-icon"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": []
+        }
+      },
+      "block_order": [
+        "collection_block_zpEtN7",
+        "collection_block_Vy7rtn",
+        "collection_block_hPFxmi",
+        "collection_block_t7gjXz"
+      ]
     }
   ],
   "enabled_on": {

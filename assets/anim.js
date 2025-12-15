@@ -384,6 +384,9 @@ if (promoTrigger && promoItems.length) {
 
 
 
+
+
+
 window.addEventListener('resize', () => {
   ScrollTrigger.refresh();
 });

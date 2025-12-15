@@ -1,0 +1,52 @@
+{%- liquid
+  assign product = block.settings.product
+-%}
+
+{%- if product.available -%}
+  <div class="product-info">
+    <p class="product-price">
+      {{ product.price | money }}
+
+      {% if product.compare_at_price > product.price %}
+        <del>{{ product.compare_at_price | money }}</del>
+      {% endif %}
+    </p>
+
+    <h3 class="product-title link-animation">
+      {{ product.title }}
+    </h3>
+
+    <a
+      href="{{ product.url }}"
+      role="button"
+      class="link-button card-button"
+      aria-label="View Details"
+    >
+      View Details
+      {% render 'icon' with 'double-arrow', width: '16', height: '16' %}
+    </a>
+  </div>
+{%- endif -%}
+
+
+
+{% schema %}
+  {
+    "name": "Product",
+    "tag": null,
+    "settings": [
+      {
+        "type": "product",
+        "id": "product",
+        "label": "Select product"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Product",
+        "settings": {
+        }
+      }
+    ]
+  }
+{% endschema %}

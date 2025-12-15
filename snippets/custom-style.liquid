@@ -1,4 +1,3 @@
- 
 {% assign block_settings = block.settings %}
 {% assign sect_settings = section.settings %}
 
@@ -8,6 +7,14 @@
     --color-star: {{ block_settings.star_color.red}}, {{ block_settings.star_color.green}}, {{ block_settings.star_color.blue}};
     --color-text: {{ block_settings.text_color.red}}, {{ block_settings.text_color.green}}, {{ block_settings.text_color.blue}};
 
-  {%- when 'multi-card' -%}
+  {%- when 'blog-date-bg' -%}
+
+    --color-date-bg:{{ block_settings.date_bg.red}}, {{ block_settings.date_bg.green}}, {{ block_settings.date_bg.blue}};
+    --color-dot:{{ block_settings.dot_color.red}}, {{ block_settings.dot_color.green}}, {{ block_settings.dot_color.blue}};
+    
+  {%- when 'instagram-video-icon' -%}
+
+    --icon-background:{{ block_settings.icon_bg}};
+    --color-icon:{{ block_settings.icon.red}}, {{ block_settings.icon.green}}, {{ block_settings.icon.blue}};
     
  {%- endcase -%}
