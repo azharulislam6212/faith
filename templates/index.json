@@ -9,6 +9,124 @@
  */
 {
   "sections": {
+    "featured_collections_list_6bRPGN": {
+      "type": "featured-collections-list",
+      "blocks": {
+        "collection_block_zpEtN7": {
+          "type": "_collection-block",
+          "name": "Collection block",
+          "settings": {
+            "collection": "dresses",
+            "title": "",
+            "block_size": "small"
+          },
+          "blocks": {}
+        },
+        "collection_block_Vy7rtn": {
+          "type": "_collection-block",
+          "name": "Collection block",
+          "settings": {
+            "collection": "frontpage",
+            "title": "",
+            "block_size": "small"
+          },
+          "blocks": {}
+        },
+        "collection_block_hPFxmi": {
+          "type": "_collection-block",
+          "name": "Collection block",
+          "settings": {
+            "collection": "women",
+            "title": "",
+            "block_size": "big-image"
+          },
+          "blocks": {}
+        },
+        "collection_block_t7gjXz": {
+          "type": "_collection-block",
+          "name": "Collection block",
+          "settings": {
+            "collection": "pants",
+            "title": "",
+            "block_size": "small"
+          },
+          "blocks": {}
+        },
+        "promo-block": {
+          "type": "_collection-promo-block",
+          "static": true,
+          "settings": {
+            "image": "shopify://shop_images/Ruffled_Boho_Skirt.jpg",
+            "url": ""
+          },
+          "blocks": {}
+        },
+        "promo-block-video": {
+          "type": "_collection-promo-block-video",
+          "static": true,
+          "settings": {
+            "image": "shopify://shop_images/Off-shoulder_midi_dress.jpg",
+            "url": "",
+            "enable_video": true,
+            "video_source": "video_external",
+            "video": "https://www.youtube.com/watch?v=_9VUPq3SxOc",
+            "video_hosted": "shopify://files/videos/4919748-uhd_2732_1440_25fps.mp4",
+            "enable_autoplay": true,
+            "enable_video_loop": true,
+            "enable_video_mute": true,
+            "hide_play_button": false
+          },
+          "blocks": {}
+        },
+        "caption-block": {
+          "type": "_collection-caption-block",
+          "static": true,
+          "settings": {},
+          "blocks": {
+            "caption-text": {
+              "type": "inline-richtext",
+              "static": true,
+              "settings": {
+                "text": "We create durable, efficient products that address practical needs with a focus on simplicity and quality materials.",
+                "text_style": "body",
+                "text_size": "medium"
+              },
+              "blocks": {}
+            },
+            "caption-button": {
+              "type": "button",
+              "static": true,
+              "settings": {
+                "button_label": "Button label",
+                "button_link": "",
+                "button_style": "primary",
+                "button_type": "with-none"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": []
+        }
+      },
+      "block_order": [
+        "collection_block_zpEtN7",
+        "collection_block_Vy7rtn",
+        "collection_block_hPFxmi",
+        "collection_block_t7gjXz"
+      ],
+      "name": "Featured collections list",
+      "settings": {
+        "desktop_image": "shopify://shop_images/promo-bg_74e7748a-faee-4705-a3a4-c294e79b7a2e.png",
+        "width": "container-full",
+        "color_scheme": "",
+        "padding_top": 102,
+        "padding_bottom": 120,
+        "padding_top_tablet": 80,
+        "padding_bottom_tablet": 80,
+        "padding_top_mobile": 60,
+        "padding_bottom_mobile": 60
+      }
+    },
     "marquee_scroller_tynpnX": {
       "type": "marquee-scroller",
       "blocks": {
@@ -390,21 +508,6 @@
         "padding_bottom_mobile": 20
       }
     },
-    "featured_collections_TjfX9R": {
-      "type": "featured-collections",
-      "name": "Featured collections",
-      "settings": {
-        "desktop_image": "shopify://shop_images/promo-bg_74e7748a-faee-4705-a3a4-c294e79b7a2e.png",
-        "width": "container-full",
-        "color_scheme": "",
-        "padding_top": 118,
-        "padding_bottom": 120,
-        "padding_top_tablet": 80,
-        "padding_bottom_tablet": 80,
-        "padding_top_mobile": 60,
-        "padding_bottom_mobile": 60
-      }
-    },
     "featured_collections_pillis_Pxtm3n": {
       "type": "featured-collections-pillis",
       "blocks": {
@@ -454,7 +557,7 @@
             "autoplay_enabled": false,
             "autoplay_timeout": 5,
             "loop_enabled": false,
-            "enable_pagination": false,
+            "enable_pagination": true,
             "enable_navigation": true,
             "color_scheme_navigation": "",
             "color_schema": ""
@@ -1898,8 +2001,8 @@
     }
   },
   "order": [
+    "featured_collections_list_6bRPGN",
     "marquee_scroller_tynpnX",
-    "featured_collections_TjfX9R",
     "featured_collections_pillis_Pxtm3n",
     "mutli_card_7DNwEP",
     "collage_grid_hnnyyA",

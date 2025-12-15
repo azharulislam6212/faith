@@ -1,0 +1,179 @@
+{{ 'component-video.css' | asset_url | stylesheet_tag }}
+<noscript>{{ 'component-video.css' | asset_url | stylesheet_tag }}</noscript>
+{{- 'section-featured-collections-list.css' | asset_url | stylesheet_tag -}}
+
+<div
+  class="featured-collections-list-wrapper collection-promo-animate"
+  role="region"
+  aria-label="Featured collections list"
+>
+  {% render 'background-element', placeholder: false %}
+
+  <div class="featured-collections-list__content">
+    <div class="{{section.settings.width}}">
+      <div class="featured-collections-list__inner">
+        <div role="region" aria-label="promo content" class="featured-collections-list__left-column">
+          {% content_for 'block', type: '_collection-promo-block', id: 'promo-block' %}
+          {% content_for 'block', type: '_collection-promo-block-video', id: 'promo-block-video' %}
+        </div>
+        <div class="featured-collections-list__right-column" role="region" aria-label="collection list">
+          <ul role="list" aria-label="collection list" class="featured-collection-items">
+            {% content_for 'blocks' %}
+          </ul>
+
+          {% content_for 'block', type: '_collection-caption-block', id: 'caption-block' %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Featured collections list",
+  "tag": "section",
+  "class": "featured-collections-list",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "desktop_image",
+      "label": "Background image"
+    },
+    {
+      "type": "header",
+      "content": "Layout wdith"
+    },
+    {
+      "type": "select",
+      "id": "width",
+      "label": "Width",
+      "default": "container-full",
+      "options": [
+        {
+          "value": "container-full",
+          "label": "Full width"
+        },
+        {
+          "value": "container-full-with-padding",
+          "label": "Full width padded"
+        },
+        {
+          "value": "container-full-mobile",
+          "label": "Full width mobile only"
+        },
+        {
+          "value": "container",
+          "label": "Page width"
+        }
+      ]
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "paragraph",
+      "content": "Desktop"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 120
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 120
+    },
+    {
+      "type": "paragraph",
+      "content": "Tablet"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_tablet",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_tablet",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 80
+    },
+    {
+      "type": "paragraph",
+      "content": "Mobile"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 60
+    }
+  ],
+  "blocks": [
+    {
+      "type": "_collection-block"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured collections list",
+      "category": "Collections",
+      "settings": {
+        "width": "container",
+        "color_scheme": "",
+        "padding_top": 120,
+        "padding_bottom": 120,
+        "padding_top_tablet": 80,
+        "padding_bottom_tablet": 80,
+        "padding_top_mobile": 60,
+        "padding_bottom_mobile": 60
+      }
+    }
+  ],
+  "enabled_on": {
+    "templates": ["*"],
+    "groups": ["aside"]
+  }
+}
+{% endschema %}

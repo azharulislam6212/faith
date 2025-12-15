@@ -8,7 +8,7 @@
 <span class="media-icon"  {%if image_width > 0%} style="--max-wdith: {{image_width | append: 'px'}}" {% endif %}>
   {% if image != blank %}
      {% liquid
-        assign image_src = image | image_url: width: 500
+        assign image_src = image | image_url: width: 150
         capture image_srcset
          render 'srcset', image: image
         endcapture

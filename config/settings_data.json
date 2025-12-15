@@ -43,7 +43,7 @@
     "show_grid_swatches": true,
     "swatches_type": "theme",
     "swatch_limit": 3,
-    "swatch_size": "large",
+    "swatch_size": "medium",
     "swatch_box_style": "circle",
     "swatch_style": "images",
     "product_card_swatch_style": "grid",

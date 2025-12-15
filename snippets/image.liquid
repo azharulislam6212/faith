@@ -106,5 +106,7 @@
 >
 
 {%- if lazy -%}
-  <span class="media-loader no-js-hidden motion-reduce"></span>
+  <span class="media-loader no-js-hidden motion-reduce">
+     {% render 'icon', icon: 'spinner' %}
+  </span>
 {%- endif -%}

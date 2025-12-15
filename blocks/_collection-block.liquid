@@ -1,6 +1,60 @@
+{% liquid
+  assign block_size = block.settings.block_size
+  assign collection = block.settings.collection
+  assign image = block.settings.image
 
+  if  block.settings.image != blank
+    assign image = block.settings.image
+    else 
+     assign image = block.settings.collection.image | default: block.settings.collection.products.first.featured_image
+  endif
 
+  if block.settings.title != blank
+    assign title = block.settings.title
+  else
+    assign title = collection.title
+  endif
+%}
 
+ 
+
+<li class="featured-collection-list__item featured-collection-list__item-{{ block_size }} collection-promo-fad-up" {{ block.shopify_attributes }}>
+  {% if collection != blank %}
+    <a href="{{ collection.url }}">
+  {% endif %}
+
+  <div class="featured-collection__img-wrap media-wrap">
+    {% if image != blank %}
+      {% liquid
+        assign image_src = image | image_url: width: 500
+        capture image_srcset
+          render 'srcset', image: image
+        endcapture
+      %}
+
+      {%
+        render 'image',
+        src: image_src,
+        srcset: image_srcset,
+        sizes: "(max-width: 640px) 100vw, 50vw"
+        alt:  image.alt | default: title | escape,
+        width: image.width,
+        height:  image.height,
+      %}
+
+    {% else %}
+      {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+    {% endif %}
+  </div>
+  <p>
+    <span class="link-animation">{{ title }}</span>
+  </p>
+
+  {% if collection != blank %}
+    </a>
+  {% endif %}
+</li>
+ 
 
 {% schema %}
 {
@@ -12,10 +66,32 @@
       "id": "collection",
       "label": "Select collection"
     },
+       {
+           "type": "image_picker",
+           "id": "image",
+           "label": "Image",
+         },
     {
       "type": "text",
       "id": "title",
-      "label": "Collection title"
+      "label": "Collection title",
+      "default": "Collection"
+    },
+    {
+      "type": "select",
+      "id": "block_size",
+      "options": [
+        {
+          "value": "small",
+          "label": "Smal"
+        },
+        {
+          "value": "big-image",
+          "label": "Large"
+        }
+      ],
+      "default": "small",
+      "label": "Block Size"
     }
   ],
   "presets": [

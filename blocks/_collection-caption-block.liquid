@@ -1,0 +1,17 @@
+<div class="featured-collection__caption collection-promo-fad-up" role="region" aria-label="caption">
+  {% content_for 'block', type: 'inline-richtext', id: 'caption-text' %}
+  {% content_for 'block', type: 'button', id: 'caption-button' %}
+</div>
+
+{% schema %}
+{
+  "name": "Caption block",
+  "tag": null,
+  "settings": [],
+  "presets": [
+    {
+      "name": "Caption block"
+    }
+  ]
+}
+{% endschema %}

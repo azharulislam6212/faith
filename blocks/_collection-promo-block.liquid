@@ -1,0 +1,52 @@
+<div class="collection-promo__item collection-promo-fad-up" {{ block.shopify_attributes }}>
+  <a href="{{ block.settings.url }}" class="collection-promo__img-wrap media-wrap"  aria-label="{{ block.settings.heading | default: 'View collection' }}">
+
+        {% if block.settings.image != blank %}
+      {% liquid
+        assign image_src = block.settings.image | image_url: width: 500
+        capture image_srcset
+          render 'srcset', image: block.settings.image
+        endcapture
+      %}
+
+      {%
+        render 'image',
+        src: image_src,
+        srcset: image_srcset,
+        sizes: "(max-width: 640px) 100vw, 50vw"
+        alt: block.settings.image.name | default:block.settings.image.alt,
+        width: block.settings.image.width,
+        height: block.settings.image.height,
+        attr: 'data-image-primary'
+      %}
+
+    {% else %}
+      {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+    {% endif %}
+ 
+  </a>
+</div>
+
+{% schema %}
+{
+  "name": "Promo block",
+  "tag": null,
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "url",
+      "id": "url",
+      "label": "Url"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Promo block"
+    }
+  ]
+}
+{% endschema %}

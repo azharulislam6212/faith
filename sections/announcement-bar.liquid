@@ -52,7 +52,7 @@
   >
     <div class="{{ section.settings.width }}">
       <div class="flex-grid flex-grid--1-col flex-grid--3-col-tablet">
-        <div class="flex-grid__item small-hide medium-hide">
+        <div class="flex-grid__item hidden md:hidden lg:block">
           {% if social_icons %}
             <nav class="announcement-bar-social" aria-label="Social Media">
               {% render 'social-icons' %}
@@ -77,7 +77,7 @@
             {% endif %}
           </div>
         </div>
-        <div class="flex-grid__item small-hide medium-hide text-end">
+        <div class="flex-grid__item hidden md:hidden lg:block  text-end">
           {% if section.settings.contact_details != blank %}
             <address class="announcement-bar-contact link-animation">
               {{ section.settings.contact_details }}

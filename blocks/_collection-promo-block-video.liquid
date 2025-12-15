@@ -1,0 +1,293 @@
+{% liquid
+  assign enable_video = block.settings.enable_video
+
+  assign video_source = block.settings.video_source
+  assign video = block.settings.video
+  assign video_hosted = block.settings.video_hosted | default: false
+  assign video_thumbnail = block.settings.video_thumbnail | default: false
+  assign video_ratio = block.settings.video_ratio | default: 'portrait'
+
+  if video_ratio == 'aspect-ratio' and video_hosted == false or video_thumbnail == false
+    assign video_ratio = false
+  endif
+
+  assign autoplay = block.settings.enable_autoplay
+  assign loop = block.settings.enable_video_loop
+  assign muted = block.settings.enable_video_mute
+  assign hide_play_button = block.settings.hide_play_button
+  assign video_type = video.type
+  if video_source == 'video_hosted'
+    assign video_type = 'local_video'
+  endif
+%}
+
+<div class="collection-promo__item collection-promo-fad-up" {{ block.shopify_attributes }}>
+  <a href="{{ block.settings.url }}" class="collection-promo__img-wrap media-wrap"   aria-label="{{ block.settings.heading | default: 'View collection' }}">
+    {% if block.settings.image != blank %}
+      {% liquid
+        assign image_src = block.settings.image | image_url: width: 500
+        capture image_srcset
+          render 'srcset', image: block.settings.image
+        endcapture
+      %}
+      {%
+        render 'image',
+        src: image_src,
+        srcset: image_srcset,
+        sizes: "(max-width: 640px) 100vw, 50vw"
+        alt: block.settings.image.name | default:block.settings.image.alt,
+        width: block.settings.image.width,
+        height: block.settings.image.height
+      %}
+
+    {% else %}
+      {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+    {% endif %}
+  </a>
+
+  {% if block.settings.enable_video %}
+    <modal-opener class="product-selector__size-link p4" data-modal="#promo-video-modal">
+      <button class="collection-promo__play-button" aria-haspopup="dialog"   aria-label="Play promotional video">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          fill="#000000"
+          viewBox="0 0 256 256"
+        >
+          <path
+              d="M240,128a15.74,15.74,0,0,1-7.6,13.51L88.32,229.65a16,16,0,0,1-16.2.3A15.86,15.86,0,0,1,64,216.13V39.87a15.86,15.86,0,0,1,8.12-13.82,16,16,0,0,1,16.2.3L232.4,114.49A15.74,15.74,0,0,1,240,128Z">
+          </path>
+        </svg>
+      </button>
+    </modal-opener>
+  {% endif %}
+</div>
+
+{% capture modal_content %}
+
+
+       {% if hide_play_button %}
+                        <div class="video-media {% if video_ratio != false %} media media--no-hover  media--16-9 {%- endif -%}"
+                          {% if video_ratio == 'aspect-ratio' %}
+                            style="padding-bottom: {% render 'aspect-ratio' with video_hosted.aspect_ratio as aspect_ratio %}%;"
+                          {% endif %} >
+                          <fth-load-video
+                            data-video-type="{{ video_type }}"
+                            data-video-id="{{ video.id }}"
+                          >
+                            {%- if video_source == 'video_hosted' and video_hosted != blank -%}
+                              {% capture local_video %}
+                                {{- video_hosted | video_tag: autoplay: true, controls: false, loop: true, preload: 'none', class: 'w-100 h-100 of-cover center-middle p-absolute' -}}
+                              {% endcapture %}
+                              {{ local_video | replace: '<source src="', '<source data-src="' }}
+                            {%- else %}
+                              <iframe
+                                tabindex="-1"
+                                 title="Promotional video - {{ heading | default: 'Announcement' }}"
+                                class="video-ifram js-local-video w-100 h-100 center-middle p-absolute"
+                                allow="autoplay; encrypted-media"
+                                data-src="
+                                  {%- if video.type == 'youtube' -%}
+                                    https://www.youtube.com/embed/{{ video.id }}?version=3&enablejsapi=1&mute=1&loop=1&controls=0&rel=0&showinfo=0&autoplay=1&playlist={{ video.id }}
+                                  {%- elsif video.type == 'vimeo' -%}
+                                    https://player.vimeo.com/video/{{ video.id }}?api=1&background=1&autoplay=1&loop=1&title=0&byline=0&portrait=0&controls=0&muted=1
+                                  {%- endif -%}"
+                              >
+                              </iframe>
+                            {% endif %}
+                          </fth-load-video>
+                        </div>
+
+                      {% else %}
+                        <fth-load-media
+                          data-section-id="{{ block.id }}"
+                          data-id-video="{{ video.id }}"
+                          data-type="{{ video_type }}"
+                          data-mute="{{muted}}"
+                          data-autoplay="{{autoplay}}"
+                          class="media-deferred-video js-media-deferred-video video-media {%if video_ratio != false%}  media media--no-hover media--16-9 {% endif %}"
+                          {% if video_ratio == 'aspect-ratio' %}
+                            style="padding-bottom: {% render 'aspect-ratio' with video_hosted.aspect_ratio as aspect_ratio %}%;"
+                          {% endif %} >
+                          <button
+                            class="js-load-media-trigger"
+                            type="button"
+                          >
+                            {%- if video_thumbnail != blank -%}
+
+                                {% liquid
+                                  assign image_src = video_thumbnail | image_url: width: 500
+                                  capture image_srcset
+                                  render 'srcset', image: video_thumbnail
+                                  endcapture
+                                %}
+
+                                {% render 'image',
+                                  src: image_src,
+                                  srcset: image_srcset,
+                                  sizes: "(max-width: 640px) 100vw, 50vw"
+                                  alt:  block.settings.heading | default:video_thumbnail.alt,
+                                  width: video_thumbnail.width,
+                                  height: video_thumbnail.height
+                                %}
+
+
+
+                            {%- elsif video_hosted and video_type == 'local_video' -%}
+
+                        
+                          
+                            {% liquid
+                                  assign image_src = video_hosted.preview_image | image_url: width: 500
+                                  capture image_srcset
+                                  render 'srcset', image: video_hosted.preview_image
+                                  endcapture
+                                %}
+
+                                {% render 'image',
+                                  src: image_src,
+                                  srcset: image_srcset,
+                                  sizes: "auto"
+                                  alt:  block.settings.heading | default:video_hosted.preview_image.alt,
+                                  width: video_hosted.preview_image.width,
+                                  height: video_hosted.preview_image.height
+                                %}
+
+                            {%- else -%}
+                              {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                            {%- endif -%}
+
+                            <span
+                              class="promo-video-play-button"
+                              tabindex="0"
+                              role="button"
+                              aria-label="play-button"
+                            >
+                              {% render 'icon' with 'play', width: '24', height: '24', class: 'icon-play' %}
+                            </span>
+                          </button>
+                          {%- if video_source == 'video_hosted' and video_hosted != blank -%}
+                            <template>
+                              {{
+                                video_hosted
+                                | video_tag:
+                                  autoplay: autoplay,
+                                  loop: loop,
+                                  muted: muted,
+                                  controls: true,
+                                  preload: 'none',
+                                  class: 'ratio-media d-block js-media-item-video',
+                                  aria_label: 'Video player'
+                              }}
+                            </template>
+                          {%- else -%}
+                            <div
+                              class="js-media-item external-video ratio-media"
+                              data-type="{{ video.type }}"
+                              id="fthVideo-{{ block.id }}-{{ video.id }}"
+                            ></div>
+                          {%- endif -%}
+                        </fth-load-media>
+                      {% endif %}
+
+
+{% endcapture %}
+
+{%- render 'modal-dialog',
+  title: 'Promo video',
+  content: modal_content,
+  id: 'promo-video-modal',
+  modifiers: 'video-modal,large',
+  class: 'modal class'
+-%}
+
+{% schema %}
+{
+  "name": "Promo block video",
+  "tag": null,
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "url",
+      "id": "url",
+      "label": "Url"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_video",
+      "label": "Enable video",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "video_source",
+      "label": "Video source",
+      "default": "video_external",
+      "options": [
+        {
+          "value": "video_external",
+          "label": "External"
+        },
+        {
+          "value": "video_hosted",
+          "label": "Video hosted"
+        }
+      ]
+    },
+    {
+      "type": "video_url",
+      "id": "video",
+      "accept": ["youtube", "vimeo"],
+      "default": "https://www.youtube.com/watch?v=_9VUPq3SxOc",
+      "label": "URL",
+      "visible_if": "{{ block.settings.video_source == 'video_external' }}"
+    },
+    {
+      "type": "video",
+      "id": "video_hosted",
+      "label": "Hosted video",
+      "visible_if": "{{ block.settings.video_source == 'video_hosted' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "video_thumbnail",
+      "label": "Video thumbnail"
+    },
+
+    {
+      "type": "checkbox",
+      "id": "enable_autoplay",
+      "label": "Enable autoplay",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_video_loop",
+      "label": "Enable video loop",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_video_mute",
+      "label": "Enable video mute",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_play_button",
+      "label": "Hide play button",
+      "default": false
+    }
+  ],
+  "presets": [
+    {
+      "name": "Promo block video"
+    }
+  ]
+}
+{% endschema %}

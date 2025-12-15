@@ -28,7 +28,7 @@
 {% endunless %}
 
 {% if settings.swatch_style contains 'images' or swatch_image != '' %}
-  <span class="swatch-box swatch-box__image swatch-size--{{ settings.swatch_size }} swatch-shape--{{ settings.swatch_box_style }}  {% if settings.card_colors_style == 'variant-images' or swatch_image %} swatch--image{% endif %}" >
+  <span class="swatch-box swatch-box__image swatch-size--{{ settings.swatch_size }} swatch-shape--{{ settings.swatch_box_style }} media {% if settings.card_colors_style == 'variant-images' or swatch_image %} swatch--image{% endif %}" >
  
 
     {% liquid
